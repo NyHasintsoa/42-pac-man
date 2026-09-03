@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/22 22:14:07 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/22 23:05:10 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -35,7 +35,8 @@ class GamePage(ParentPage):
         self.game_running = True
         maze_cols, maze_rows = 20, 10
         self.maze_gen = MazeGenerator(
-            (maze_cols, maze_rows), False, (0, 0), (14, 14)
+            (maze_cols, maze_rows), False,
+            (0, 0), (maze_cols - 1, maze_rows - 1)
         )
         self.maze_gen.generate()
 
@@ -108,6 +109,14 @@ class GamePage(ParentPage):
         self._event_listener()
         self.pacman.update()
         self.ghost.update()
+
+        self.pacgum_manager.update(pr.get_frame_time())
+
+        if not self.pacman.is_dead:
+            screen_px = int(self.pacman.pixel_pos.x + self.offset_x)
+            screen_py = int(self.pacman.pixel_pos.y + self.offset_y)
+            gained_score = self.pacgum_manager.collect_pacgums(screen_px, screen_py)
+            self.score += gained_score
 
     def render(self) -> None:
         pr.clear_background(pr.BLACK)
