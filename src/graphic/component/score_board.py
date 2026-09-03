@@ -19,7 +19,9 @@ class ScoreBoardComponent:
         self.level = 1
         self.time_elapsed = 0.0
 
-        self.life_texture = pr.load_texture("assets/pacman/pacman_lives.png")
+        self.life_texture: pr.Texture = pr.load_texture(
+            "assets/pacman/pacman_lives.png"
+        )
 
     def update(
         self,
@@ -39,9 +41,7 @@ class ScoreBoardComponent:
     def _draw_pacman_icon(self, cx: float, cy: float, radius: float) -> None:
         draw_x = int(cx - radius)
         draw_y = int(cy - radius)
-
         scale_x = (radius * 2.0) / self.life_texture.width
-
         pr.draw_texture_ex(
             self.life_texture,
             pr.Vector2(draw_x, draw_y),
@@ -94,5 +94,4 @@ class ScoreBoardComponent:
         )
 
     def unload(self) -> None:
-        pr.unload_texture(self.life_texture)
         pr.unload_texture(self.life_texture)

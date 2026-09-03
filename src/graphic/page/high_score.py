@@ -77,6 +77,9 @@ class HighScorePage(ParentPage):
         scores.sort(key=lambda x: x.get("score", 0), reverse=True)
         return scores
 
+    def unload(self) -> None:
+        pr.unload_font(self.font)
+
     def _draw_text_with_shadow_ex(
         self,
         text: str,

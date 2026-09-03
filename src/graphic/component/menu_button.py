@@ -15,10 +15,13 @@ class MenuButton:
         self.text = text
         self.font_size = font_size
         self.is_clicked = False
-        self.font = pr.load_font("assets/fonts/emulogic.ttf")
+        self.font: pr.Font = pr.load_font("assets/fonts/emulogic.ttf")
         self.initial_text_color = pr.Color(220, 235, 245, 255)
         self.active_text_color = pr.Color(255, 215, 45, 255)
         self.shadow_color = pr.Color(10, 50, 90, 200)
+
+    def unload(self) -> None:
+        pr.unload_font(self.font)
 
     def render(self, is_focused: bool = False) -> None:
         self.is_clicked = False

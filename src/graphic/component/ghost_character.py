@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Dict, List, Tuple
 
 import pyray as pr
 
+from src.algorithm import GhostMovement
 from src.graphic.component.character import CharacterComponent
 
 if TYPE_CHECKING:
@@ -10,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class GhostCharacter(CharacterComponent):
-
     def __init__(
         self,
         maze_data: List[List[int]],
@@ -22,16 +22,16 @@ class GhostCharacter(CharacterComponent):
         score: int,
         ghost_name: str = "clyde",
     ) -> None:
-        self.ghost_name = ghost_name
-        self.assets_path = "assets/ghost"
-        self.super_timer = 0.0
-        self.score = score
+        self.ghost_name: str = ghost_name
+        self.assets_path: str = "assets/ghost"
+        self.super_timer: float = 0.0
+        self.score: int = score
         self.movement_history: List[Tuple[int, int]] = []
 
         self.initial_grid_pos = pr.Vector2(pos_x, pos_y)
-        self.is_returning_eyes = False
-        self.respawn_timer = 0.0
-        self.is_waiting_to_respawn = False
+        self.is_returning_eyes: bool = False
+        self.respawn_timer: float = 0.0
+        self.is_waiting_to_respawn: bool = False
         self.is_edible: bool
 
         super().__init__(
@@ -99,9 +99,6 @@ class GhostCharacter(CharacterComponent):
         is_angry_blinky: bool = False,
     ) -> None:
         self.super_timer = super_timer
-        if pr.is_key_pressed(pr.KeyboardKey.KEY_G):
-            self.is_edible = not self.is_edible
-
         if self.is_waiting_to_respawn:
             self.respawn_timer -= pr.get_frame_time()
             if self.respawn_timer <= 0.0:
@@ -129,8 +126,6 @@ class GhostCharacter(CharacterComponent):
             abs(self.pixel_pos.x - center.x) < self.speed
             and abs(self.pixel_pos.y - center.y) < self.speed
         ):
-            from src.algorithm import GhostMovement
-
             calculated_dir = GhostMovement.get_next_direction(
                 ghost=self,
                 pacman=pacman,
@@ -142,7 +137,7 @@ class GhostCharacter(CharacterComponent):
 
         saved_speed = self.speed
         if self.is_returning_eyes:
-            self.speed *= 2.0
+            self.speed *= 1.5
 
         self.update_movement_and_grid()
         self.speed = saved_speed
@@ -175,7 +170,6 @@ class GhostCharacter(CharacterComponent):
         )
 
     def render(self) -> None:
-
         if self.is_returning_eyes or self.is_waiting_to_respawn:
             hx = int(self.pixel_pos.x)
             hy = int(self.pixel_pos.y)

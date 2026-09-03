@@ -24,9 +24,9 @@ class CharacterComponent(ABC):
         self.maze_data = maze_data
         self.grid_cols = len(maze_data[0]) if maze_data else 0
         self.grid_rows = len(maze_data) if maze_data else 0
-        self.speed = speed
         self.animation_speed = animation_speed
         self.assets_path: str
+        self._loaded_textures: List[pr.Texture] = []
         available_width = float(window.width - (padding_x * 2))
         available_height = float(
             window.height - margin_top - (padding_x * 2) - margin_bottom
@@ -44,6 +44,7 @@ class CharacterComponent(ABC):
             margin_top
             + (available_height - (self.grid_rows * self.scale)) / 2.0
         )
+        self.speed = speed
         self.grid_pos = pr.Vector2(pos_x, pos_y)
         self.pixel_pos = self.get_pixel_position(self.grid_pos)
         self.direction = pr.Vector2(0, 0)
@@ -69,6 +70,7 @@ class CharacterComponent(ABC):
             pr.image_resize(img, size, size)
         tex = pr.load_texture_from_image(img)
         pr.unload_image(img)
+        self._loaded_textures.append(tex)
         return tex
 
     def check_wall_collision(self, gx: int, gy: int, dx: int, dy: int) -> bool:
@@ -137,6 +139,11 @@ class CharacterComponent(ABC):
             self.frame_timer = 0.0
             self.frame_index += 1
 
+    def unload(self) -> None:
+        for texture in list(self._loaded_textures):
+            pr.unload_texture(texture)
+        self._loaded_textures.clear()
+
     @abstractmethod
     def load_textures(self) -> None:
         pass
@@ -145,6 +152,6 @@ class CharacterComponent(ABC):
     def render(self) -> None:
         pass
 
+    @abstractmethod
     def on_direction_changed(self) -> None:
-        pass
         pass

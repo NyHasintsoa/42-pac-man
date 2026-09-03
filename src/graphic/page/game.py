@@ -28,25 +28,31 @@ class GamePage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.GAME_PAGE
+        self.super_duration: float = 8
+
+        self.cheat_manager = CheatingManager()
+        self.level_manager = LevelManager(self.context)
+        self.pause_menu = PauseComponent(self.window)
+        self.cheat_menu = CheatComponent(self.window, self.cheat_manager)
+
+        self.levels: List[LevelConfig]
+        self.maze_data: MazeData
+        self.ready_timer: float
+        self.ghosts: List[GhostCharacter]
+
+        self.current_level: int = 1
+        self.super_timer: float = 0.0
         self.score: int = 0
         self.lives: int = 5
-        self.levels: List[LevelConfig]
-        self.current_level: int = 1
-        self.maze_data: MazeData
         self.time_elapsed: float = 0
         self.is_paused: bool = False
         self.is_cheating: bool = False
-        self.ready_timer: float = 3.0
-        self.cheat_manager = CheatingManager()
-
-        self.super_timer: float = 0.0
-        self.super_duration: float = 7.0
-        self.level_manager = LevelManager(self.context)
 
     def init(self, context: GameContext) -> None:
         super().init(context)
-        self.lives = self.context.lives
-        self.levels = self.context.config.levels
+        if self.current_level == 1:
+            self.lives = self.context.lives
+            self.levels = self.context.config.levels
         self.time_elapsed = self.levels[self.current_level - 1].level_max_time
         self.maze_data = self.context.maze_levels[self.current_level - 1]
 
@@ -60,8 +66,6 @@ class GamePage(ParentPage):
         self.is_paused = False
         self.is_cheating = False
         self.super_timer = 0.0
-
-        self.level_manager = LevelManager(self.context)
 
         self.score_board = ScoreBoardComponent(
             self.window, high_score=120, padding_x=50
@@ -86,9 +90,6 @@ class GamePage(ParentPage):
             4.5,
             0.15,
             self.window,
-            80,
-            30,
-            20,
         )
 
         self.ghost_manager = GhostManager(
@@ -99,8 +100,15 @@ class GamePage(ParentPage):
         self.pacgums = PacgumComponent(
             self.maze_data, self.window, level_pacgums
         )
-        self.pause_menu = PauseComponent(self.window)
-        self.cheat_menu = CheatComponent(self.window, self.cheat_manager)
+
+    def unload(self) -> None:
+        if hasattr(self, "score_board"):
+            self.score_board.unload()
+        if hasattr(self, "pacman"):
+            self.pacman.unload()
+        if hasattr(self, "ghosts"):
+            for ghost in self.ghosts:
+                ghost.unload()
 
     def _event_listener(self) -> None:
         if not self.is_cheating and pr.is_key_pressed(
@@ -118,10 +126,14 @@ class GamePage(ParentPage):
         self.is_paused = False
 
     def restart_game(self) -> None:
+        self.current_level = 1
+        self.lives = self.context.lives
+        self.score = 0
         self.init(self.context)
 
     def return_to_menu(self) -> None:
-        self.window.current_state = PageState.MAIN_MENU
+        self.score = 0
+        self.next_state = PageState.MAIN_MENU
 
     def add_extra_life(self) -> None:
         self.cheat_manager.add_extra_life(self)
@@ -251,12 +263,10 @@ class GamePage(ParentPage):
                         if not ghost.is_returning_eyes:
                             ghost.is_edible = False
 
-            original_speed = 5.0
-            self.pacman.speed = (
-                original_speed * 2.0
-                if self.cheat_manager.speed_boost
-                else original_speed
-            )
+            base_speed_factor = 4.5
+            speed_multiplier = 2.0 if self.cheat_manager.speed_boost else 1.0
+            self.pacman.speed = base_speed_factor * speed_multiplier
+
             self.pacman.update()
 
             if not self.cheat_manager.ghost_freeze:

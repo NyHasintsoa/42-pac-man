@@ -19,6 +19,9 @@ class ParentPage(ABC):
         self.next_state = self.state
         self.context = context
 
+    def unload(self) -> None:
+        pass
+
     @abstractmethod
     def render(self) -> None:
         pass

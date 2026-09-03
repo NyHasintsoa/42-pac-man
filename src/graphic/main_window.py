@@ -37,6 +37,11 @@ class MainWindow:
     def add_event(self) -> None:
         pr.set_exit_key(pr.KeyboardKey.KEY_NULL)
 
+    def close(self) -> None:
+        for page in self.windows.values():
+            page.unload()
+        pr.close_window()
+
     def load_page(self) -> None:
         self.windows = {
             PageState.LOADING_PAGE: LoadingPage(self),
@@ -63,11 +68,17 @@ class MainWindow:
             self.current_page.render()
 
             if self.current_page.next_state != self.current_state:
+                previous_page = self.current_page
                 self.context = self.current_page.context
                 self.current_state = self.current_page.next_state
                 self.current_page = self.windows.get(self.current_state)
                 if self.current_page:
                     self.current_page.next_state = self.current_state
                     self.current_page.init(self.context)
+                if (
+                    previous_page is not None
+                    and previous_page is not self.current_page
+                ):
+                    previous_page.unload()
             pr.end_drawing()
-        pr.close_window()
+        self.close()

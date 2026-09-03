@@ -57,7 +57,7 @@ class GhostMovement:
         pacman: PacmanCharacter,
         blinky: GhostCharacter,
         is_angry_blinky: bool = False,
-        history_limit: int = 8,
+        history_limit: int = 20,
     ) -> pr.Vector2:
         directions = [
             pr.Vector2(1, 0),

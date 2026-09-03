@@ -67,6 +67,11 @@ GHOSTS: 200 PTS.
             score=200,
         )
 
+    def unload(self) -> None:
+        pr.unload_font(self.font)
+        self.pacman_preview.unload()
+        self.ghost_preview.unload()
+
     def _draw_text_with_shadow_ex(
         self,
         text: str,

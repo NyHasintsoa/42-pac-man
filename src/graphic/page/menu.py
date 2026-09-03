@@ -55,6 +55,10 @@ class MenuPage(ParentPage):
             ),
         ]
 
+    def unload(self) -> None:
+        for button in self.buttons:
+            button.unload()
+
     def _event_listener(self) -> None:
         if pr.is_key_pressed(pr.KeyboardKey.KEY_UP) or pr.is_key_pressed(
             pr.KeyboardKey.KEY_W
@@ -85,7 +89,7 @@ class MenuPage(ParentPage):
         elif self.buttons[3].is_clicked or (
             self.selected_index == 3 and enter_pressed
         ):
-            pr.close_window()
+            self.window.close()
 
     def render(self) -> None:
         self._event_listener()
