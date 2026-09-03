@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 14:16:04 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,7 +21,7 @@ from src.graphic.component import (
     PacgumComponent,
     PacmanCharacter,
 )
-from src.graphic.page.parent_page import ParentPage
+from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 from src.model.game_context import GameContext
 

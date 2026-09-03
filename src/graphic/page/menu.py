@@ -1,12 +1,12 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  menu_page.py                                      :+:      :+:    :+:    #
+#  menu.py                                           :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:00:58 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 14:16:17 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 import pyray as pr
 
 from src.graphic.component import Button
-from src.graphic.page.parent_page import ParentPage
+from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 
 if TYPE_CHECKING:

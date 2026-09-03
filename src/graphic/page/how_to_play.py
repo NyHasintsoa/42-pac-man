@@ -1,12 +1,12 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  help_page.py                                      :+:      :+:    :+:    #
+#  how_to_play.py                                    :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:00:48 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 14:16:10 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:18:02 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,14 +15,14 @@ from typing import TYPE_CHECKING
 import pyray as pr
 
 from src.graphic.component import Button
-from src.graphic.page.parent_page import ParentPage
+from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 
 
-class HelpPage(ParentPage):
+class HowToPlayPage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.HELP_MENU

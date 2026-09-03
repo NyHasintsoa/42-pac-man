@@ -1,12 +1,12 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  player_name_page.py                               :+:      :+:    :+:    #
+#  player_name.py                                    :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/07/11 18:05:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 13:30:55 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 import pyray as pr
 
 from src.graphic.component import Button, Input
-from src.graphic.page.parent_page import ParentPage
+from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 from src.model.game_context import GameContext
 

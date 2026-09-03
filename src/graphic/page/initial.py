@@ -2,15 +2,15 @@ from typing import TYPE_CHECKING
 
 import pyray as pr
 
+from src.graphic.page.parent import ParentPage
 from src.graphic.component import MenuButton, PageFrame
-from src.graphic.page.parent_page import ParentPage
 from src.model.enums import PageState
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 
 
-class InitPage(ParentPage):
+class InitialPage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.INIT_MENU

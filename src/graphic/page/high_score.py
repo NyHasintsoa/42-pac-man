@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import pyray as pr
 
 from src.graphic.component import PageFrame
-from src.graphic.page.parent_page import ParentPage
+from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 
 if TYPE_CHECKING:

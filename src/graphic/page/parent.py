@@ -1,20 +1,21 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  parent_page.py                                    :+:      :+:    :+:    #
+#  parent.py                                         :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:07:23 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:14:45 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from src.model import GameContext
 from src.model.enums.page_state import PageState
+
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 

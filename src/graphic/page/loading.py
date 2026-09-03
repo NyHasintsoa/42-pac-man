@@ -1,12 +1,12 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  loading_page.py                                   :+:      :+:    :+:    #
+#  loading.py                                        :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/25 17:26:20 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 18:55:47 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 import pyray as pr
 
-from src.graphic.page.parent_page import ParentPage
+from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 from src.service import LevelGenerator
 

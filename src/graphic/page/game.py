@@ -1,12 +1,12 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  game_page.py                                      :+:      :+:    :+:    #
+#  game.py                                           :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 20:15:30 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,7 +21,7 @@ from src.graphic.component import (
     PacmanCharacter,
     ScoreBoardComponent,
 )
-from src.graphic.page.parent_page import ParentPage
+from src.graphic.page.parent import ParentPage
 from src.model import GameContext, LevelData
 from src.model.enums import PageState
 

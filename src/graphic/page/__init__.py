@@ -6,24 +6,24 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:29:56 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:03:14 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:18:09 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from src.graphic.page.game_page import GamePage
-from src.graphic.page.help_page import HelpPage
-from src.graphic.page.high_score_page import HighScorePage
-from src.graphic.page.init_page import InitPage
-from src.graphic.page.loading_page import LoadingPage
-from src.graphic.page.menu_page import MenuPage
-from src.graphic.page.parent_page import ParentPage
-from src.graphic.page.player_name_page import PlayerNamePage
+from src.graphic.page.game import GamePage
+from src.graphic.page.high_score import HighScorePage
+from src.graphic.page.how_to_play import HowToPlayPage
+from src.graphic.page.initial import InitialPage
+from src.graphic.page.loading import LoadingPage
+from src.graphic.page.menu import MenuPage
+from src.graphic.page.parent import ParentPage
+from src.graphic.page.player_name import PlayerNamePage
 
 __all__ = [
     "ParentPage",
-    "InitPage",
+    "InitialPage",
     "MenuPage",
-    "HelpPage",
+    "HowToPlayPage",
     "GamePage",
     "PlayerNamePage",
     "LoadingPage",

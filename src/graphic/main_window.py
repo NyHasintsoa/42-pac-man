@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:04:40 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:18:22 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,9 +16,9 @@ import pyray as pr
 
 from src.graphic.page import (
     GamePage,
-    HelpPage,
     HighScorePage,
-    InitPage,
+    HowToPlayPage,
+    InitialPage,
     LoadingPage,
     MenuPage,
     ParentPage,
@@ -49,14 +49,14 @@ class MainWindow:
     def load_page(self) -> None:
         self.windows = {
             PageState.LOADING_PAGE: LoadingPage(self),
-            PageState.INIT_MENU: InitPage(self),
+            PageState.INIT_MENU: InitialPage(self),
             PageState.MAIN_MENU: MenuPage(self),
-            PageState.HELP_MENU: HelpPage(self),
+            PageState.HELP_MENU: HowToPlayPage(self),
             PageState.GAME_PAGE: GamePage(self),
             PageState.PLAYER_NAME_PAGE: PlayerNamePage(self),
             PageState.HIGH_SCORES_PAGE: HighScorePage(self),
         }
-        self.current_state = PageState.HIGH_SCORES_PAGE
+        self.current_state = PageState.LOADING_PAGE
         self.current_page = self.windows.get(self.current_state)
         if self.current_page:
             self.current_page.init(self.context)
