@@ -8,6 +8,7 @@ wheels/
 lib/
 *.egg-info
 *.bkp
+.cache
 
 # Virtual environments
 .venv

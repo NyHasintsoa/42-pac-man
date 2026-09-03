@@ -6,19 +6,25 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/04 16:13:37 by nramalan          #+#    #+#              #
-#    Updated: 2026/07/14 22:15:55 by nramalan         ###   ########.fr        #
+#    Updated: 2026/07/30 17:43:22 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+.SILENT:
+
 VENV := .venv
 
-UV := @uv
+FT_CACHE_DIR := $(PWD)/.cache
+
+UV := uv
 PYTHON := $(UV) run python
-PDB := $(UV) run python -m pdb
+PDB := $(PYTHON) -m pdb
 FLAKE8 := $(UV) run flake8
 MYPY := $(UV) run mypy
 
 .DEFAULT_GOAL := run
+
+FLAKE8_EXCLUDE_LINT := $(VENV),.cache
 
 #----------------------------------------------
 # Main Commands
@@ -26,6 +32,7 @@ MYPY := $(UV) run mypy
 .PHONY: install
 install: $(VENV)
 	@echo "Installing project and its dependencies"
+	UV_CACHE_DIR=$(FT_CACHE_DIR)/uv \
 	$(UV) sync
 
 .PHONY: run
@@ -46,16 +53,16 @@ clean:
 .PHONY: lint
 lint: $(VENV)
 	@echo "Check Project Types"
-	$(FLAKE8) . --exclude $(VENV)
+	$(FLAKE8) . --exclude $(FLAKE8_EXCLUDE_LINT)
 	$(MYPY) . --warn-return-any --warn-unused-ignores \
 			--ignore-missing-imports --disallow-untyped-defs \
-			--check-untyped-defs --exclude $(VENV)
+			--check-untyped-defs
 
 .PHONY: lint-strict
 lint-strict: $(VENV)
 	@echo "Check Project Types Strict Mode"
-	$(FLAKE8) . --exclude $(VENV)
-	$(MYPY) . --strict --exclude $(VENV)
+	$(FLAKE8) . --exclude $(FLAKE8_EXCLUDE_LINT)
+	$(MYPY) . --strict
 
 #----------------------------------------------
 # Dependencies
@@ -63,6 +70,7 @@ lint-strict: $(VENV)
 $(VENV): lib/mazegenerator-2.0.1-py3-none-any.whl
 	@echo "Creating virtual environment and installing dependencies"
 	$(UV) venv
+	UV_CACHE_DIR=$(FT_CACHE_DIR)/uv \
 	$(UV) sync
 
 lib/mazegenerator-2.0.1-py3-none-any.whl:
