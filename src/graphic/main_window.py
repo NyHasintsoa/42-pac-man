@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/10 21:12:52 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/10 21:55:52 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -51,6 +51,10 @@ class MainWindow:
             if not self.current_page:
                 break
             self.current_page.render()
-            self.current_state = self.current_page.next_state
+            if self.current_page.next_state != self.current_state:
+                self.current_state = self.current_page.next_state
+                self.current_page = self.windows.get(self.current_state)
+                if self.current_page:
+                    self.current_page.on_enter()
             pr.end_drawing()
         pr.close_window()

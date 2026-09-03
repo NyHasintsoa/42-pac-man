@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:21:14 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/10 21:13:45 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/10 21:49:17 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,15 +21,16 @@ class InitPage(ParentPage):
     def __init__(self) -> None:
         super().__init__()
         self.state = PageState.INIT_MENU
+        self.next_state = PageState.INIT_MENU
         self.btn_first = Button(50, 50, 100, 40, "First")
-        self.btn_second = Button(300, 250, 200, 50, "Second")
+        self.btn_second = Button(300, 250, 200, 50, "Go to Main Menu")
 
     def _event_listener(self) -> None:
         if (self.btn_first.is_clicked):
             print("Init page -> btn first")
         if (self.btn_second.is_clicked):
             self.next_state = PageState.MAIN_MENU
-            print("Init page -> btn second")
+            print("Init page -> transitioning to Main Menu")
 
     def render(self) -> None:
         pr.draw_text("Init Page", 220, 100, 40, pr.YELLOW)

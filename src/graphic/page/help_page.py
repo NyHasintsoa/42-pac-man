@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:00:48 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/10 20:31:05 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/10 21:54:55 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,14 +21,15 @@ class HelpPage(ParentPage):
     def __init__(self) -> None:
         super().__init__()
         self.state = PageState.HELP_MENU
-        self.btn_first = Button(50, 50, 100, 40, "First")
-        self.btn_second = Button(300, 250, 200, 50, "Second")
+        self.next_state = PageState.HELP_MENU
+        self.btn_first = Button(50, 50, 100, 40, "Back to Menu")
+        self.btn_second = Button(300, 250, 200, 50, "Close")
 
     def _event_listener(self) -> None:
         if (self.btn_first.is_clicked):
-            print("help page -> btn first")
+            self.next_state = PageState.MAIN_MENU
         if (self.btn_second.is_clicked):
-            print("help page -> btn second")
+            print("Help page -> closing application")
 
     def render(self) -> None:
         pr.draw_text("Help Page", 220, 100, 40, pr.YELLOW)
