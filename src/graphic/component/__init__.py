@@ -6,13 +6,12 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:31:29 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 14:40:16 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/14 14:56:32 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from typing import List
-
 from src.graphic.component.button import Button
+from src.graphic.component.cheat import CheatComponent
 from src.graphic.component.ghost_character import GhostCharacter
 from src.graphic.component.input import Input
 from src.graphic.component.maze_component import MazeComponent
@@ -20,9 +19,10 @@ from src.graphic.component.menu_button import MenuButton
 from src.graphic.component.pacgum import PacgumComponent
 from src.graphic.component.pacman_character import PacmanCharacter
 from src.graphic.component.page_frame import PageFrame
+from src.graphic.component.pause import PauseComponent
 from src.graphic.component.score_board import ScoreBoardComponent
 
-__all__: List[str] = [
+__all__ = [
     "Button",
     "MenuButton",
     "Input",
@@ -32,4 +32,6 @@ __all__: List[str] = [
     "PacgumComponent",
     "ScoreBoardComponent",
     "PageFrame",
+    "PauseComponent",
+    "CheatComponent",
 ]

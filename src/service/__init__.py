@@ -6,16 +6,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/25 17:35:38 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 17:41:17 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/14 14:57:03 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
-
-from typing import List
 
 from src.service.config_parser import ConfigParser
 from src.service.level_generator import LevelGenerator
 
-__all__: List[str] = [
+__all__ = [
     "ConfigParser",
     "LevelGenerator",
 ]

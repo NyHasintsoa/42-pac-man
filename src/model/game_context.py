@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 16:10:07 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 21:50:29 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 22:26:48 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -30,5 +30,3 @@ class GameContext(BaseModel):
     score: int = 0
     lives: int = 3
     time_elapsed: int = 0
-    is_paused: bool = False
-    game_running: bool = True

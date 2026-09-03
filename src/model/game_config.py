@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 15:24:39 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 21:30:23 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/14 14:44:27 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -31,6 +31,7 @@ class LevelConfig(BaseModel):
 
 class GameConfig(BaseModel):
     highscore_filename: str
+    cheating: bool = Field(default=False)
     lives: int
     level_max_time: int
     seed: int
@@ -57,7 +58,7 @@ class GameConfig(BaseModel):
                 level.points_per_super_pacgum = self.points_per_super_pacgum
             if level.points_per_ghost == -1:
                 level.points_per_ghost = self.points_per_ghost
-            max_pacgum: int = (level.width * level.height) - 22
+            max_pacgum: int = (level.width * level.height) - 23
             if max_pacgum < level.pacgum:
                 raise ConfigError("pacgum can't be inserted")
             count += 1

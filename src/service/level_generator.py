@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/07/13 20:58:23 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 21:49:18 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 22:46:36 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -51,7 +51,7 @@ class LevelGenerator:
             [1, 0, 0, 0, 1, 1, 1],
             [1, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 0, 1, 1, 1],
-            [0, 0, 1, 0, 1, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0],
             [0, 0, 1, 0, 1, 1, 1],
         ]
 
@@ -88,7 +88,7 @@ class LevelGenerator:
 
         chosen_simple_spots: Set[Tuple[int, int]] = set()
 
-        def is_well_separated(pos, existing_spots, dist_threshold):
+        def is_well_separated(pos, existing_spots, dist_threshold) -> bool:
             for ep in existing_spots:
                 if abs(pos[0] - ep[0]) + abs(pos[1] - ep[1]) < dist_threshold:
                     return False

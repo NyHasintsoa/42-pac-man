@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/07/13 20:41:06 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 21:46:23 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 22:44:15 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -33,6 +33,10 @@ class PacgumComponent:
     ) -> None:
         self.pacgums: List[SimplePacgum] = pacgums[1]
         self.super_pacgums: List[SuperPacgum] = pacgums[0]
+        for i in range(len(self.pacgums)):
+            self.pacgums[i].collected = False
+        for i in range(len(self.super_pacgums)):
+            self.super_pacgums[i].collected = False
 
         self.grid_cols = len(maze_data[0]) if maze_data else 0
         self.grid_rows = len(maze_data) if maze_data else 0
