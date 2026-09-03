@@ -72,7 +72,7 @@ class GamePage(ParentPage):
             self.maze_data,
             self.initial_pacman_x,
             self.initial_pacman_y,
-            5.0,
+            4.5,
             0.15,
             self.window,
             80,
@@ -80,12 +80,12 @@ class GamePage(ParentPage):
             20,
         )
 
-        self.ghost_manager = GhostManager(self.window, self.maze_data)
+        self.ghost_manager = GhostManager(
+            self.window, self.maze_data, self.current_level
+        )
         self.ghosts = self.ghost_manager.ghosts
 
-        self.pacgums = PacgumComponent(
-            self.maze_data, self.window, pacgums, 80, 30, 20
-        )
+        self.pacgums = PacgumComponent(self.maze_data, self.window, pacgums)
         self.pause_menu = PauseComponent(self.window)
         self.cheat_menu = CheatComponent(self.window, self.cheat_manager)
 
@@ -133,7 +133,7 @@ class GamePage(ParentPage):
             )
             if distance < collision_distance:
                 if ghost.is_edible:
-                    self.score += 200
+                    self.score += ghost.score
                     self.reset_ghost_position(ghost)
                 else:
                     return True

@@ -15,10 +15,10 @@ class PacgumComponent:
         maze_data: List[List[int]],
         window: MainWindow,
         pacgums: Pacgums,
-        margin_top: int = 100,
-        margin_bottom: int = 30,
-        padding_x: int = 20,
     ) -> None:
+        margin_top: int = 80
+        margin_bottom: int = 30
+        padding_x: int = 20
         self.pacgums: List[SimplePacgum] = pacgums[1]
         self.super_pacgums: List[SuperPacgum] = pacgums[0]
         for i in range(len(self.pacgums)):
@@ -89,7 +89,7 @@ class PacgumComponent:
                 dy = pos.y - py
                 if (dx * dx + dy * dy) < threshold_sq:
                     simple_pacgum.collected = True
-                    score += 10
+                    score += simple_pacgum.score
 
         for power_pacgum in self.super_pacgums:
             if not power_pacgum.collected:
@@ -98,8 +98,7 @@ class PacgumComponent:
                 dy = pos.y - py
                 if (dx * dx + dy * dy) < threshold_sq:
                     power_pacgum.collected = True
-                    score += 50
+                    score += power_pacgum.score
                     super_collected = True
 
-        return score, super_collected
         return score, super_collected

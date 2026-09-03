@@ -5,31 +5,30 @@ from pyray import WHITE, YELLOW, Color
 
 
 class Pacgum(ABC):
-    def __init__(self, x: int, y: int, color: Color = WHITE) -> None:
+    def __init__(
+        self, x: int, y: int, score: int, color: Color = WHITE
+    ) -> None:
         self.x = x
         self.y = y
         self.color = color
         self.radius: int = 5
         self.collected = False
-
-    def check_collision(self, px: int, py: int, distance: int = 15) -> bool:
-        dx = self.x - px
-        dy = self.y - py
-        return (dx * dx + dy * dy) < (distance * distance)
+        self.score: int = score
 
 
 class SimplePacgum(Pacgum):
-    def __init__(self, x: int, y: int, color: Color = WHITE) -> None:
-        super().__init__(x, y, color)
+    def __init__(
+        self, x: int, y: int, score: int, color: Color = WHITE
+    ) -> None:
+        super().__init__(x, y, score, color)
 
 
 class SuperPacgum(Pacgum):
-    def __init__(self, x: int, y: int, color: Color = YELLOW) -> None:
-        self.x = x
-        self.y = y
-        self.color = color
-        self.radius: int = 8
-        self.collected = False
+    def __init__(
+        self, x: int, y: int, score: int, color: Color = YELLOW
+    ) -> None:
+        super().__init__(x, y, score, color)
+        self.radius = 8
         self.animation_counter = 0
 
     def update(self) -> None:

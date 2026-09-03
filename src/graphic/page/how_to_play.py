@@ -64,6 +64,7 @@ GHOSTS: 200 PTS.
             speed=0.0,
             animation_speed=0.15,
             window=self.window,
+            score=200,
         )
 
     def _draw_text_with_shadow_ex(
@@ -335,7 +336,7 @@ GHOSTS: 200 PTS.
                     )
             else:
                 self._draw_text_with_shadow_ex(
-                    "200",
+                    str(self.context.config.points_per_ghost),
                     int(ghost_x),
                     int(visual_area_y - (sprite_size // 2)),
                     10,
@@ -363,7 +364,7 @@ GHOSTS: 200 PTS.
                 pr.WHITE,
             )
             self._draw_text_with_shadow_ex(
-                "10",
+                str(self.context.config.points_per_pacgum),
                 int(scoring_center_x - offset_w + 20),
                 int(visual_area_y - 6),
                 12,
@@ -376,7 +377,7 @@ GHOSTS: 200 PTS.
                 int(scoring_center_x), int(visual_area_y), 8, self.color_accent
             )
             self._draw_text_with_shadow_ex(
-                "50",
+                str(self.context.config.points_per_super_pacgum),
                 int(scoring_center_x + 20),
                 int(visual_area_y - 6),
                 12,
@@ -393,7 +394,7 @@ GHOSTS: 200 PTS.
                 is_edible=True,
             )
             self._draw_text_with_shadow_ex(
-                "200",
+                str(self.context.config.points_per_ghost),
                 int(scoring_center_x + offset_w + int(sprite_size * 0.6)),
                 int(visual_area_y - 6),
                 12,

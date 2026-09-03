@@ -12,17 +12,22 @@ if TYPE_CHECKING:
 
 
 class GhostManager:
-    def __init__(self, window: "MainWindow", maze_data: MazeData) -> None:
+    def __init__(
+        self, window: MainWindow, maze_data: MazeData, current_level: int
+    ) -> None:
         self.window = window
         self.maze_data = maze_data
         self.ghosts: List[GhostCharacter] = []
-        self._initialize_ghosts()
+        self._initialize_ghosts(current_level)
 
-    def _initialize_ghosts(self) -> None:
+    def _initialize_ghosts(self, current_level: int) -> None:
         rows = len(self.maze_data)
         cols = len(self.maze_data[0])
         animation_speed: float = 0.15
-        speed: float = 2.2
+        speed: float = 3.0
+        score = self.window.context.config.levels[
+            current_level - 1
+        ].points_per_ghost
 
         self.blinky = GhostCharacter(
             self.maze_data,
@@ -31,10 +36,18 @@ class GhostManager:
             speed,
             animation_speed,
             self.window,
+            score,
             "blinky",
         )
         self.pinky = GhostCharacter(
-            self.maze_data, 1, 1, speed, animation_speed, self.window, "pinky"
+            self.maze_data,
+            1,
+            1,
+            speed,
+            animation_speed,
+            self.window,
+            score,
+            "pinky",
         )
         self.inky = GhostCharacter(
             self.maze_data,
@@ -43,6 +56,7 @@ class GhostManager:
             speed,
             animation_speed,
             self.window,
+            score,
             "inky",
         )
         self.clyde = GhostCharacter(
@@ -52,6 +66,7 @@ class GhostManager:
             speed,
             animation_speed,
             self.window,
+            score,
             "clyde",
         )
 

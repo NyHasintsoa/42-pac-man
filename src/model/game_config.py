@@ -9,42 +9,41 @@ class LevelConfig(BaseModel):
     width: int = 20
     height: int = 10
 
-    seed: int = Field(default=-1)
-    level_max_time: int = Field(default=-1)
-    pacgum: int = Field(default=-1)
-    points_per_pacgum: int = Field(default=-1)
-    points_per_super_pacgum: int = Field(default=-1)
-    points_per_ghost: int = Field(default=-1)
+    seed: int = Field(default=1, ge=1)
+    level_max_time: int = Field(default=1, ge=1)
+    pacgum: int = Field(default=1, ge=1)
+    points_per_pacgum: int = Field(default=1, ge=1)
+    points_per_super_pacgum: int = Field(default=1, ge=1)
+    points_per_ghost: int = Field(default=1, ge=1)
 
 
 class GameConfig(BaseModel):
-    highscore_filename: str
+    highscore_filename: str = Field(min_length=6)
     cheating: bool = Field(default=False)
-    lives: int
-    level_max_time: int
+    lives: int = Field(ge=1)
+    level_max_time: int = Field(ge=5)
     seed: int
-    pacgum: int
-    points_per_pacgum: int
-    points_per_super_pacgum: int
-    points_per_ghost: int
-
+    pacgum: int = Field(ge=1)
+    points_per_pacgum: int = Field(ge=1)
+    points_per_super_pacgum: int = Field(ge=1)
+    points_per_ghost: int = Field(ge=1)
     levels: List[LevelConfig]
 
     @model_validator(mode="after")
     def populate_level_defaults(self) -> GameConfig:
-        count: int = 0
+        count: int = 1
         for level in self.levels:
-            if level.seed == -1:
+            if level.seed == 1:
                 level.seed = self.seed
-            if level.level_max_time == -1:
+            if level.level_max_time == 1:
                 level.level_max_time = self.level_max_time
-            if level.pacgum == -1:
+            if level.pacgum == 1:
                 level.pacgum = self.pacgum
-            if level.points_per_pacgum == -1:
+            if level.points_per_pacgum == 1:
                 level.points_per_pacgum = self.points_per_pacgum
-            if level.points_per_super_pacgum == -1:
+            if level.points_per_super_pacgum == 1:
                 level.points_per_super_pacgum = self.points_per_super_pacgum
-            if level.points_per_ghost == -1:
+            if level.points_per_ghost == 1:
                 level.points_per_ghost = self.points_per_ghost
             max_pacgum: int = (level.width * level.height) - 23
             if max_pacgum < level.pacgum:

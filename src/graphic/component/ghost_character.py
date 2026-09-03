@@ -18,17 +18,20 @@ class GhostCharacter(CharacterComponent):
         speed: float,
         animation_speed: float,
         window: "MainWindow",
+        score: int,
         ghost_name: str = "clyde",
     ) -> None:
         self.ghost_name = ghost_name
         self.assets_path = "assets/ghost"
         self.super_timer = 0.0
+        self.score = score
         self.movement_history: List[Tuple[int, int]] = []
 
         self.initial_grid_pos = pr.Vector2(pos_x, pos_y)
         self.is_returning_eyes = False
         self.respawn_timer = 0.0
         self.is_waiting_to_respawn = False
+        self.is_edible: bool
 
         super().__init__(
             maze_data=maze_data,

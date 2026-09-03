@@ -3,38 +3,21 @@ from typing import List, Optional, Set, Tuple
 
 from mazegenerator import MazeGenerator
 
-from src.model import GameConfig, MazeData, Pacgums, SimplePacgum, SuperPacgum
+from src.model import (
+    GameConfig,
+    LevelConfig,
+    MazeData,
+    Pacgums,
+    SimplePacgum,
+    SuperPacgum,
+)
 
 
 class LevelGenerator:
     def __init__(self, config: GameConfig) -> None:
         self.config = config
 
-    def _generate_pacgums(
-        self,
-        maze: List[List[int]],
-        num_pacgums: int,
-        min_distance_tiles: int = 2,
-    ) -> Pacgums:
-        """
-        Generates instances of SimplePacgum and SuperPacgum for a maze.
-        PRIORITY 1: Corridor positions with strict distance spacing
-        PRIORITY 2: Fill remaining target using remaining corridors
-        PRIORITY 3: Force target match using completely random
-                    positions if maze is too small
-        Parameters:
-        - maze: 2D list where 0 represents a corridor and 1 represents a wall.
-        - num_pacgums: The target number of regular pacgums to place.
-        - min_distance_tiles: Minimum grid distance between regular pacgums.
-
-        Returns:
-        - super_pacgums_list: A list of SuperPacgum instances.
-        - simple_pacgums_list: A list of SimplePacgum instances.
-        """
-
-        rows = len(maze)
-        cols = len(maze[0])
-
+    def _get_wall_42_spots(self, rows: int, cols: int) -> Set[Tuple[int, int]]:
         ft_small = [
             [1, 0, 0, 0, 1, 1, 1],
             [1, 0, 0, 0, 0, 0, 1],
@@ -42,7 +25,6 @@ class LevelGenerator:
             [0, 0, 1, 1, 1, 0, 0],
             [0, 0, 1, 0, 1, 1, 1],
         ]
-
         wall_42_spots: Set[Tuple[int, int]] = set()
 
         if not (len(ft_small) * 2 > rows or len(ft_small[0]) * 2 > cols):
@@ -53,6 +35,34 @@ class LevelGenerator:
                 for x in range(len(ft_small[0])):
                     if ft_small[y][x] == 1:
                         wall_42_spots.add((posy + y, posx + x))
+        return wall_42_spots
+
+    def _generate_super_pacgums(
+        self,
+        rows: int,
+        cols: int,
+        wall_42_spots: Set[Tuple[int, int]],
+        score: int,
+    ) -> List[SuperPacgum]:
+        chosen_super_spots: Set[Tuple[int, int]] = set()
+        corners = [(0, 0), (0, cols - 1), (rows - 1, 0), (rows - 1, cols - 1)]
+
+        for corner in corners:
+            if corner not in wall_42_spots:
+                chosen_super_spots.add(corner)
+        return [SuperPacgum(c, r, score) for (r, c) in chosen_super_spots]
+
+    def _generate_simple_pacgums(
+        self,
+        maze: List[List[int]],
+        num_pacgums: int,
+        min_distance_tiles: int,
+        wall_42_spots: Set[Tuple[int, int]],
+        chosen_super_spots: Set[Tuple[int, int]],
+        score: int,
+    ) -> List[SimplePacgum]:
+        rows = len(maze)
+        cols = len(maze[0])
 
         corridors = [
             (r, c)
@@ -62,14 +72,7 @@ class LevelGenerator:
         ]
 
         if not corridors:
-            return [], []
-
-        chosen_super_spots: Set[Tuple[int, int]] = set()
-        corners = [(0, 0), (0, cols - 1), (rows - 1, 0), (rows - 1, cols - 1)]
-        for corner in corners:
-
-            if corner not in wall_42_spots:
-                chosen_super_spots.add(corner)
+            return []
 
         available_slots = [p for p in corridors if p not in chosen_super_spots]
         random.shuffle(available_slots)
@@ -116,13 +119,34 @@ class LevelGenerator:
                     break
                 if slot not in chosen_simple_spots:
                     chosen_simple_spots.add(slot)
+        return [SimplePacgum(c, r, score) for (r, c) in chosen_simple_spots]
 
-        super_pacgums_list = [
-            SuperPacgum(c, r) for (r, c) in chosen_super_spots
-        ]
-        simple_pacgums_list = [
-            SimplePacgum(c, r) for (r, c) in chosen_simple_spots
-        ]
+    def _generate_pacgums(
+        self,
+        maze: List[List[int]],
+        level: LevelConfig,
+        min_distance_tiles: int = 3,
+    ) -> Pacgums:
+        rows = len(maze)
+        cols = len(maze[0])
+
+        wall_42_spots = self._get_wall_42_spots(rows, cols)
+
+        super_pacgums_list = self._generate_super_pacgums(
+            rows, cols, wall_42_spots, level.points_per_super_pacgum
+        )
+
+        chosen_super_spots = {(p.y, p.x) for p in super_pacgums_list}
+
+        simple_pacgums_list = self._generate_simple_pacgums(
+            maze,
+            level.pacgum,
+            min_distance_tiles,
+            wall_42_spots,
+            chosen_super_spots,
+            level.points_per_pacgum,
+        )
+
         return super_pacgums_list, simple_pacgums_list
 
     def generate_levels(self) -> Tuple[List[MazeData], List[Pacgums]]:
@@ -131,7 +155,7 @@ class LevelGenerator:
         for _, lvl in enumerate(self.config.levels):
             print(f"level {lvl.model_dump_json()}")
             maze = self._generate_maze(lvl.width, lvl.height, lvl.seed)
-            pacgums.append(self._generate_pacgums(maze, lvl.pacgum))
+            pacgums.append(self._generate_pacgums(maze, lvl))
             levels.append(maze)
         return (levels, pacgums)
 
@@ -145,5 +169,4 @@ class LevelGenerator:
         gen.generate(
             seed if seed else 42,
         )
-        return gen.maze
         return gen.maze
