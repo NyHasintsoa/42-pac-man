@@ -19,6 +19,9 @@ from src.model.enums import PageState
 from src.service.cheating_manager import (
     CheatingManager,
 )
+from src.service.ghost_manager import (
+    GhostManager,
+)
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -86,27 +89,8 @@ class GamePage(ParentPage):
             20,
         )
 
-        self.ghosts: List[GhostCharacter] = []
-
-        self.ghosts.append(
-            GhostCharacter(
-                self.maze_data, 1, 1, 2.0, 0.15, self.window, 80, 30, 20
-            )
-        )
-
-        self.ghosts.append(
-            GhostCharacter(
-                self.maze_data,
-                len(self.maze_data[0]) - 2,
-                1,
-                2.2,
-                0.15,
-                self.window,
-                80,
-                30,
-                20,
-            )
-        )
+        self.ghost_manager = GhostManager(self.window, self.maze_data)
+        self.ghosts = self.ghost_manager.ghosts
 
         self.pacgums = PacgumComponent(
             self.maze_data, self.window, pacgums, 80, 30, 20
@@ -157,7 +141,6 @@ class GamePage(ParentPage):
             )
             if distance < collision_distance:
                 if ghost.is_edible:
-
                     self.score += 200
                     self.reset_ghost_position(ghost)
                 else:
@@ -165,11 +148,8 @@ class GamePage(ParentPage):
         return False
 
     def reset_ghost_position(self, ghost: GhostCharacter) -> None:
-        ghost.grid_pos = pr.Vector2(1, 1)
-        ghost.pixel_pos = ghost.get_pixel_position(ghost.grid_pos)
-        ghost.direction = pr.Vector2(-1, 0)
-        ghost.next_direction = pr.Vector2(-1, 0)
-        ghost.is_edible = False
+
+        self.ghost_manager.reset_ghost_position(ghost)
 
     def reset_positions(self) -> None:
         self.ready_timer = 3.0
@@ -230,7 +210,6 @@ class GamePage(ParentPage):
             if self.super_timer > 0.0:
                 self.super_timer -= pr.get_frame_time()
                 if self.super_timer <= 0.0:
-
                     for ghost in self.ghosts:
                         ghost.is_edible = False
 
@@ -244,9 +223,10 @@ class GamePage(ParentPage):
             self.pacman.update()
 
             if not self.cheat_manager.ghost_freeze:
-                for ghost in self.ghosts:
-                    ghost.super_timer = self.super_timer
-                    ghost.update(self.super_timer)
+
+                self.ghost_manager.update_ghosts(
+                    self.super_timer, self.pacman, self.pacgums
+                )
 
             if self.check_character_collision():
                 self.pacman.is_dead = True

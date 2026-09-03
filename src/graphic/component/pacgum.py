@@ -13,7 +13,7 @@ class PacgumComponent:
     def __init__(
         self,
         maze_data: List[List[int]],
-        window: "MainWindow",
+        window: MainWindow,
         pacgums: Pacgums,
         margin_top: int = 100,
         margin_bottom: int = 30,
@@ -101,4 +101,5 @@ class PacgumComponent:
                     score += 50
                     super_collected = True
 
+        return score, super_collected
         return score, super_collected

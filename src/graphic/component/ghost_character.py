@@ -1,10 +1,12 @@
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 import pyray as pr
 
+from src.algorithm import GhostMovement
 from src.graphic.component.character import CharacterComponent
 
 if TYPE_CHECKING:
+    from src.graphic.component import PacmanCharacter
     from src.graphic.main_window import MainWindow
 
 
@@ -16,14 +18,13 @@ class GhostCharacter(CharacterComponent):
         pos_y: int,
         speed: float,
         animation_speed: float,
-        window: "MainWindow",
-        margin_top: int = 80,
-        margin_bottom: int = 30,
-        padding_x: int = 20,
+        window: MainWindow,
+        ghost_name: str = "clyde",
     ) -> None:
+        self.ghost_name = ghost_name
         self.assets_path = "assets/ghost"
-
         self.super_timer = 0.0
+        self.movement_history: List[Tuple[int, int]] = []
 
         super().__init__(
             maze_data=maze_data,
@@ -32,28 +33,28 @@ class GhostCharacter(CharacterComponent):
             speed=speed,
             animation_speed=animation_speed,
             window=window,
-            margin_top=margin_top,
-            margin_bottom=margin_bottom,
-            padding_x=padding_x,
+            margin_top=80,
+            margin_bottom=30,
+            padding_x=20,
         )
 
     def load_textures(self) -> None:
         self.ghost_move_textures: Dict[int, List[pr.Texture]] = {
             0: [
-                self.load_tex("ghost0_d0_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d0_1.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d0_0.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d0_1.png", pr.ORANGE),
             ],
             1: [
-                self.load_tex("ghost0_d1_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d1_1.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d1_0.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d1_1.png", pr.ORANGE),
             ],
             2: [
-                self.load_tex("ghost0_d2_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d2_1.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d2_0.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d2_1.png", pr.ORANGE),
             ],
             3: [
-                self.load_tex("ghost0_d3_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d3_1.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d3_0.png", pr.ORANGE),
+                self.load_tex(f"ghost_{self.ghost_name}_d3_1.png", pr.ORANGE),
             ],
         }
 
@@ -82,46 +83,38 @@ class GhostCharacter(CharacterComponent):
         elif self.direction.y == 1:
             self.look_id = 3
 
-    def update(self, super_timer: float = 0.0) -> None:
+    def update(
+        self,
+        super_timer: float,
+        pacman: PacmanCharacter,
+        blinky: GhostCharacter,
+        is_angry_blinky: bool = False,
+    ) -> None:
         self.super_timer = super_timer
-
         if pr.is_key_pressed(pr.KeyboardKey.KEY_G):
             self.is_edible = not self.is_edible
 
         center = self.get_pixel_position(self.grid_pos)
+
         if (
             abs(self.pixel_pos.x - center.x) < self.speed
             and abs(self.pixel_pos.y - center.y) < self.speed
         ):
-            if self.check_wall_collision(
-                int(self.grid_pos.x),
-                int(self.grid_pos.y),
-                int(self.direction.x),
-                int(self.direction.y),
-            ):
-                all_dirs = [
-                    pr.Vector2(1, 0),
-                    pr.Vector2(-1, 0),
-                    pr.Vector2(0, -1),
-                    pr.Vector2(0, 1),
-                ]
-                for d in all_dirs:
-                    if not self.check_wall_collision(
-                        int(self.grid_pos.x),
-                        int(self.grid_pos.y),
-                        int(d.x),
-                        int(d.y),
-                    ):
-                        self.next_direction = d
-                        break
+            calculated_dir = GhostMovement.get_next_direction(
+                ghost=self,
+                pacman=pacman,
+                blinky=blinky,
+                is_angry_blinky=is_angry_blinky,
+            )
+            self.direction = calculated_dir
+            self.next_direction = calculated_dir
+
         self.update_movement_and_grid()
         self.update_animation_timer()
 
     def render(self) -> None:
         if self.is_edible:
-
             if 0.0 < self.super_timer < 2.5:
-
                 use_flash_texture = int(pr.get_time() / 0.25) % 2 == 0
                 if use_flash_texture:
                     tex = self.ghost_flash_textures[
@@ -132,12 +125,10 @@ class GhostCharacter(CharacterComponent):
                         self.frame_index % len(self.ghost_edible_textures)
                     ]
             else:
-
                 tex = self.ghost_edible_textures[
                     self.frame_index % len(self.ghost_edible_textures)
                 ]
         else:
-
             seq = self.ghost_move_textures[self.look_id]
             tex = seq[self.frame_index % len(seq)]
 

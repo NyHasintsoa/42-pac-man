@@ -16,7 +16,7 @@ class CharacterComponent(ABC):
         pos_y: int,
         speed: float,
         animation_speed: float,
-        window: "MainWindow",
+        window: MainWindow,
         margin_top: int = 80,
         margin_bottom: int = 30,
         padding_x: int = 20,
@@ -150,4 +150,5 @@ class CharacterComponent(ABC):
         pass
 
     def on_direction_changed(self) -> None:
+        pass
         pass

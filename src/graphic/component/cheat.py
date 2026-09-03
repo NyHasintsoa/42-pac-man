@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING, Callable, Dict
 import pyray as pr
 
 from src.graphic.component import Button
+from src.service.cheating_manager import CheatingManager
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
-    from src.service.cheating_manager import CheatingManager
 
 
 class CheatComponent:

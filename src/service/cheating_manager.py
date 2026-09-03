@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.graphic.page.game import GamePage
+    from src.graphic.page import GamePage
 
 
 class CheatingManager:
@@ -10,10 +10,10 @@ class CheatingManager:
         self.ghost_freeze: bool = False
         self.speed_boost: bool = False
 
-    def add_extra_life(self, game_page: "GamePage") -> None:
+    def add_extra_life(self, game_page: GamePage) -> None:
         game_page.lives += 1
 
-    def skip_level(self, game_page: "GamePage") -> None:
+    def skip_level(self, game_page: GamePage) -> None:
         game_page.is_cheating = False
         if game_page.current_level < len(game_page.levels):
             game_page.current_level += 1
