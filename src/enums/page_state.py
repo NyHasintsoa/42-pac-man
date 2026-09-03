@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 16:44:52 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:08:13 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/25 17:13:20 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -17,5 +17,4 @@ class PageState(IntEnum):
     INIT_MENU = 0
     MAIN_MENU = 1
     HELP_MENU = 2
-    LEVEL_MENU = 3
-    GAME_PAGE = 4
+    GAME_PAGE = 3

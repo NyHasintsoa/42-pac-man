@@ -6,7 +6,7 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/04 16:13:37 by nramalan          #+#    #+#              #
-#    Updated: 2026/05/10 16:26:44 by nramalan         ###   ########.fr        #
+#    Updated: 2026/05/25 17:10:19 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,11 @@ lint-strict: $(VENV)
 #----------------------------------------------
 # Dependencies
 #----------------------------------------------
-$(VENV):
+$(VENV): lib/mazegenerator-2.0.1-py3-none-any.whl
 	@echo "Creating virtual environment and installing dependencies"
 	$(UV) venv
 	$(UV) sync
+
+lib/mazegenerator-2.0.1-py3-none-any.whl:
+	mv lib/mazegenerator-00001-py3-none-any.whl \
+		lib/mazegenerator-2.0.1-py3-none-any.whl

@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:10:14 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/25 17:13:45 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,7 +14,7 @@ from typing import Dict, Optional
 import pyray as pr
 
 from src.graphic.page import HelpPage, InitPage, MenuPage, ParentPage
-from src.graphic.page import GamePage, LevelPage
+from src.graphic.page import GamePage
 from src.enums import PageState
 
 
@@ -38,12 +38,10 @@ class MainWindow:
         menu_page = MenuPage(self)
         help_page = HelpPage(self)
         game_page = GamePage(self)
-        level_page = LevelPage(self)
         self.windows = {
             PageState.INIT_MENU: init_page,
             PageState.MAIN_MENU: menu_page,
             PageState.HELP_MENU: help_page,
-            PageState.LEVEL_MENU: level_page,
             PageState.GAME_PAGE: game_page
         }
         self.current_state = PageState.INIT_MENU

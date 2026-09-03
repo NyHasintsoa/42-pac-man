@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:00:58 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:34:12 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/25 17:14:39 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -47,9 +47,7 @@ class MenuPage(ParentPage):
 
     def _event_listener(self) -> None:
         if self.btn_play.is_clicked:
-            self.next_state = PageState.LEVEL_MENU
-        if self.btn_level.is_clicked:
-            self.next_state = PageState.LEVEL_MENU
+            self.next_state = PageState.GAME_PAGE
         if self.btn_help.is_clicked:
             self.next_state = PageState.HELP_MENU
         if self.btn_exit.is_clicked:
