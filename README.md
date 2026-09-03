@@ -28,7 +28,6 @@ uv sync
 
 # Run the game using uv
 uv run python pac-man.py config.json
-
 ```
 
 ### Build & Automation Commands
@@ -83,13 +82,13 @@ The engine dynamically loads runtime settings from a `config.json` (JSON with Co
 
 * **`highscore_filename`** (`string`): The local JSON filename used by `ScoreManager` to store high scores (default: `"highscores.json"`).
 * **`cheating`** (`boolean`): Enables or disables developer debug controls and the `CheatPanel` overlay (default: `false`).
-* **`lives`** (`integer`): Starting life counter for Pac-Man at the start of a run.
-* **`level_max_time`** (`integer`): Global countdown limit in seconds per level stage.
-* **`seed`** (`integer`): Pseudo-random seed used by `LevelGenerator` for reproducible procedural maze generation.
-* **`pacgum`** (`integer`): Total number of Pac-Gums placed across the maze layout.
-* **`points_per_pacgum`** (`integer`): Base score awarded for consuming a standard Pac-Gum.
-* **`points_per_super_pacgum`** (`integer`): Score awarded for eating a power pellet, triggering frightened ghost mode.
-* **`points_per_ghost`** (`integer`): Base score awarded for consuming an edible ghost.
+* **`lives`** (`integer`): Starting life counter for Pac-Man at the start of a run (default: `3`).
+* **`level_max_time`** (`integer`): Global countdown limit in seconds per level stage (default: `90`).
+* **`seed`** (`integer`): Pseudo-random seed used by `LevelGenerator` for reproducible procedural maze generation (default: `42`).
+* **`pacgum`** (`integer`): Total number of Pac-Gums placed across the maze layout (default: `1`).
+* **`points_per_pacgum`** (`integer`): Base score awarded for consuming a standard Pac-Gum (default: `10`).
+* **`points_per_super_pacgum`** (`integer`): Score awarded for eating a power pellet, triggering frightened ghost mode (default: `50`).
+* **`points_per_ghost`** (`integer`): Base score awarded for consuming an edible ghost (default: `200`).
 
 ### Level-Specific Overrides (`levels`)
 

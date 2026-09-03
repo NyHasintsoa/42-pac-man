@@ -9,7 +9,7 @@ class LevelConfig(BaseModel):
     width: int = 20
     height: int = 10
 
-    seed: int = Field(default=1, ge=1)
+    seed: int = Field(default=42, ge=1)
     level_max_time: int = Field(default=1, ge=1)
     pacgum: int = Field(default=1, ge=1)
     points_per_pacgum: int = Field(default=1, ge=1)
@@ -20,13 +20,13 @@ class LevelConfig(BaseModel):
 class GameConfig(BaseModel):
     highscore_filename: str = Field(min_length=6, default="highscores.json")
     cheating: bool = Field(default=False)
-    lives: int = Field(ge=1)
-    level_max_time: int = Field(ge=5)
-    seed: int
-    pacgum: int = Field(ge=1)
-    points_per_pacgum: int = Field(ge=1)
-    points_per_super_pacgum: int = Field(ge=1)
-    points_per_ghost: int = Field(ge=1)
+    lives: int = Field(default=3, ge=1)
+    level_max_time: int = Field(default=90, ge=5)
+    seed: int = Field(default=42, ge=1)
+    pacgum: int = Field(default=1, ge=1)
+    points_per_pacgum: int = Field(default=10, ge=1)
+    points_per_super_pacgum: int = Field(default=50, ge=1)
+    points_per_ghost: int = Field(default=200, ge=1)
     levels: List[LevelConfig]
 
     @model_validator(mode="after")
@@ -45,9 +45,6 @@ class GameConfig(BaseModel):
                 level.points_per_super_pacgum = self.points_per_super_pacgum
             if level.points_per_ghost == 1:
                 level.points_per_ghost = self.points_per_ghost
-            max_pacgum: int = (level.width * level.height) - 23
-            if max_pacgum < level.pacgum:
-                raise ConfigError("pacgum can't be inserted")
             count += 1
         if count < 10:
             raise ConfigError("not enough level")
