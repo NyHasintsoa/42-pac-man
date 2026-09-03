@@ -4,7 +4,7 @@
 {
   "highscore_filename": "highscores.json",
   "cheating": true,
-  "lives": 3,
+  "lives": 1,
   "level_max_time": 90,
   "seed": 42,
   "pacgum": 42,

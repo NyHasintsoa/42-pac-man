@@ -22,6 +22,7 @@ class ScoreBoardComponent:
         self.life_texture: pr.Texture = pr.load_texture(
             "assets/pacman/pacman_lives.png"
         )
+        self._is_unloaded = False
 
     def update(
         self,
@@ -94,4 +95,7 @@ class ScoreBoardComponent:
         )
 
     def unload(self) -> None:
+        if self._is_unloaded:
+            return
         pr.unload_texture(self.life_texture)
+        self._is_unloaded = True

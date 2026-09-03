@@ -56,8 +56,11 @@ class MenuPage(ParentPage):
         ]
 
     def unload(self) -> None:
+        if self._is_unloaded:
+            return
         for button in self.buttons:
             button.unload()
+        super().unload()
 
     def _event_listener(self) -> None:
         if pr.is_key_pressed(pr.KeyboardKey.KEY_UP) or pr.is_key_pressed(

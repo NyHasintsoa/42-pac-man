@@ -24,7 +24,6 @@ class HowToPlayPage(ParentPage):
         self.color_text = pr.Color(255, 255, 255, 255)
         self.color_shadow = pr.Color(0, 0, 0, 255)
         self.color_accent = pr.Color(255, 255, 0, 255)
-        self.color_footer = pr.Color(249, 44, 114, 255)
 
         self.sections = [
             {
@@ -68,9 +67,12 @@ GHOSTS: 200 PTS.
         )
 
     def unload(self) -> None:
+        if self._is_unloaded:
+            return
         pr.unload_font(self.font)
         self.pacman_preview.unload()
         self.ghost_preview.unload()
+        super().unload()
 
     def _draw_text_with_shadow_ex(
         self,
@@ -479,12 +481,7 @@ GHOSTS: 200 PTS.
             )
 
         alpha_pulse = int(130 + 125 * math.cos(total_time * 4.5))
-        footer_color = pr.Color(
-            self.color_footer.r,
-            self.color_footer.g,
-            self.color_footer.b,
-            alpha_pulse,
-        )
+        footer_color = pr.Color(249, 44, 114, alpha_pulse)
 
         footer_text = "PRESS [ESC] OR [ENTER] TO RETURN TO MENU"
         footer_font_size = int(width * 0.012)

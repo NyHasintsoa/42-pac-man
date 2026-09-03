@@ -39,7 +39,8 @@ class MainWindow:
 
     def close(self) -> None:
         for page in self.windows.values():
-            page.unload()
+            if not getattr(page, "_is_unloaded", False):
+                page.unload()
         pr.close_window()
 
     def load_page(self) -> None:
@@ -68,17 +69,11 @@ class MainWindow:
             self.current_page.render()
 
             if self.current_page.next_state != self.current_state:
-                previous_page = self.current_page
                 self.context = self.current_page.context
                 self.current_state = self.current_page.next_state
                 self.current_page = self.windows.get(self.current_state)
                 if self.current_page:
                     self.current_page.next_state = self.current_state
                     self.current_page.init(self.context)
-                if (
-                    previous_page is not None
-                    and previous_page is not self.current_page
-                ):
-                    previous_page.unload()
             pr.end_drawing()
         self.close()

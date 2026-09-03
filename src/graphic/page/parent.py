@@ -14,13 +14,16 @@ class ParentPage(ABC):
         self.context: GameContext = window.context
         self.state: PageState
         self.next_state: PageState
+        self._is_unloaded = False
 
     def init(self, context: GameContext) -> None:
         self.next_state = self.state
         self.context = context
 
     def unload(self) -> None:
-        pass
+        if self._is_unloaded:
+            return
+        self._is_unloaded = True
 
     @abstractmethod
     def render(self) -> None:

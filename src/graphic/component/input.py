@@ -24,14 +24,14 @@ class Input:
     def update(self) -> None:
         key = pr.get_char_pressed()
         while key > 0:
-            if (32 <= key <= 125) and (len(self.value) < self.max_chars):
-                self.value += chr(key)
+            char_pressed = chr(key)
+
+            if (char_pressed.isalnum() or char_pressed == "-") and (
+                len(self.value) < self.max_chars
+            ):
+                self.value += char_pressed
             key = pr.get_char_pressed()
 
-        if pr.is_key_pressed(pr.KeyboardKey.KEY_SPACE) and (
-            len(self.value) < self.max_chars
-        ):
-            self.value += " "
         if (
             pr.is_key_pressed(pr.KeyboardKey.KEY_BACKSPACE)
             and len(self.value) > 0

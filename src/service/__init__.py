@@ -3,6 +3,7 @@ from src.service.config_parser import ConfigParser
 from src.service.ghost_manager import GhostManager
 from src.service.level_generator import LevelGenerator
 from src.service.level_manager import LevelManager
+from src.service.score_manager import ScoreManager
 
 __all__ = [
     "ConfigParser",
@@ -10,4 +11,5 @@ __all__ = [
     "LevelManager",
     "CheatingManager",
     "GhostManager",
+    "ScoreManager",
 ]

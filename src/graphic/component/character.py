@@ -27,6 +27,7 @@ class CharacterComponent(ABC):
         self.animation_speed = animation_speed
         self.assets_path: str
         self._loaded_textures: List[pr.Texture] = []
+        self._is_unloaded = False
         available_width = float(window.width - (padding_x * 2))
         available_height = float(
             window.height - margin_top - (padding_x * 2) - margin_bottom
@@ -140,9 +141,12 @@ class CharacterComponent(ABC):
             self.frame_index += 1
 
     def unload(self) -> None:
+        if self._is_unloaded:
+            return
         for texture in list(self._loaded_textures):
             pr.unload_texture(texture)
         self._loaded_textures.clear()
+        self._is_unloaded = True
 
     @abstractmethod
     def load_textures(self) -> None:

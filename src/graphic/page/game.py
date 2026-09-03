@@ -18,6 +18,7 @@ from src.service import (
     CheatingManager,
     GhostManager,
     LevelManager,
+    ScoreManager,
 )
 
 if TYPE_CHECKING:
@@ -51,7 +52,7 @@ class GamePage(ParentPage):
     def init(self, context: GameContext) -> None:
         super().init(context)
         if self.current_level == 1:
-            self.lives = self.context.lives
+            self.reset_runtime_state()
             self.levels = self.context.config.levels
         self.time_elapsed = self.levels[self.current_level - 1].level_max_time
         self.maze_data = self.context.maze_levels[self.current_level - 1]
@@ -68,7 +69,11 @@ class GamePage(ParentPage):
         self.super_timer = 0.0
 
         self.score_board = ScoreBoardComponent(
-            self.window, high_score=120, padding_x=50
+            self.window,
+            high_score=ScoreManager(
+                self.context.config.highscore_filename
+            ).get_high_score(),
+            padding_x=50,
         )
         self.maze_view = MazeComponent(
             self.maze_data,
@@ -102,6 +107,8 @@ class GamePage(ParentPage):
         )
 
     def unload(self) -> None:
+        if self._is_unloaded:
+            return
         if hasattr(self, "score_board"):
             self.score_board.unload()
         if hasattr(self, "pacman"):
@@ -109,6 +116,7 @@ class GamePage(ParentPage):
         if hasattr(self, "ghosts"):
             for ghost in self.ghosts:
                 ghost.unload()
+        super().unload()
 
     def _event_listener(self) -> None:
         if not self.is_cheating and pr.is_key_pressed(
@@ -126,14 +134,26 @@ class GamePage(ParentPage):
         self.is_paused = False
 
     def restart_game(self) -> None:
-        self.current_level = 1
-        self.lives = self.context.lives
-        self.score = 0
+        self.reset_runtime_state()
         self.init(self.context)
 
     def return_to_menu(self) -> None:
-        self.score = 0
+        self.reset_runtime_state()
         self.next_state = PageState.MAIN_MENU
+
+    def reset_runtime_state(self) -> None:
+        self.current_level = 1
+        self.score = 0
+        self.lives = self.context.lives
+        self.time_elapsed = 0.0
+        self.super_timer = 0.0
+        self.ready_timer = 0.0
+        self.is_paused = False
+        self.is_cheating = False
+        self.context.score = 0
+        self.context.current_level = 1
+        self.context.time_elapsed = 0
+        self.context.is_winner = False
 
     def add_extra_life(self) -> None:
         self.cheat_manager.add_extra_life(self)
@@ -245,6 +265,8 @@ class GamePage(ParentPage):
                 if self.lives <= 0:
                     self.context.score = self.score
                     self.context.is_winner = False
+                    self.context.current_level = self.current_level
+                    self.current_level = 1
                     self.next_state = PageState.PLAYER_NAME_PAGE
                 else:
                     self.reset_positions()

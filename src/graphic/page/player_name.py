@@ -6,6 +6,7 @@ from src.graphic.component import Button, Input, PageFrame
 from src.graphic.page.parent import ParentPage
 from src.model import GameContext
 from src.model.enums import PageState
+from src.service.score_manager import ScoreManager
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -55,16 +56,22 @@ class PlayerNamePage(ParentPage):
             self._handle_submit()
 
     def _handle_submit(self) -> None:
-        cleaned_name = self.name_input.value.strip()
+        raw_name = self.name_input.value.strip()
+        display_name = raw_name if raw_name else "AAA"
 
-        if cleaned_name:
-            print(f"[SUBMITTED PLAYER NAME]: {cleaned_name} with Score:\
-{self.context.score}")
-        else:
-            print(f"[SUBMITTED PLAYER NAME]: Anonymous Player with Score:\
-{self.context.score}")
+        final_score = self.context.score
+        final_level = self.context.current_level
+        filename = self.context.config.highscore_filename
 
-        self.window.current_state = PageState.MAIN_MENU
+        score_manager = ScoreManager(filename)
+        score_manager.add_score(display_name, final_score, final_level)
+
+        self.context.score = 0
+        self.context.current_level = 1
+        self.context.time_elapsed = 0
+        self.context.is_winner = False
+
+        self.next_state = PageState.HIGH_SCORES_PAGE
 
     def render(self) -> None:
         self.update()

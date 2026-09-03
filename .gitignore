@@ -12,3 +12,5 @@ lib/
 # Virtual environments
 .venv
 .python-version
+
+highscores.json
