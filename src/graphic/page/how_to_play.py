@@ -1,5 +1,5 @@
 import math
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 import pyray as pr
 
@@ -147,7 +147,7 @@ GHOSTS: 200 PTS.
 
     def _render_section_card(
         self,
-        sec: dict,
+        sec: Dict[str, str],
         box_x: int,
         box_y: int,
         cell_width: int,

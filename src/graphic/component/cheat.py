@@ -64,9 +64,9 @@ class CheatComponent:
 
     def handle_input(
         self,
-        on_add_life: Callable,
-        on_skip_level: Callable,
-        on_close: Callable,
+        on_add_life: Callable[[], None],
+        on_skip_level: Callable[[], None],
+        on_close: Callable[[], None],
     ) -> None:
         if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
             mouse_pos = pr.get_mouse_position()

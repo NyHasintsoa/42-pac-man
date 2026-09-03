@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING, Dict, List, Tuple
 
 import pyray as pr
 
-from src.algorithm import GhostMovement
 from src.graphic.component.character import CharacterComponent
 
 if TYPE_CHECKING:
@@ -18,13 +17,18 @@ class GhostCharacter(CharacterComponent):
         pos_y: int,
         speed: float,
         animation_speed: float,
-        window: MainWindow,
+        window: "MainWindow",
         ghost_name: str = "clyde",
     ) -> None:
         self.ghost_name = ghost_name
         self.assets_path = "assets/ghost"
         self.super_timer = 0.0
         self.movement_history: List[Tuple[int, int]] = []
+
+        self.initial_grid_pos = pr.Vector2(pos_x, pos_y)
+        self.is_returning_eyes = False
+        self.respawn_timer = 0.0
+        self.is_waiting_to_respawn = False
 
         super().__init__(
             maze_data=maze_data,
@@ -94,12 +98,35 @@ class GhostCharacter(CharacterComponent):
         if pr.is_key_pressed(pr.KeyboardKey.KEY_G):
             self.is_edible = not self.is_edible
 
-        center = self.get_pixel_position(self.grid_pos)
+        if self.is_waiting_to_respawn:
+            self.respawn_timer -= pr.get_frame_time()
+            if self.respawn_timer <= 0.0:
+                self.is_waiting_to_respawn = False
+                self.is_returning_eyes = False
+                self.is_edible = False
+                self.movement_history = []
+            return
 
+        if self.is_returning_eyes:
+            home_pixel = self.get_pixel_position(self.initial_grid_pos)
+            if abs(self.pixel_pos.x - home_pixel.x) < (
+                self.speed * 2.0
+            ) and abs(self.pixel_pos.y - home_pixel.y) < (self.speed * 2.0):
+                self.pixel_pos = home_pixel
+                self.grid_pos = pr.Vector2(
+                    self.initial_grid_pos.x, self.initial_grid_pos.y
+                )
+                self.is_waiting_to_respawn = True
+                self.respawn_timer = 5.0
+                return
+
+        center = self.get_pixel_position(self.grid_pos)
         if (
             abs(self.pixel_pos.x - center.x) < self.speed
             and abs(self.pixel_pos.y - center.y) < self.speed
         ):
+            from src.algorithm import GhostMovement
+
             calculated_dir = GhostMovement.get_next_direction(
                 ghost=self,
                 pacman=pacman,
@@ -109,10 +136,68 @@ class GhostCharacter(CharacterComponent):
             self.direction = calculated_dir
             self.next_direction = calculated_dir
 
+        saved_speed = self.speed
+        if self.is_returning_eyes:
+            self.speed *= 2.0
+
         self.update_movement_and_grid()
+        self.speed = saved_speed
         self.update_animation_timer()
 
+    def render_spawn_background(self) -> None:
+        home_pixel = self.get_pixel_position(self.initial_grid_pos)
+        hx = int(home_pixel.x)
+        hy = int(home_pixel.y)
+        sz = int(self.scale - 8)
+
+        half_sz = sz // 2
+        bx = hx - half_sz
+        by = hy - half_sz
+        thick = 2
+        length = 5
+
+        color = pr.GRAY
+        pr.draw_rectangle(bx, by, length, thick, color)
+        pr.draw_rectangle(bx, by, thick, length, color)
+        pr.draw_rectangle(bx + sz - length, by, length, thick, color)
+        pr.draw_rectangle(bx + sz - thick, by, thick, length, color)
+        pr.draw_rectangle(bx, by + sz - thick, length, thick, color)
+        pr.draw_rectangle(bx, by + sz - length, thick, length, color)
+        pr.draw_rectangle(
+            bx + sz - length, by + sz - thick, length, thick, color
+        )
+        pr.draw_rectangle(
+            bx + sz - thick, by + sz - length, thick, length, color
+        )
+
     def render(self) -> None:
+
+        if self.is_returning_eyes or self.is_waiting_to_respawn:
+            hx = int(self.pixel_pos.x)
+            hy = int(self.pixel_pos.y)
+
+            pr.draw_rectangle(hx - 5, hy - 3, 4, 4, pr.WHITE)
+            pr.draw_rectangle(hx + 2, hy - 3, 4, 4, pr.WHITE)
+
+            px1, py1 = hx - 4, hy - 2
+            px2, py2 = hx + 3, hy - 2
+            if self.direction.x > 0:
+                px1 += 1
+                px2 += 1
+            elif self.direction.x < 0:
+                px1 -= 1
+                px2 -= 1
+            elif self.direction.y > 0:
+                py1 += 1
+                py2 += 1
+            elif self.direction.y < 0:
+                py1 -= 1
+                py2 -= 1
+
+            pr.draw_rectangle(px1, py1, 2, 2, pr.BLUE)
+            pr.draw_rectangle(px2, py2, 2, 2, pr.BLUE)
+            return
+
         if self.is_edible:
             if 0.0 < self.super_timer < 2.5:
                 use_flash_texture = int(pr.get_time() / 0.25) % 2 == 0

@@ -142,10 +142,6 @@ class CharacterComponent(ABC):
         pass
 
     @abstractmethod
-    def update(self) -> None:
-        pass
-
-    @abstractmethod
     def render(self) -> None:
         pass
 

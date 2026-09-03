@@ -1,8 +1,5 @@
 from typing import TYPE_CHECKING, List
 
-import pyray as pr
-
-from src.algorithm import GhostMovement
 from src.graphic.component import (
     GhostCharacter,
     PacgumComponent,
@@ -15,8 +12,7 @@ if TYPE_CHECKING:
 
 
 class GhostManager:
-
-    def __init__(self, window: MainWindow, maze_data: MazeData) -> None:
+    def __init__(self, window: "MainWindow", maze_data: MazeData) -> None:
         self.window = window
         self.maze_data = maze_data
         self.ghosts: List[GhostCharacter] = []
@@ -37,17 +33,9 @@ class GhostManager:
             self.window,
             "blinky",
         )
-
         self.pinky = GhostCharacter(
-            self.maze_data,
-            1,
-            1,
-            speed,
-            animation_speed,
-            self.window,
-            "pinky",
+            self.maze_data, 1, 1, speed, animation_speed, self.window, "pinky"
         )
-
         self.inky = GhostCharacter(
             self.maze_data,
             cols - 2,
@@ -57,7 +45,6 @@ class GhostManager:
             self.window,
             "inky",
         )
-
         self.clyde = GhostCharacter(
             self.maze_data,
             1,
@@ -68,29 +55,12 @@ class GhostManager:
             "clyde",
         )
 
-        self.ghosts = [
-            self.blinky,
-            self.pinky,
-            self.inky,
-            self.clyde,
-        ]
+        self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
     def reset_ghost_position(self, ghost: GhostCharacter) -> None:
-        rows = len(self.maze_data)
-        cols = len(self.maze_data[0]) if rows > 0 else 0
-
-        if ghost.ghost_name == "blinky":
-            ghost.grid_pos = pr.Vector2(cols - 2, 1)
-        elif ghost.ghost_name == "pinky":
-            ghost.grid_pos = pr.Vector2(1, 1)
-        elif ghost.ghost_name == "inky":
-            ghost.grid_pos = pr.Vector2(cols - 2, rows - 2)
-        else:
-            ghost.grid_pos = pr.Vector2(1, rows - 2)
-
-        ghost.pixel_pos = ghost.get_pixel_position(ghost.grid_pos)
-        ghost.direction = pr.Vector2(-1, 0)
-        ghost.next_direction = pr.Vector2(-1, 0)
+        ghost.is_returning_eyes = True
+        ghost.is_waiting_to_respawn = False
+        ghost.respawn_timer = 0.0
         ghost.is_edible = False
         ghost.movement_history = []
 
@@ -108,20 +78,4 @@ class GhostManager:
 
         for ghost in self.ghosts:
             ghost.super_timer = super_timer
-
-            center = ghost.get_pixel_position(ghost.grid_pos)
-            if (
-                abs(ghost.pixel_pos.x - center.x) < ghost.speed
-                and abs(ghost.pixel_pos.y - center.y) < ghost.speed
-            ):
-                calculated_dir = GhostMovement.get_next_direction(
-                    ghost=ghost,
-                    pacman=pacman,
-                    blinky=self.blinky,
-                    is_angry_blinky=blinky_is_angry,
-                )
-                ghost.direction = calculated_dir
-                ghost.next_direction = calculated_dir
-
-            ghost.update_movement_and_grid()
-            ghost.update_animation_timer()
+            ghost.update(super_timer, pacman, self.blinky, blinky_is_angry)

@@ -42,7 +42,10 @@ class PauseComponent:
         )
 
     def handle_input(
-        self, on_resume: Callable, on_restart: Callable, on_menu: Callable
+        self,
+        on_resume: Callable[[], None],
+        on_restart: Callable[[], None],
+        on_menu: Callable[[], None],
     ) -> None:
 
         if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):

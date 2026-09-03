@@ -76,7 +76,11 @@ class LevelGenerator:
 
         chosen_simple_spots: Set[Tuple[int, int]] = set()
 
-        def is_well_separated(pos, existing_spots, dist_threshold) -> bool:
+        def is_well_separated(
+            pos: Tuple[int, int],
+            existing_spots: Set[Tuple[int, int]],
+            dist_threshold: int,
+        ) -> bool:
             for ep in existing_spots:
                 if abs(pos[0] - ep[0]) + abs(pos[1] - ep[1]) < dist_threshold:
                     return False

@@ -1,7 +1,7 @@
 import json
 import math
 import os
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, List
 
 import pyray as pr
 
@@ -40,7 +40,7 @@ class HighScorePage(ParentPage):
         self.color_gold_text = pr.Color(255, 255, 0, 255)
         self.color_footer = pr.Color(249, 44, 114, 255)
 
-    def _load_high_scores(self) -> list:
+    def _load_high_scores(self) -> List[Any]:
         scores = []
         if os.path.exists(self.json_file_path):
             try:
@@ -87,7 +87,7 @@ class HighScorePage(ParentPage):
         text_color: pr.Color,
         shadow_color: pr.Color,
         offset: int = 2,
-    ):
+    ) -> None:
         pr.draw_text_ex(
             self.font,
             text,
@@ -102,7 +102,7 @@ class HighScorePage(ParentPage):
 
     def _draw_retro_trophy(
         self, x: int, y: int, scale: float, color: pr.Color
-    ):
+    ) -> None:
         pr.draw_rectangle(
             int(x - 10 * scale),
             int(y - 12 * scale),

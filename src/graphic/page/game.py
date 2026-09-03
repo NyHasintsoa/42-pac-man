@@ -9,19 +9,13 @@ from src.graphic.component import (
     PacmanCharacter,
     ScoreBoardComponent,
 )
-from src.graphic.component.cheat import (
-    CheatComponent,
-)
+from src.graphic.component.cheat import CheatComponent
 from src.graphic.component.pause import PauseComponent
 from src.graphic.page.parent import ParentPage
 from src.model import GameContext, LevelConfig, MazeData
 from src.model.enums import PageState
-from src.service.cheating_manager import (
-    CheatingManager,
-)
-from src.service.ghost_manager import (
-    GhostManager,
-)
+from src.service.cheating_manager import CheatingManager
+from src.service.ghost_manager import GhostManager
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -59,11 +53,8 @@ class GamePage(ParentPage):
         self.super_timer = 0.0
 
         self.score_board = ScoreBoardComponent(
-            self.window,
-            high_score=120,
-            padding_x=50,
+            self.window, high_score=120, padding_x=50
         )
-
         self.maze_view = MazeComponent(
             self.maze_data,
             self.window,
@@ -74,13 +65,13 @@ class GamePage(ParentPage):
             logo_color=pr.Color(33, 208, 220, 255),
         )
 
-        center_y = round(len(self.maze_data) / 2)
-        center_x = round(len(self.maze_data[0]) / 2) - 1
+        self.initial_pacman_x = round(len(self.maze_data[0]) / 2) - 1
+        self.initial_pacman_y = round(len(self.maze_data) / 2)
 
         self.pacman = PacmanCharacter(
             self.maze_data,
-            center_x,
-            center_y,
+            self.initial_pacman_x,
+            self.initial_pacman_y,
             5.0,
             0.15,
             self.window,
@@ -103,7 +94,6 @@ class GamePage(ParentPage):
             pr.KeyboardKey.KEY_ESCAPE
         ):
             self.is_paused = not self.is_paused
-
         if (
             self.window.context.config.cheating
             and not self.is_paused
@@ -134,8 +124,10 @@ class GamePage(ParentPage):
             return False
 
         collision_distance = self.pacman.scale * 0.75
-
         for ghost in self.ghosts:
+            if ghost.is_returning_eyes or ghost.is_waiting_to_respawn:
+                continue
+
             distance = pr.vector2_distance(
                 self.pacman.pixel_pos, ghost.pixel_pos
             )
@@ -148,18 +140,16 @@ class GamePage(ParentPage):
         return False
 
     def reset_ghost_position(self, ghost: GhostCharacter) -> None:
-
         self.ghost_manager.reset_ghost_position(ghost)
 
     def reset_positions(self) -> None:
         self.ready_timer = 3.0
-        center_y = round(len(self.maze_data) / 2)
-        center_x = round(len(self.maze_data[0]) / 2) - 1
-
         self.pacman.is_dead = False
         self.pacman.frame_index = 0
         self.pacman.frame_timer = 0.0
-        self.pacman.grid_pos = pr.Vector2(center_x, center_y)
+        self.pacman.grid_pos = pr.Vector2(
+            self.initial_pacman_x, self.initial_pacman_y
+        )
         self.pacman.pixel_pos = self.pacman.get_pixel_position(
             self.pacman.grid_pos
         )
@@ -167,7 +157,39 @@ class GamePage(ParentPage):
         self.pacman.next_direction = pr.Vector2(0, 0)
 
         for ghost in self.ghosts:
+            ghost.is_returning_eyes = False
+            ghost.is_waiting_to_respawn = False
+            ghost.respawn_timer = 0.0
             self.reset_ghost_position(ghost)
+            ghost.is_returning_eyes = False
+
+    def render_pacman_spawn_bg(self) -> None:
+        home_pixel = self.pacman.get_pixel_position(
+            pr.Vector2(self.initial_pacman_x, self.initial_pacman_y)
+        )
+        px = int(home_pixel.x)
+        py = int(home_pixel.y)
+        sz = int(self.pacman.scale - 8)
+
+        half_sz = sz // 2
+        bx = px - half_sz
+        by = py - half_sz
+        thick = 2
+        length = 5
+
+        color = pr.GOLD
+        pr.draw_rectangle(bx, by, length, thick, color)
+        pr.draw_rectangle(bx, by, thick, length, color)
+        pr.draw_rectangle(bx + sz - length, by, length, thick, color)
+        pr.draw_rectangle(bx + sz - thick, by, thick, length, color)
+        pr.draw_rectangle(bx, by + sz - thick, length, thick, color)
+        pr.draw_rectangle(bx, by + sz - length, thick, length, color)
+        pr.draw_rectangle(
+            bx + sz - length, by + sz - thick, length, thick, color
+        )
+        pr.draw_rectangle(
+            bx + sz - thick, by + sz - length, thick, length, color
+        )
 
     def update(self) -> None:
         self._event_listener()
@@ -211,7 +233,8 @@ class GamePage(ParentPage):
                 self.super_timer -= pr.get_frame_time()
                 if self.super_timer <= 0.0:
                     for ghost in self.ghosts:
-                        ghost.is_edible = False
+                        if not ghost.is_returning_eyes:
+                            ghost.is_edible = False
 
             original_speed = 5.0
             self.pacman.speed = (
@@ -219,11 +242,9 @@ class GamePage(ParentPage):
                 if self.cheat_manager.speed_boost
                 else original_speed
             )
-
             self.pacman.update()
 
             if not self.cheat_manager.ghost_freeze:
-
                 self.ghost_manager.update_ghosts(
                     self.super_timer, self.pacman, self.pacgums
                 )
@@ -248,7 +269,11 @@ class GamePage(ParentPage):
         if super_eaten:
             self.super_timer = self.super_duration
             for ghost in self.ghosts:
-                ghost.is_edible = True
+                if (
+                    not ghost.is_returning_eyes
+                    and not ghost.is_waiting_to_respawn
+                ):
+                    ghost.is_edible = True
 
     def render(self) -> None:
         pr.clear_background(pr.BLACK)
@@ -257,6 +282,11 @@ class GamePage(ParentPage):
 
         self.score_board.render()
         self.maze_view.render()
+
+        self.render_pacman_spawn_bg()
+        for ghost in self.ghosts:
+            ghost.render_spawn_background()
+
         self.pacgums.render()
 
         if not self.pacman.is_dead:
