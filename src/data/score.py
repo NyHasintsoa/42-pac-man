@@ -1,19 +1,11 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  __init__.py                                       :+:      :+:    :+:    #
+#  score.py                                          :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/25 17:35:38 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 15:31:08 by nramalan        ###   ########.fr        #
+#  Created: 2026/05/27 15:24:38 by nramalan        #+#    #+#               #
+#  Updated: 2026/05/27 15:24:38 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
-
-from typing import List
-
-from src.service.config_parser import ConfigParser
-
-__all__: List[str] = [
-    "ConfigParser"
-]

@@ -6,14 +6,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/25 17:41:57 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 17:20:57 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
 from typing import TYPE_CHECKING
-from mazegenerator import MazeGenerator
 
+from src.data.game_context import GameContext
 from src.graphic.component import PacmanCharacter, GhostCharacter
 from src.enums import PageState
 from src.graphic.component import (
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 
 class GamePage(ParentPage):
-    def __init__(self, window: "MainWindow") -> None:
+    def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.GAME_PAGE
         self.score = 0
@@ -35,17 +35,17 @@ class GamePage(ParentPage):
         self.game_running = True
         self.is_paused = False
 
-        maze_cols, maze_rows = 20, 10
+        self.btn_back = Button(
+            self.window.width - 240, 15, 220, 50, "Main Menu",
+            color=pr.DARKPURPLE, hover_color=pr.VIOLET,
+            clicked_color=pr.GOLD, text_color=pr.WHITE,
+            font_size=20, border_radius=0.35
+        )
 
-        if hasattr(self.window, "cached_maze") and self.window.cached_maze is not None:
-            self.maze_data = self.window.cached_maze
-        else:
-            self.maze_gen = MazeGenerator(
-                (maze_cols, maze_rows), False,
-                (0, 0), (maze_cols - 1, maze_rows - 1)
-            )
-            self.maze_gen.generate()
-            self.maze_data = self.maze_gen.maze
+    def init(self, context: GameContext) -> None:
+        super().init(context)
+        self.maze_data = self.context.maze_level
+        maze_cols, maze_rows = 20, 10
 
         ui_height = 160
         available_width = self.window.width * 0.95
@@ -77,7 +77,7 @@ class GamePage(ParentPage):
 
         self.pacman = PacmanCharacter(
             maze_data=self.maze_data, tile_size=self.scale,
-            grid_x=1, grid_y=1, speed=2.0,
+            grid_x=1, grid_y=1, speed=3.0,
             animation_speed=0.12
         )
 
@@ -85,13 +85,6 @@ class GamePage(ParentPage):
             maze_data=self.maze_data, tile_size=self.scale,
             grid_x=maze_cols - 2, grid_y=maze_rows - 2, speed=1.5,
             animation_speed=0.12
-        )
-
-        self.btn_back = Button(
-            self.window.width - 240, 15, 220, 50, "Main Menu",
-            color=pr.DARKPURPLE, hover_color=pr.VIOLET,
-            clicked_color=pr.GOLD, text_color=pr.WHITE,
-            font_size=20, border_radius=0.35
         )
 
     def check_character_collision(self) -> bool:

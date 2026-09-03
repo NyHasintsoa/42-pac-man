@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 15:51:26 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/10 15:52:22 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 16:51:32 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -34,4 +34,4 @@ class MazeGenerator:
     @property
     def maze_exit(self) -> Tuple[int, int]: ...
 
-    def generate(self, seed: int = ...) -> None: ...
+    def generate(self, seed: int = 0) -> None: ...

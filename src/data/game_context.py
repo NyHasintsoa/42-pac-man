@@ -1,19 +1,25 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  __init__.py                                       :+:      :+:    :+:    #
+#  game_context.py                                   :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/25 17:35:38 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 15:31:08 by nramalan        ###   ########.fr        #
+#  Created: 2026/05/27 16:10:07 by nramalan        #+#    #+#               #
+#  Updated: 2026/05/27 17:26:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
+from pydantic import BaseModel
 from typing import List
 
-from src.service.config_parser import ConfigParser
 
-__all__: List[str] = [
-    "ConfigParser"
-]
+class LevelData(BaseModel):
+    width: int
+    height: int
+    maze_data: List[List[int]]
+    pacgums: List[List[int]]
+
+
+class GameContext(BaseModel):
+    maze_level: List[List[int]] = [[]]
