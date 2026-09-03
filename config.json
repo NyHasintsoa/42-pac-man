@@ -21,11 +21,7 @@
       "width": 20,
       "height": 18,
       "seed": 20,
-      "pacgum": 2,
-      "level_max_time": 30,
-      "points_per_pacgum": 20,
-      "points_per_super_pacgum": 100,
-      "points_per_ghost": 200
+      "pacgum": 2
     },
     {
       "width": 30,
@@ -83,10 +79,7 @@
     {
       "width": 30,
       "height": 20,
-      "seed": 42,
-      "points_per_pacgum": 10,
-      "points_per_super_pacgum": 50,
-      "points_per_ghost": 200
+      "seed": 42
     }
   ]
 }

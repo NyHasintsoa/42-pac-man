@@ -18,7 +18,7 @@ class LevelConfig(BaseModel):
 
 
 class GameConfig(BaseModel):
-    highscore_filename: str = Field(min_length=6)
+    highscore_filename: str = Field(min_length=6, default="highscores.json")
     cheating: bool = Field(default=False)
     lives: int = Field(ge=1)
     level_max_time: int = Field(ge=5)

@@ -9,7 +9,7 @@ def main() -> None:
     if len(sys.argv) <= 1:
         raise ArgsError("Usage: python3 ./pac-man.py <config_file>")
     config = ConfigParser.parse_file(sys.argv[1])
-    window = MainWindow(1500, 1000, config, "pac-man")
+    window = MainWindow(1177, 920, config, "pac-man")
     window.add_event()
     window.load_page()
     window.render()

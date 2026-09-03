@@ -278,7 +278,7 @@ class HighScorePage(ParentPage):
             )
         else:
             visible_subset = self.high_scores[
-                self.scroll_offset : self.scroll_offset + self.max_visible_rows
+                self.scroll_offset: self.scroll_offset + self.max_visible_rows
             ]
 
             for i, entry in enumerate(visible_subset):
