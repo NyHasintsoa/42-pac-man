@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class PlayerNamePage(ParentPage):
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: "MainWindow") -> None:
         super().__init__(window)
         self.state = PageState.PLAYER_NAME_PAGE
         self.page_frame = PageFrame(window.width, window.height)
@@ -45,7 +45,7 @@ class PlayerNamePage(ParentPage):
             font_size=20,
         )
 
-    def init(self, context: GameContext) -> None:
+    def init(self, context: "GameContext") -> None:
         super().init(context)
         self.name_input.clear()
 

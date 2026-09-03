@@ -13,7 +13,7 @@ class GhostMovement:
         start: Tuple[int, int],
         target: Tuple[int, int],
         maze_data: List[List[int]],
-        ghost: GhostCharacter,
+        ghost: "GhostCharacter",
     ) -> Optional[pr.Vector2]:
         if start == target:
             return None
@@ -53,9 +53,9 @@ class GhostMovement:
 
     @staticmethod
     def get_next_direction(
-        ghost: GhostCharacter,
-        pacman: PacmanCharacter,
-        blinky: GhostCharacter,
+        ghost: "GhostCharacter",
+        pacman: "PacmanCharacter",
+        blinky: "GhostCharacter",
         is_angry_blinky: bool = False,
         history_limit: int = 20,
     ) -> pr.Vector2:
@@ -153,9 +153,9 @@ class GhostMovement:
 
     @staticmethod
     def _calculate_target(
-        ghost: GhostCharacter,
-        pacman: PacmanCharacter,
-        blinky: GhostCharacter,
+        ghost: "GhostCharacter",
+        pacman: "PacmanCharacter",
+        blinky: "GhostCharacter",
         is_angry_blinky: bool,
     ) -> pr.Vector2:
         rows = len(ghost.maze_data)

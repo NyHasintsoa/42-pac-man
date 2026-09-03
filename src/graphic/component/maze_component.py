@@ -10,7 +10,7 @@ class MazeComponent:
     def __init__(
         self,
         maze: List[List[int]],
-        window: MainWindow,
+        window: "MainWindow",
         margin_top: int = 80,
         margin_bottom: int = 30,
         padding_x: int = 20,

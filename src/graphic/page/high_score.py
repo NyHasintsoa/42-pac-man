@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class HighScorePage(ParentPage):
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: "MainWindow") -> None:
         super().__init__(window)
         self.state = PageState.HIGH_SCORES_PAGE
         self.page_frame = PageFrame(window.width, window.height)
@@ -278,7 +278,7 @@ class HighScorePage(ParentPage):
             )
         else:
             visible_subset = self.high_scores[
-                self.scroll_offset: self.scroll_offset + self.max_visible_rows
+                self.scroll_offset : self.scroll_offset + self.max_visible_rows
             ]
 
             for i, entry in enumerate(visible_subset):

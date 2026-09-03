@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 class PauseComponent:
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: "MainWindow") -> None:
         self.window = window
 
         self.modal_w = 280

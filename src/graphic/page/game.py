@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 
 class GamePage(ParentPage):
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: "MainWindow") -> None:
         super().__init__(window)
         self.state = PageState.GAME_PAGE
         self.super_duration: float = 8
@@ -49,7 +49,7 @@ class GamePage(ParentPage):
         self.is_paused: bool = False
         self.is_cheating: bool = False
 
-    def init(self, context: GameContext) -> None:
+    def init(self, context: "GameContext") -> None:
         super().init(context)
         if self.current_level == 1:
             self.reset_runtime_state()
@@ -191,7 +191,7 @@ class GamePage(ParentPage):
                     return True
         return False
 
-    def reset_ghost_position(self, ghost: GhostCharacter) -> None:
+    def reset_ghost_position(self, ghost: "GhostCharacter") -> None:
         self.ghost_manager.reset_ghost_position(ghost)
 
     def reset_positions(self) -> None:

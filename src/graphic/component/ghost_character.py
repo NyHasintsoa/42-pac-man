@@ -18,7 +18,7 @@ class GhostCharacter(CharacterComponent):
         pos_y: int,
         speed: float,
         animation_speed: float,
-        window: MainWindow,
+        window: "MainWindow",
         score: int,
         ghost_name: str = "clyde",
     ) -> None:
@@ -94,8 +94,8 @@ class GhostCharacter(CharacterComponent):
     def update(
         self,
         super_timer: float,
-        pacman: PacmanCharacter,
-        blinky: GhostCharacter,
+        pacman: "PacmanCharacter",
+        blinky: "GhostCharacter",
         is_angry_blinky: bool = False,
     ) -> None:
         self.super_timer = super_timer

@@ -199,10 +199,10 @@ wheels = [
 
 [[package]]
 name = "mazegenerator"
-version = "2.0.1"
-source = { path = "lib/mazegenerator-2.0.1-py3-none-any.whl" }
+version = "2.1.0"
+source = { path = "lib/mazegenerator-2.1.0-py3-none-any.whl" }
 wheels = [
-    { filename = "mazegenerator-2.0.1-py3-none-any.whl", hash = "sha256:9d3903ad098f73c459fc34c59d6756452786477436ef477e7e96f459de70f1f4" },
+    { filename = "mazegenerator-2.1.0-py3-none-any.whl", hash = "sha256:98e12f7e989cef03dd4411657d7bee12653804aee87a568eddfaf21436ffd4aa" },
 ]
 
 [[package]]
@@ -300,7 +300,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "mazegenerator", path = "lib/mazegenerator-2.0.1-py3-none-any.whl" },
+    { name = "mazegenerator", path = "lib/mazegenerator-2.1.0-py3-none-any.whl" },
     { name = "pydantic", specifier = ">=2.13.3" },
     { name = "raylib", specifier = ">=5.5.0.4" },
     { name = "setuptools", specifier = ">=82.0.1" },

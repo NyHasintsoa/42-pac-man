@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class ScoreBoardComponent:
     def __init__(
-        self, window: MainWindow, high_score: int = 0, padding_x: int = 20
+        self, window: "MainWindow", high_score: int = 0, padding_x: int = 20
     ) -> None:
         self.width = window.width
         self.height = window.height

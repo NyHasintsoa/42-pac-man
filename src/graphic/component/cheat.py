@@ -10,7 +10,9 @@ if TYPE_CHECKING:
 
 
 class CheatComponent:
-    def __init__(self, window: MainWindow, manager: CheatingManager) -> None:
+    def __init__(
+        self, window: "MainWindow", manager: "CheatingManager"
+    ) -> None:
         self.window = window
         self.manager = manager
 

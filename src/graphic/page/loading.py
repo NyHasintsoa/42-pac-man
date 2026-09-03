@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class LoadingPage(ParentPage):
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: "MainWindow") -> None:
         super().__init__(window)
         self.state = PageState.LOADING_PAGE
         self.next_state = PageState.LOADING_PAGE

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class GhostManager:
     def __init__(
-        self, window: MainWindow, maze_data: MazeData, current_level: int
+        self, window: "MainWindow", maze_data: "MazeData", current_level: int
     ) -> None:
         self.window = window
         self.maze_data = maze_data

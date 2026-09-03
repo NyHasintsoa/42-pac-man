@@ -30,7 +30,7 @@ class GameConfig(BaseModel):
     levels: List[LevelConfig]
 
     @model_validator(mode="after")
-    def populate_level_defaults(self) -> GameConfig:
+    def populate_level_defaults(self) -> "GameConfig":
         count: int = 1
         for level in self.levels:
             if level.seed == 1:
@@ -54,5 +54,5 @@ class GameConfig(BaseModel):
         return self
 
     @classmethod
-    def parse_json(cls, json_str: str) -> GameConfig:
+    def parse_json(cls, json_str: str) -> "GameConfig":
         return cls.model_validate_json(json_str)

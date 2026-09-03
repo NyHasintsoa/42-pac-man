@@ -9,14 +9,14 @@ if TYPE_CHECKING:
 
 
 class ParentPage(ABC):
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: "MainWindow") -> None:
         self.window = window
         self.context: GameContext = window.context
         self.state: PageState
         self.next_state: PageState
         self._is_unloaded = False
 
-    def init(self, context: GameContext) -> None:
+    def init(self, context: "GameContext") -> None:
         self.next_state = self.state
         self.context = context
 

@@ -67,12 +67,8 @@ lint-strict: $(VENV)
 #----------------------------------------------
 # Dependencies
 #----------------------------------------------
-$(VENV): lib/mazegenerator-2.0.1-py3-none-any.whl
+$(VENV): lib/mazegenerator-2.1.0-py3-none-any.whl
 	@echo "Creating virtual environment and installing dependencies"
 	$(UV) venv
 	UV_CACHE_DIR=$(FT_CACHE_DIR)/uv \
 	$(UV) sync
-
-lib/mazegenerator-2.0.1-py3-none-any.whl:
-	mv lib/mazegenerator-00001-py3-none-any.whl \
-		lib/mazegenerator-2.0.1-py3-none-any.whl

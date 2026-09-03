@@ -13,8 +13,8 @@ class PacgumComponent:
     def __init__(
         self,
         maze_data: List[List[int]],
-        window: MainWindow,
-        pacgums: Pacgums,
+        window: "MainWindow",
+        pacgums: "Pacgums",
     ) -> None:
         margin_top: int = 80
         margin_bottom: int = 30

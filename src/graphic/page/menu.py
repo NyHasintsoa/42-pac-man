@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class MenuPage(ParentPage):
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: "MainWindow") -> None:
         super().__init__(window)
         self.state = PageState.MAIN_MENU
         self.page_frame = PageFrame(window.width, window.height)

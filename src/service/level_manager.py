@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 
 class LevelManager:
-    def __init__(self, context: GameContext) -> None:
+    def __init__(self, context: "GameContext") -> None:
         self.context = context
 
     def count_remaining_pacgums(
-        self, pacgum_component: PacgumComponent
+        self, pacgum_component: "PacgumComponent"
     ) -> int:
         remaining = 0
         for pacgum in getattr(pacgum_component, "pacgums", []):
@@ -26,10 +26,10 @@ class LevelManager:
 
         return remaining
 
-    def is_level_completed(self, pacgum_component: PacgumComponent) -> bool:
+    def is_level_completed(self, pacgum_component: "PacgumComponent") -> bool:
         return self.count_remaining_pacgums(pacgum_component) == 0
 
-    def advance_level(self, game_page: GamePage) -> bool:
+    def advance_level(self, game_page: "GamePage") -> bool:
         if not self.is_level_completed(game_page.pacgums):
             return False
 
