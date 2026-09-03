@@ -1,10 +1,11 @@
-from src.graphic import MainWindow
+from src.graphic.main_window import MainWindow
 
 
 def main() -> None:
     print("Hello from pacman!")
     window = MainWindow(1000, 1000, "Pacman")
     window.add_event()
+    window.load_page()
     window.render()
 
 
