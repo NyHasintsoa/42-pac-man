@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  pacman_character.py                               :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 22:03:20 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from typing import TYPE_CHECKING, List
 
 import pyray as pr

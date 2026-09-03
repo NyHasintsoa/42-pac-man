@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  level_generator.py                                :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/07/13 20:58:23 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 22:46:36 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 import random
 from typing import List, Optional, Set, Tuple
 

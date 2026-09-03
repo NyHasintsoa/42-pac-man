@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  character.py                                      :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/15 20:50:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 19:46:27 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 import os
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, List

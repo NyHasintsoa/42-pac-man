@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  parent.py                                         :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/10 17:07:23 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:14:45 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 

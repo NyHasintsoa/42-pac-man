@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  cheat.py                                            :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/07/14 14:37:44 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/14 14:50:12 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from typing import TYPE_CHECKING, Callable, Dict
 
 import pyray as pr
@@ -104,7 +92,6 @@ class CheatComponent:
     def _draw_checkbox(
         self, rect: pr.Rectangle, checked: bool, label: str
     ) -> None:
-        """Helper to draw retro-styled interactive checkboxes."""
         pr.draw_rectangle_lines_ex(rect, 2, pr.Color(33, 208, 220, 255))
 
         if checked:

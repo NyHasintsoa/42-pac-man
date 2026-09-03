@@ -1,17 +1,6 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  maze_component.py                                 :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/11 08:22:35 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 16:09:02 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
+from typing import TYPE_CHECKING, List
 
 import pyray as pr
-from typing import List, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow

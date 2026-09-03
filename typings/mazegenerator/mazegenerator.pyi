@@ -1,17 +1,4 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  mazegenerator.pyi                                 :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/10 15:51:26 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 16:51:32 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from typing import List, Tuple
-
 
 class MazeGenerator:
     def __init__(
@@ -24,14 +11,10 @@ class MazeGenerator:
     ) -> None: ...
     @property
     def maze(self) -> List[List[int]]: ...
-
     @property
     def shortest_path(self) -> str | bool: ...
-
     @property
     def maze_entry(self) -> Tuple[int, int]: ...
-
     @property
     def maze_exit(self) -> Tuple[int, int]: ...
-
     def generate(self, seed: int = 0) -> None: ...

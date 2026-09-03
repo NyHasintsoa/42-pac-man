@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  game.py                                           :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/07/14 14:37:44 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/14 15:01:42 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from typing import TYPE_CHECKING, List
 
 import pyray as pr
@@ -51,6 +39,9 @@ class GamePage(ParentPage):
         self.ready_timer: float = 3.0
         self.cheat_manager = CheatingManager()
 
+        self.super_timer: float = 0.0
+        self.super_duration: float = 7.0
+
     def init(self, context: GameContext) -> None:
         super().init(context)
         self.lives = self.context.lives
@@ -62,6 +53,7 @@ class GamePage(ParentPage):
         self.ready_timer = 3.0
         self.is_paused = False
         self.is_cheating = False
+        self.super_timer = 0.0
 
         self.score_board = ScoreBoardComponent(
             self.window,
@@ -154,7 +146,6 @@ class GamePage(ParentPage):
         self.is_cheating = False
 
     def check_character_collision(self) -> bool:
-
         if self.cheat_manager.invincible:
             return False
 
@@ -165,8 +156,20 @@ class GamePage(ParentPage):
                 self.pacman.pixel_pos, ghost.pixel_pos
             )
             if distance < collision_distance:
-                return True
+                if ghost.is_edible:
+
+                    self.score += 200
+                    self.reset_ghost_position(ghost)
+                else:
+                    return True
         return False
+
+    def reset_ghost_position(self, ghost: GhostCharacter) -> None:
+        ghost.grid_pos = pr.Vector2(1, 1)
+        ghost.pixel_pos = ghost.get_pixel_position(ghost.grid_pos)
+        ghost.direction = pr.Vector2(-1, 0)
+        ghost.next_direction = pr.Vector2(-1, 0)
+        ghost.is_edible = False
 
     def reset_positions(self) -> None:
         self.ready_timer = 3.0
@@ -184,10 +187,7 @@ class GamePage(ParentPage):
         self.pacman.next_direction = pr.Vector2(0, 0)
 
         for ghost in self.ghosts:
-            ghost.grid_pos = pr.Vector2(1, 1)
-            ghost.pixel_pos = ghost.get_pixel_position(ghost.grid_pos)
-            ghost.direction = pr.Vector2(-1, 0)
-            ghost.next_direction = pr.Vector2(-1, 0)
+            self.reset_ghost_position(ghost)
 
     def update(self) -> None:
         self._event_listener()
@@ -227,8 +227,14 @@ class GamePage(ParentPage):
             if self.time_elapsed > 0:
                 self.time_elapsed -= pr.get_frame_time()
 
-            original_speed = 5.0
+            if self.super_timer > 0.0:
+                self.super_timer -= pr.get_frame_time()
+                if self.super_timer <= 0.0:
 
+                    for ghost in self.ghosts:
+                        ghost.is_edible = False
+
+            original_speed = 5.0
             self.pacman.speed = (
                 original_speed * 2.0
                 if self.cheat_manager.speed_boost
@@ -239,7 +245,8 @@ class GamePage(ParentPage):
 
             if not self.cheat_manager.ghost_freeze:
                 for ghost in self.ghosts:
-                    ghost.update()
+                    ghost.super_timer = self.super_timer
+                    ghost.update(self.super_timer)
 
             if self.check_character_collision():
                 self.pacman.is_dead = True
@@ -252,8 +259,16 @@ class GamePage(ParentPage):
 
         screen_px = int(self.pacman.pixel_pos.x)
         screen_py = int(self.pacman.pixel_pos.y)
-        gained_score = self.pacgums.collect_pacgums(screen_px, screen_py)
+
+        gained_score, super_eaten = self.pacgums.collect_pacgums(
+            screen_px, screen_py
+        )
         self.score += gained_score
+
+        if super_eaten:
+            self.super_timer = self.super_duration
+            for ghost in self.ghosts:
+                ghost.is_edible = True
 
     def render(self) -> None:
         pr.clear_background(pr.BLACK)

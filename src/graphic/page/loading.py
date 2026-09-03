@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  loading.py                                        :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/25 17:26:20 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 21:50:04 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from threading import Thread
 from typing import TYPE_CHECKING
 

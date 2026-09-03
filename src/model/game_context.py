@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  game_context.py                                   :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/27 16:10:07 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 22:26:48 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from typing import List, TypeAlias
 
 from pydantic import BaseModel, ConfigDict, Field

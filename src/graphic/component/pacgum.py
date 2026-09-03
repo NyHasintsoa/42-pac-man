@@ -1,17 +1,5 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  pacgum.py                                         :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/07/13 20:41:06 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 22:44:15 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 import math
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Tuple
 
 import pyray as pr
 
@@ -88,8 +76,9 @@ class PacgumComponent:
         for power_pacgum in self.super_pacgums:
             power_pacgum.update()
 
-    def collect_pacgums(self, px: int, py: int) -> int:
+    def collect_pacgums(self, px: int, py: int) -> Tuple[int, bool]:
         score = 0
+        super_collected = False
         collection_threshold = self.scale * 0.45
         threshold_sq = collection_threshold * collection_threshold
 
@@ -110,5 +99,6 @@ class PacgumComponent:
                 if (dx * dx + dy * dy) < threshold_sq:
                     power_pacgum.collected = True
                     score += 50
+                    super_collected = True
 
-        return score
+        return score, super_collected

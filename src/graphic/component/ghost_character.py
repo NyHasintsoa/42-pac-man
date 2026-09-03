@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  ghost_character.py                                :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 19:46:27 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from typing import TYPE_CHECKING, Dict, List
 
 import pyray as pr
@@ -34,6 +22,8 @@ class GhostCharacter(CharacterComponent):
         padding_x: int = 20,
     ) -> None:
         self.assets_path = "assets/ghost"
+
+        self.super_timer = 0.0
 
         super().__init__(
             maze_data=maze_data,
@@ -66,9 +56,15 @@ class GhostCharacter(CharacterComponent):
                 self.load_tex("ghost0_d3_1.png", pr.ORANGE),
             ],
         }
+
         self.ghost_edible_textures = [
             self.load_tex("edible_blue0.png", pr.BLUE),
             self.load_tex("edible_blue1.png", pr.BLUE),
+        ]
+
+        self.ghost_flash_textures = [
+            self.load_tex("edible_white0.png", pr.WHITE),
+            self.load_tex("edible_white1.png", pr.WHITE),
         ]
 
         self.look_id = 1
@@ -86,7 +82,9 @@ class GhostCharacter(CharacterComponent):
         elif self.direction.y == 1:
             self.look_id = 3
 
-    def update(self) -> None:
+    def update(self, super_timer: float = 0.0) -> None:
+        self.super_timer = super_timer
+
         if pr.is_key_pressed(pr.KeyboardKey.KEY_G):
             self.is_edible = not self.is_edible
 
@@ -121,10 +119,25 @@ class GhostCharacter(CharacterComponent):
 
     def render(self) -> None:
         if self.is_edible:
-            tex = self.ghost_edible_textures[
-                self.frame_index % len(self.ghost_edible_textures)
-            ]
+
+            if 0.0 < self.super_timer < 2.5:
+
+                use_flash_texture = int(pr.get_time() / 0.25) % 2 == 0
+                if use_flash_texture:
+                    tex = self.ghost_flash_textures[
+                        self.frame_index % len(self.ghost_flash_textures)
+                    ]
+                else:
+                    tex = self.ghost_edible_textures[
+                        self.frame_index % len(self.ghost_edible_textures)
+                    ]
+            else:
+
+                tex = self.ghost_edible_textures[
+                    self.frame_index % len(self.ghost_edible_textures)
+                ]
         else:
+
             seq = self.ghost_move_textures[self.look_id]
             tex = seq[self.frame_index % len(seq)]
 

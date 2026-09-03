@@ -1,15 +1,3 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  __init__.py                                       :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/10 17:31:29 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/14 14:56:32 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from src.graphic.component.button import Button
 from src.graphic.component.cheat import CheatComponent
 from src.graphic.component.ghost_character import GhostCharacter
