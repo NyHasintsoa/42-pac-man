@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:39:00 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 21:02:25 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -23,20 +23,24 @@ from src.graphic.page import (
     ParentPage,
     PlayerNamePage,
 )
-from src.model import GameContext
+from src.model import GameConfig, GameContext
 from src.model.enums import PageState
 
 
 class MainWindow:
-    def __init__(self, width: int, height: int, title: str) -> None:
+    def __init__(
+        self, width: int, height: int, config: GameConfig, title: str
+    ) -> None:
         self.width = width
         self.height = height
         self.title = title
         self.current_state: PageState
         self.current_page: Optional[ParentPage] = None
         self.windows: Dict[PageState, ParentPage] = {}
-        self.cached_maze: Optional[list] = None
-        self.context = GameContext()
+        self.context = GameContext(
+            config=config,
+            lives=config.lives,
+        )
 
         pr.set_trace_log_level(pr.TraceLogLevel.LOG_NONE)
         pr.init_window(self.width, self.height, self.title)

@@ -6,11 +6,12 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 17:54:15 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 20:08:37 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 21:42:03 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from abc import ABC
+from typing import List, Tuple, TypeAlias
 
 from pyray import WHITE, YELLOW, Color
 
@@ -45,3 +46,6 @@ class SuperPacgum(Pacgum):
 
     def update(self) -> None:
         self.animation_counter += 1
+
+
+Pacgums: TypeAlias = Tuple[List[SuperPacgum], List[SimplePacgum]]

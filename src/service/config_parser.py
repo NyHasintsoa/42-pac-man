@@ -6,31 +6,32 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 13:26:44 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 17:56:17 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 19:17:07 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from pathlib import Path
 import re
+from pathlib import Path
+
 from pydantic import ValidationError
 
-from src.model import GameConfig
 from src.exception import ConfigError
+from src.model import GameConfig
 
 
 class ConfigParser:
     @staticmethod
     def _strip_comments(json_str: str) -> str:
-        json_str = re.sub(r'/\*.*?\*/', '', json_str, flags=re.DOTALL)
+        json_str = re.sub(r"/\*.*?\*/", "", json_str, flags=re.DOTALL)
 
         clean_lines = []
         for line in json_str.splitlines():
             stripped = line.strip()
-            if stripped.startswith('#') or stripped.startswith('//'):
+            if stripped.startswith("#") or stripped.startswith("//"):
                 continue
-            line = re.sub(r'(?<!:)\s*(?://|#).*$', '', line)
+            line = re.sub(r"(?<!:)\s*(?://|#).*$", "", line)
             clean_lines.append(line)
-        return '\n'.join(clean_lines)
+        return "\n".join(clean_lines)
 
     @staticmethod
     def parse_file(file_path: str) -> GameConfig:
@@ -42,7 +43,7 @@ class ConfigParser:
                 )
             raw_data = path.read_text(encoding="utf-8")
             sanitized_json = ConfigParser._strip_comments(raw_data)
-            return GameConfig.model_validate_json(sanitized_json, strict=True)
+            return GameConfig.parse_json(sanitized_json)
         except FileNotFoundError:
             raise ConfigError(f"Configuration file '{file_path}' not found.")
         except PermissionError:

@@ -6,12 +6,13 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 17:27:21 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 22:03:20 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
+from typing import TYPE_CHECKING, List
+
 import pyray as pr
-from typing import List, TYPE_CHECKING
 
 from src.graphic.component.character import CharacterComponent
 
@@ -78,14 +79,21 @@ class PacmanCharacter(CharacterComponent):
                 if self.frame_index < len(self.death_textures) - 1:
                     self.frame_index += 1
             return
-
-        if pr.is_key_down(pr.KeyboardKey.KEY_RIGHT):
+        if pr.is_key_down(pr.KeyboardKey.KEY_RIGHT) or pr.is_key_down(
+            pr.KeyboardKey.KEY_D
+        ):
             self.next_direction = pr.Vector2(1, 0)
-        elif pr.is_key_down(pr.KeyboardKey.KEY_LEFT):
+        elif pr.is_key_down(pr.KeyboardKey.KEY_LEFT) or pr.is_key_down(
+            pr.KeyboardKey.KEY_A
+        ):
             self.next_direction = pr.Vector2(-1, 0)
-        elif pr.is_key_down(pr.KeyboardKey.KEY_UP):
+        elif pr.is_key_down(pr.KeyboardKey.KEY_UP) or pr.is_key_down(
+            pr.KeyboardKey.KEY_W
+        ):
             self.next_direction = pr.Vector2(0, -1)
-        elif pr.is_key_down(pr.KeyboardKey.KEY_DOWN):
+        elif pr.is_key_down(pr.KeyboardKey.KEY_DOWN) or pr.is_key_down(
+            pr.KeyboardKey.KEY_S
+        ):
             self.next_direction = pr.Vector2(0, 1)
 
         self.update_movement_and_grid()

@@ -1,3 +1,15 @@
+# ************************************************************************* #
+#                                                                           #
+#                                                      :::      ::::::::    #
+#  how_to_play.py                                    :+:      :+:    :+:    #
+#                                                  +:+ +:+         +:+      #
+#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
+#                                              +#+#+#+#+#+   +#+            #
+#  Created: 2026/07/13 20:54:25 by nramalan        #+#    #+#               #
+#  Updated: 2026/07/13 20:54:26 by nramalan        ###   ########.fr        #
+#                                                                           #
+# ************************************************************************* #
+
 import math
 from typing import TYPE_CHECKING
 
@@ -48,8 +60,9 @@ GHOSTS: 200 PTS.
             },
         ]
 
+        dummy_maze = [[0]]
         self.pacman_preview = PacmanCharacter(
-            maze_data=[[0]],
+            maze_data=dummy_maze,
             pos_x=0,
             pos_y=0,
             speed=0.0,
@@ -57,7 +70,7 @@ GHOSTS: 200 PTS.
             window=self.window,
         )
         self.ghost_preview = GhostCharacter(
-            maze_data=[[0]],
+            maze_data=dummy_maze,
             pos_x=0,
             pos_y=0,
             speed=0.0,
@@ -155,7 +168,6 @@ GHOSTS: 200 PTS.
         body_font_size: int,
         spacing: float,
     ) -> None:
-
         pr.draw_rectangle_rounded(
             pr.Rectangle(box_x, box_y, cell_width, cell_height),
             0.08,
@@ -209,31 +221,51 @@ GHOSTS: 200 PTS.
         sprite_size = int(cell_height * 0.18)
 
         if header == "CONTROLS":
-            ctrl_center_x = box_x + (cell_width // 2)
-            key_size = int(cell_height * 0.13)
+            key_size = int(cell_height * 0.12)
             offset_k = int(key_size * 1.15)
 
+            wasd_center_x = box_x + int(cell_width * 0.30)
+            self._draw_key_button(
+                "W",
+                wasd_center_x - (key_size // 2),
+                visual_area_y - offset_k,
+                key_size,
+            )
+            self._draw_key_button(
+                "A",
+                wasd_center_x - (key_size // 2) - offset_k,
+                visual_area_y,
+                key_size,
+            )
+            self._draw_key_button(
+                "S", wasd_center_x - (key_size // 2), visual_area_y, key_size
+            )
+            self._draw_key_button(
+                "D",
+                wasd_center_x - (key_size // 2) + offset_k,
+                visual_area_y,
+                key_size,
+            )
+
+            arrows_center_x = box_x + int(cell_width * 0.70)
             self._draw_key_button(
                 "^",
-                ctrl_center_x - (key_size // 2),
+                arrows_center_x - (key_size // 2),
                 visual_area_y - offset_k,
                 key_size,
             )
             self._draw_key_button(
                 "<",
-                ctrl_center_x - (key_size // 2) - offset_k,
+                arrows_center_x - (key_size // 2) - offset_k,
                 visual_area_y,
                 key_size,
             )
             self._draw_key_button(
-                "v",
-                ctrl_center_x - (key_size // 2),
-                visual_area_y,
-                key_size,
+                "v", arrows_center_x - (key_size // 2), visual_area_y, key_size
             )
             self._draw_key_button(
                 ">",
-                ctrl_center_x - (key_size // 2) + offset_k,
+                arrows_center_x - (key_size // 2) + offset_k,
                 visual_area_y,
                 key_size,
             )
@@ -262,7 +294,10 @@ GHOSTS: 200 PTS.
                     rotation_angle == 180.0 and dot_x < pac_x
                 ):
                     pr.draw_circle(
-                        int(dot_x), int(visual_area_y), 4, self.color_accent
+                        int(dot_x),
+                        int(visual_area_y),
+                        4,
+                        pr.Color(255, 255, 255, 255),
                     )
 
             self._draw_component_pacman(
@@ -337,7 +372,7 @@ GHOSTS: 200 PTS.
                 int(scoring_center_x - offset_w),
                 int(visual_area_y),
                 4,
-                self.color_accent,
+                pr.WHITE,
             )
             self._draw_text_with_shadow_ex(
                 "10",

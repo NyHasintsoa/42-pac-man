@@ -5,16 +5,17 @@
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 20:04:41 by nramalan        ###   ########.fr        #
+#  Created: 2026/07/13 20:41:06 by nramalan        #+#    #+#               #
+#  Updated: 2026/07/13 21:46:23 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from typing import TYPE_CHECKING, List, Tuple
+import math
+from typing import TYPE_CHECKING, List
 
 import pyray as pr
 
-from src.model import SimplePacgum, SuperPacgum
+from src.model import Pacgums, SimplePacgum, SuperPacgum
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -25,7 +26,7 @@ class PacgumComponent:
         self,
         maze_data: List[List[int]],
         window: "MainWindow",
-        pacgums: Tuple[List[SuperPacgum], List[SimplePacgum]],
+        pacgums: Pacgums,
         margin_top: int = 100,
         margin_bottom: int = 30,
         padding_x: int = 20,
@@ -61,17 +62,23 @@ class PacgumComponent:
         )
 
     def render(self) -> None:
+        simple_radius = self.scale * 0.1
+        base_super_radius = self.scale * 0.18
+
+        bounce_factor = 1.0 + 0.08 * math.sin(pr.get_time() * 8.0)
+        animated_super_radius = base_super_radius * bounce_factor
+
         for simple_pacgum in self.pacgums:
             if not simple_pacgum.collected:
                 pos = self.get_pixel_position(simple_pacgum.x, simple_pacgum.y)
-                pr.draw_circle_v(
-                    pos, simple_pacgum.radius, simple_pacgum.color
-                )
+                pr.draw_circle_v(pos, simple_radius, simple_pacgum.color)
 
         for power_pacgum in self.super_pacgums:
             if not power_pacgum.collected:
                 pos = self.get_pixel_position(power_pacgum.x, power_pacgum.y)
-                pr.draw_circle_v(pos, power_pacgum.radius, power_pacgum.color)
+                pr.draw_circle_v(
+                    pos, animated_super_radius, power_pacgum.color
+                )
 
     def update(self) -> None:
         for power_pacgum in self.super_pacgums:
@@ -79,12 +86,15 @@ class PacgumComponent:
 
     def collect_pacgums(self, px: int, py: int) -> int:
         score = 0
+        collection_threshold = self.scale * 0.45
+        threshold_sq = collection_threshold * collection_threshold
+
         for simple_pacgum in self.pacgums:
             if not simple_pacgum.collected:
                 pos = self.get_pixel_position(simple_pacgum.x, simple_pacgum.y)
                 dx = pos.x - px
                 dy = pos.y - py
-                if (dx * dx + dy * dy) < (15 * 15):
+                if (dx * dx + dy * dy) < threshold_sq:
                     simple_pacgum.collected = True
                     score += 10
 
@@ -93,7 +103,7 @@ class PacgumComponent:
                 pos = self.get_pixel_position(power_pacgum.x, power_pacgum.y)
                 dx = pos.x - px
                 dy = pos.y - py
-                if (dx * dx + dy * dy) < (15 * 15):
+                if (dx * dx + dy * dy) < threshold_sq:
                     power_pacgum.collected = True
                     score += 50
 

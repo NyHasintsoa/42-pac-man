@@ -2,7 +2,7 @@
 // PACMAN SETTINGS
 // -----------------------------------------------
 {
-  "highscore_filename": "scores/highscores.json",
+  "highscore_filename": "highscores.json",
   "lives": 3,
   "level_max_time": 90,
   "seed": 42,
@@ -18,7 +18,72 @@
   "levels": [
     {
       "width": 30,
-      "height": 20
+      "height": 20,
+      "seed": 42,
+      "pacgum": 578,
+      "points_per_pacgum": 10,
+      "points_per_super_pacgum": 50,
+      "points_per_ghost": 200
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42,
+      "level_max_time": 90,
+      "points_per_ghost": 200
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42,
+      "points_per_pacgum": 10,
+      "points_per_super_pacgum": 50,
+      "points_per_ghost": 200
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42,
+      "level_max_time": 90,
+      "points_per_ghost": 200
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42,
+      "points_per_pacgum": 10,
+      "points_per_super_pacgum": 50,
+      "points_per_ghost": 200
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42,
+      "level_max_time": 90,
+      "points_per_ghost": 200
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42
+    },
+    {
+      "width": 30,
+      "height": 20,
+      "seed": 42,
+      "points_per_pacgum": 10,
+      "points_per_super_pacgum": 50,
+      "points_per_ghost": 200
     }
   ]
 }

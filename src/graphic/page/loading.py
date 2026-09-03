@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/25 17:26:20 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:38:49 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 21:50:04 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -48,10 +48,10 @@ class LoadingPage(ParentPage):
                 return
 
             level_gen = LevelGenerator(config)
-            generated = level_gen.generate_levels()
-            self.context.levels = generated
-            if generated:
-                self.context.current_level = 0
+            maze, pacgums = level_gen.generate_levels()
+            self.context.maze_levels = maze
+            self.context.pacgums = pacgums
+            self.context.current_level = 0
             self.context.lives = config.lives
         finally:
             self.is_generation_done = True
