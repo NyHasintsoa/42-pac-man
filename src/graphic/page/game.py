@@ -164,6 +164,13 @@ class GamePage(ParentPage):
     def close_cheats(self) -> None:
         self.is_cheating = False
 
+    def finish_game(self, is_winner: bool = False) -> None:
+        self.context.score = self.score
+        self.context.current_level = self.current_level
+        self.context.time_elapsed = int(self.time_elapsed)
+        self.context.is_winner = is_winner
+        self.next_state = PageState.PLAYER_NAME_PAGE
+
     def check_character_collision(self) -> bool:
         if self.cheat_manager.invincible:
             return False
@@ -263,11 +270,7 @@ class GamePage(ParentPage):
             if self.pacman.frame_index >= len(self.pacman.death_textures) - 1:
                 self.lives -= 1
                 if self.lives <= 0:
-                    self.context.score = self.score
-                    self.context.is_winner = False
-                    self.context.current_level = self.current_level
-                    self.current_level = 1
-                    self.next_state = PageState.PLAYER_NAME_PAGE
+                    self.finish_game(is_winner=False)
                 else:
                     self.reset_positions()
             return
@@ -277,6 +280,10 @@ class GamePage(ParentPage):
         else:
             if self.time_elapsed > 0:
                 self.time_elapsed -= pr.get_frame_time()
+                if self.time_elapsed <= 0:
+                    self.time_elapsed = 0.0
+                    self.finish_game(is_winner=False)
+                    return
 
             if self.super_timer > 0.0:
                 self.super_timer -= pr.get_frame_time()
