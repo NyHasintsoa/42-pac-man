@@ -6,17 +6,25 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:04:40 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from typing import Dict, Optional
+
 import pyray as pr
 
+from src.graphic.page import (
+    GamePage,
+    HelpPage,
+    HighScorePage,
+    InitPage,
+    LoadingPage,
+    MenuPage,
+    ParentPage,
+    PlayerNamePage,
+)
 from src.model import GameContext
-from src.graphic.page import HelpPage, InitPage, MenuPage, ParentPage
-from src.graphic.page import GamePage
-from src.graphic.page.loading_page import LoadingPage
 from src.model.enums import PageState
 
 
@@ -39,21 +47,16 @@ class MainWindow:
         pr.set_exit_key(pr.KeyboardKey.KEY_NULL)
 
     def load_page(self) -> None:
-        loading_page = LoadingPage(self)
-        init_page = InitPage(self)
-        menu_page = MenuPage(self)
-        help_page = HelpPage(self)
-        game_page = GamePage(self)
-
         self.windows = {
-            PageState.LOADING_PAGE: loading_page,
-            PageState.INIT_MENU: init_page,
-            PageState.MAIN_MENU: menu_page,
-            PageState.HELP_MENU: help_page,
-            PageState.GAME_PAGE: game_page
+            PageState.LOADING_PAGE: LoadingPage(self),
+            PageState.INIT_MENU: InitPage(self),
+            PageState.MAIN_MENU: MenuPage(self),
+            PageState.HELP_MENU: HelpPage(self),
+            PageState.GAME_PAGE: GamePage(self),
+            PageState.PLAYER_NAME_PAGE: PlayerNamePage(self),
+            PageState.HIGH_SCORES_PAGE: HighScorePage(self),
         }
-
-        self.current_state = PageState.LOADING_PAGE
+        self.current_state = PageState.HIGH_SCORES_PAGE
         self.current_page = self.windows.get(self.current_state)
         if self.current_page:
             self.current_page.init(self.context)

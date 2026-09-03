@@ -6,16 +6,18 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:00:58 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 14:16:17 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-import pyray as pr
 from typing import TYPE_CHECKING
 
-from src.model.enums import PageState
+import pyray as pr
+
 from src.graphic.component import Button
 from src.graphic.page.parent_page import ParentPage
+from src.model.enums import PageState
+
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 
@@ -25,24 +27,36 @@ class MenuPage(ParentPage):
         super().__init__(window)
         self.state = PageState.MAIN_MENU
         self.btn_play = Button(
-            360, 340, 280, 70, "Play Game",
-            color=pr.DARKBLUE, hover_color=pr.SKYBLUE,
-            clicked_color=pr.GOLD, font_size=24, border_radius=0.35
+            360,
+            340,
+            280,
+            70,
+            "Play Game",
+            font_size=24,
         )
         self.btn_level = Button(
-            360, 440, 280, 70, "Level Select",
-            color=pr.DARKPURPLE, hover_color=pr.VIOLET,
-            clicked_color=pr.GOLD, font_size=24, border_radius=0.35
+            360,
+            440,
+            280,
+            70,
+            "Level Select",
+            font_size=24,
         )
         self.btn_help = Button(
-            360, 540, 280, 70, "Help & Controls",
-            color=pr.DARKGRAY, hover_color=pr.SKYBLUE,
-            clicked_color=pr.GOLD, font_size=24, border_radius=0.35
+            360,
+            540,
+            280,
+            70,
+            "Help & Controls",
+            font_size=24,
         )
         self.btn_exit = Button(
-            360, 640, 280, 70, "Quit Game",
-            color=pr.MAROON, hover_color=pr.RED,
-            clicked_color=pr.GOLD, font_size=24, border_radius=0.35
+            360,
+            640,
+            280,
+            70,
+            "Quit Game",
+            font_size=24,
         )
 
     def _event_listener(self) -> None:
@@ -61,7 +75,10 @@ class MenuPage(ParentPage):
         pr.draw_text("MAIN MENU", 320, 180, 60, pr.YELLOW)
         pr.draw_text(
             "Select your next challenge and jump back into the maze.",
-            210, 250, 22, pr.LIGHTGRAY
+            210,
+            250,
+            22,
+            pr.LIGHTGRAY,
         )
 
         pr.draw_circle(180, 220, 24, pr.GOLD)

@@ -1,21 +1,11 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  init_page.py                                      :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/10 17:21:14 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
-import pyray as pr
 from typing import TYPE_CHECKING
 
-from src.model.enums import PageState
-from src.graphic.component import Button
+import pyray as pr
+
+from src.graphic.component import MenuButton, PageFrame
 from src.graphic.page.parent_page import ParentPage
+from src.model.enums import PageState
+
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 
@@ -24,42 +14,64 @@ class InitPage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.INIT_MENU
-        self.btn_start = Button(
-            360, 590, 280, 70, "Start Adventure",
-            color=pr.DARKBLUE, hover_color=pr.SKYBLUE,
-            clicked_color=pr.GOLD, text_color=pr.WHITE,
-            font_size=26, border_radius=0.35
-        )
-        self.btn_help = Button(
-            360, 690, 280, 70, "How to Play",
-            color=pr.DARKPURPLE, hover_color=pr.VIOLET,
-            clicked_color=pr.GOLD, text_color=pr.WHITE,
-            font_size=26, border_radius=0.35
-        )
+        self.page_frame = PageFrame(window.width, window.height)
+        self.selected_index = 0
+        btn_width = 400
+        btn_height = 50
+        btn_x = (window.width - btn_width) // 2
+
+        self.buttons = [
+            MenuButton(
+                btn_x,
+                520,
+                btn_width,
+                btn_height,
+                "START ADVENTURE",
+                35,
+            ),
+            MenuButton(
+                btn_x,
+                590,
+                btn_width,
+                btn_height,
+                "HOW TO PLAY",
+                35,
+            ),
+        ]
 
     def _event_listener(self) -> None:
-        if self.btn_start.is_clicked:
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_UP) or pr.is_key_pressed(
+            pr.KeyboardKey.KEY_W
+        ):
+            self.selected_index = (self.selected_index - 1) % len(self.buttons)
+
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_DOWN) or pr.is_key_pressed(
+            pr.KeyboardKey.KEY_S
+        ):
+            self.selected_index = (self.selected_index + 1) % len(self.buttons)
+
+        enter_pressed = pr.is_key_pressed(
+            pr.KeyboardKey.KEY_ENTER
+        ) or pr.is_key_pressed(pr.KeyboardKey.KEY_KP_ENTER)
+
+        if self.buttons[0].is_clicked or (
+            self.selected_index == 0 and enter_pressed
+        ):
             self.next_state = PageState.MAIN_MENU
-        if self.btn_help.is_clicked:
+        elif self.buttons[1].is_clicked or (
+            self.selected_index == 1 and enter_pressed
+        ):
             self.next_state = PageState.HELP_MENU
 
     def render(self) -> None:
-        background_panel = pr.Rectangle(120, 120, 760, 680)
-        pr.draw_rectangle_rounded(background_panel, 0.3, 16, pr.DARKBLUE)
-        pr.draw_rectangle_rounded_lines(background_panel, 0.3, 16, pr.GOLD)
-
-        pr.draw_text("PAC-MAN", 320, 180, 72, pr.YELLOW)
-        pr.draw_text("A bold maze adventure with a 42 twist", 236, 260, 22, pr.LIGHTGRAY)
-        pr.draw_text(
-            "Choose your path, explore the maze, and enjoy arcade style fun.",
-            190, 300, 20, pr.LIGHTGRAY
-        )
-
-        pr.draw_circle(190, 220, 26, pr.GOLD)
-        pr.draw_circle(860, 220, 20, pr.SKYBLUE)
-        pr.draw_circle(760, 330, 14, pr.LIGHTGRAY)
-        pr.draw_circle(210, 330, 12, pr.LIGHTGRAY)
-
-        self.btn_start.render()
-        self.btn_help.render()
         self._event_listener()
+        self.page_frame.render()
+        pr.draw_text("PAC-MAN", 320, 180, 72, pr.YELLOW)
+
+        mouse_pos = pr.get_mouse_position()
+        for i, button in enumerate(self.buttons):
+            if pr.check_collision_point_rec(mouse_pos, button.rect):
+                self.selected_index = i
+
+        for i, button in enumerate(self.buttons):
+            button.render(is_focused=(i == self.selected_index))

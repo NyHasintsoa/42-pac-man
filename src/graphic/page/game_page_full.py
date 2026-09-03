@@ -6,18 +6,24 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 14:43:00 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 14:16:04 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-import pyray as pr
 from typing import TYPE_CHECKING
 
-from src.model.game_context import GameContext
-from src.graphic.component import PacmanCharacter, GhostCharacter
-from src.model.enums import PageState
-from src.graphic.component import Button, MazeComponent, PacgumComponent
+import pyray as pr
+
+from src.graphic.component import (
+    Button,
+    GhostCharacter,
+    MazeComponent,
+    PacgumComponent,
+    PacmanCharacter,
+)
 from src.graphic.page.parent_page import ParentPage
+from src.model.enums import PageState
+from src.model.game_context import GameContext
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -39,12 +45,8 @@ class GamePage(ParentPage):
             220,
             50,
             "Main Menu",
-            color=pr.DARKPURPLE,
-            hover_color=pr.VIOLET,
-            clicked_color=pr.GOLD,
             text_color=pr.WHITE,
             font_size=20,
-            border_radius=0.35,
         )
 
     def init(self, context: GameContext) -> None:
