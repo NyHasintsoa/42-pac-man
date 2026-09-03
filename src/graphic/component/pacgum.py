@@ -19,12 +19,9 @@ class PacgumComponent:
         margin_top: int = 80
         margin_bottom: int = 30
         padding_x: int = 20
+
         self.pacgums: List[SimplePacgum] = pacgums[1]
         self.super_pacgums: List[SuperPacgum] = pacgums[0]
-        for i in range(len(self.pacgums)):
-            self.pacgums[i].collected = False
-        for i in range(len(self.super_pacgums)):
-            self.super_pacgums[i].collected = False
 
         self.grid_cols = len(maze_data[0]) if maze_data else 0
         self.grid_rows = len(maze_data) if maze_data else 0

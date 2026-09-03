@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from src.model import GameContext
-from src.model.enums.page_state import PageState
+from src.model.enums import PageState
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow

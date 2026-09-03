@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 
 class GhostCharacter(CharacterComponent):
+
     def __init__(
         self,
         maze_data: List[List[int]],
@@ -17,7 +18,7 @@ class GhostCharacter(CharacterComponent):
         pos_y: int,
         speed: float,
         animation_speed: float,
-        window: "MainWindow",
+        window: MainWindow,
         score: int,
         ghost_name: str = "clyde",
     ) -> None:

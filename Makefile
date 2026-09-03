@@ -6,7 +6,7 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/04 16:13:37 by nramalan          #+#    #+#              #
-#    Updated: 2026/07/10 13:39:05 by nramalan         ###   ########.fr        #
+#    Updated: 2026/07/14 22:15:55 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ clean:
 	@echo "Cleaning project"
 	@find . -type d -name "__pycache__" -exec rm -rf {} +
 	@find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	@find . -type d -name "*.egg-info" -exec rm -rf {} +
 
 .PHONY: lint
 lint: $(VENV)

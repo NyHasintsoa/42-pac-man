@@ -18,3 +18,4 @@ class GameContext(BaseModel):
     score: int = 0
     lives: int = 3
     time_elapsed: int = 0
+    is_winner: bool = False

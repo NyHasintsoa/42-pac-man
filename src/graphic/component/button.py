@@ -2,7 +2,6 @@ import pyray as pr
 
 
 class Button:
-
     def __init__(
         self,
         pos_x: int,

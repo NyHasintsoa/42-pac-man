@@ -3,19 +3,22 @@ from typing import TYPE_CHECKING, List
 import pyray as pr
 
 from src.graphic.component import (
+    CheatComponent,
     GhostCharacter,
     MazeComponent,
     PacgumComponent,
     PacmanCharacter,
+    PauseComponent,
     ScoreBoardComponent,
 )
-from src.graphic.component.cheat import CheatComponent
-from src.graphic.component.pause import PauseComponent
 from src.graphic.page.parent import ParentPage
 from src.model import GameContext, LevelConfig, MazeData
 from src.model.enums import PageState
-from src.service.cheating_manager import CheatingManager
-from src.service.ghost_manager import GhostManager
+from src.service import (
+    CheatingManager,
+    GhostManager,
+    LevelManager,
+)
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -38,6 +41,7 @@ class GamePage(ParentPage):
 
         self.super_timer: float = 0.0
         self.super_duration: float = 7.0
+        self.level_manager = LevelManager(self.context)
 
     def init(self, context: GameContext) -> None:
         super().init(context)
@@ -45,12 +49,19 @@ class GamePage(ParentPage):
         self.levels = self.context.config.levels
         self.time_elapsed = self.levels[self.current_level - 1].level_max_time
         self.maze_data = self.context.maze_levels[self.current_level - 1]
-        pacgums = self.context.pacgums[self.current_level - 1]
+
+        level_pacgums = self.context.pacgums[self.current_level - 1]
+        for super_pacgum in level_pacgums[0]:
+            super_pacgum.collected = False
+        for simple_pacgum in level_pacgums[1]:
+            simple_pacgum.collected = False
 
         self.ready_timer = 3.0
         self.is_paused = False
         self.is_cheating = False
         self.super_timer = 0.0
+
+        self.level_manager = LevelManager(self.context)
 
         self.score_board = ScoreBoardComponent(
             self.window, high_score=120, padding_x=50
@@ -85,7 +96,9 @@ class GamePage(ParentPage):
         )
         self.ghosts = self.ghost_manager.ghosts
 
-        self.pacgums = PacgumComponent(self.maze_data, self.window, pacgums)
+        self.pacgums = PacgumComponent(
+            self.maze_data, self.window, level_pacgums
+        )
         self.pause_menu = PauseComponent(self.window)
         self.cheat_menu = CheatComponent(self.window, self.cheat_manager)
 
@@ -218,7 +231,9 @@ class GamePage(ParentPage):
             if self.pacman.frame_index >= len(self.pacman.death_textures) - 1:
                 self.lives -= 1
                 if self.lives <= 0:
-                    self.window.current_state = PageState.MAIN_MENU
+                    self.context.score = self.score
+                    self.context.is_winner = False
+                    self.next_state = PageState.PLAYER_NAME_PAGE
                 else:
                     self.reset_positions()
             return
@@ -274,6 +289,9 @@ class GamePage(ParentPage):
                     and not ghost.is_waiting_to_respawn
                 ):
                     ghost.is_edible = True
+
+        if self.level_manager.is_level_completed(self.pacgums):
+            self.level_manager.advance_level(self)
 
     def render(self) -> None:
         pr.clear_background(pr.BLACK)

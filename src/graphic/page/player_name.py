@@ -4,8 +4,8 @@ import pyray as pr
 
 from src.graphic.component import Button, Input, PageFrame
 from src.graphic.page.parent import ParentPage
+from src.model import GameContext
 from src.model.enums import PageState
-from src.model.game_context import GameContext
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -16,14 +16,16 @@ class PlayerNamePage(ParentPage):
         super().__init__(window)
         self.state = PageState.PLAYER_NAME_PAGE
         self.page_frame = PageFrame(window.width, window.height)
+
         box_width = 300
         box_height = 50
         box_x = (self.window.width // 2) - (box_width // 2)
-        self.box_y = (self.window.height // 2) - 40
+        self.box_y = (self.window.height // 2) + 30
+
         btn_width = 160
         btn_height = 45
         btn_x = (self.window.width // 2) - (btn_width // 2)
-        btn_y = self.box_y + box_height + 30
+        btn_y = self.box_y + box_height + 25
 
         self.name_input = Input(
             pos_x=box_x,
@@ -56,21 +58,54 @@ class PlayerNamePage(ParentPage):
         cleaned_name = self.name_input.value.strip()
 
         if cleaned_name:
-            print(f"[SUBMITTED PLAYER NAME]: {cleaned_name}")
+            print(f"[SUBMITTED PLAYER NAME]: {cleaned_name} with Score:\
+{self.context.score}")
         else:
-            print("[SUBMITTED PLAYER NAME]: Anonymous Player")
+            print(f"[SUBMITTED PLAYER NAME]: Anonymous Player with Score:\
+{self.context.score}")
+
+        self.window.current_state = PageState.MAIN_MENU
 
     def render(self) -> None:
         self.update()
         self.page_frame.render()
-        title_text = "ENTER PLAYER NAME"
-        title_size = 28
-        title_width = pr.measure_text(title_text, title_size)
+
+        if getattr(self.context, "is_winner", False):
+            outcome_text = "YOU WIN!"
+            outcome_color = pr.Color(46, 204, 113, 255)
+        else:
+            outcome_text = "GAME OVER"
+            outcome_color = pr.Color(231, 76, 60, 255)
+
+        outcome_font_size = 52
+        outcome_width = pr.measure_text(outcome_text, outcome_font_size)
         pr.draw_text(
-            title_text,
-            (self.window.width // 2) - (title_width // 2),
-            self.box_y - 60,
-            title_size,
+            outcome_text,
+            (self.window.width // 2) - (outcome_width // 2),
+            self.box_y - 180,
+            outcome_font_size,
+            outcome_color,
+        )
+
+        score_text = f"FINAL SCORE: {getattr(self.context, 'score', 0)}"
+        score_font_size = 24
+        score_width = pr.measure_text(score_text, score_font_size)
+        pr.draw_text(
+            score_text,
+            (self.window.width // 2) - (score_width // 2),
+            self.box_y - 120,
+            score_font_size,
+            pr.WHITE,
+        )
+
+        prompt_text = "ENTER PLAYER NAME"
+        prompt_size = 18
+        prompt_width = pr.measure_text(prompt_text, prompt_size)
+        pr.draw_text(
+            prompt_text,
+            (self.window.width // 2) - (prompt_width // 2),
+            self.box_y - 30,
+            prompt_size,
             pr.YELLOW,
         )
 
