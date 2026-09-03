@@ -8,8 +8,10 @@ from src.service import ConfigParser
 def main() -> None:
     if len(sys.argv) <= 1:
         raise ArgsError("Usage: python3 ./pac-man.py <config_file>")
-    ConfigParser.parse_file(sys.argv[1])
+    config = ConfigParser.parse_file(sys.argv[1])
     window = MainWindow(1500, 1000, "Pacman")
+    window.context.config = config
+    window.context.lives = config.lives
     window.add_event()
     window.load_page()
     window.render()

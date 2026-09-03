@@ -6,14 +6,15 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/25 17:26:20 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 19:04:26 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
 from threading import Thread
 from typing import TYPE_CHECKING
-from mazegenerator import MazeGenerator
+
+from src.service import LevelGenerator
 from src.model.enums import PageState
 from src.graphic.page.parent_page import ParentPage
 
@@ -28,20 +29,32 @@ class LoadingPage(ParentPage):
         self.next_state = PageState.LOADING_PAGE
         self.rotation_angle = 0.0
         self.is_generation_done = False
-        self.loading_message = "GENERATING MAZE CONFIGURATIONS..."
-        self.worker_thread = Thread(target=self._perform_heavy_generation)
-        self.worker_thread.daemon = True
-        self.worker_thread.start()
+        self.loading_message = "GENERATING LEVELS..."
+        self.progress_text = "Level generation progressing"
+
+        if self.context and self.context.config:
+            self.worker_thread = Thread(target=self._perform_heavy_generation)
+            self.worker_thread.daemon = True
+            self.worker_thread.start()
+        else:
+            self.is_generation_done = True
 
     def _perform_heavy_generation(self) -> None:
-        maze_cols, maze_rows = 20, 10
-        maze_gen = MazeGenerator(
-            (maze_cols, maze_rows), False,
-            (0, 0), (maze_cols - 1, maze_rows - 1)
-        )
-        maze_gen.generate()
-        self.context.maze_level = maze_gen.maze
-        self.is_generation_done = True
+        try:
+            config = self.context.config
+            if not config:
+                self.is_generation_done = True
+                return
+
+            level_gen = LevelGenerator(config)
+            generated = level_gen.generate_levels()
+            self.context.levels = generated
+            if generated:
+                self.context.current_level_index = 0
+                self.context.maze_level = generated[0].maze_data
+            self.context.lives = config.lives
+        finally:
+            self.is_generation_done = True
 
     def update(self) -> None:
         self.rotation_angle += 180.0 * pr.get_frame_time()

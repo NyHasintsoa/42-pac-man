@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 18:27:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -17,7 +17,7 @@ from src.model.game_context import GameContext
 from src.graphic.component import PacmanCharacter, GhostCharacter
 from src.model.enums import PageState
 from src.graphic.component import (
-    Button, MazeComponent, PacgumManager
+    Button, MazeComponent, PacgumComponent
 )
 from src.graphic.page.parent_page import ParentPage
 
@@ -70,7 +70,7 @@ class GamePage(ParentPage):
             logo_color=pr.Color(33, 208, 220, 255)
         )
 
-        self.pacgum_manager = PacgumManager(self.scale)
+        self.pacgum_manager = PacgumComponent(self.scale)
         self.pacgum_manager.generate_pacgums(
             self.maze_data, self.offset_x, self.offset_y
         )
@@ -118,7 +118,7 @@ class GamePage(ParentPage):
         if not self.is_paused:
             self.pacman.update()
             self.ghost.update()
-            self.pacgum_manager.update(pr.get_frame_time())
+            self.pacgum_manager.update()
 
             if not self.pacman.is_dead:
                 screen_px = int(self.pacman.pixel_pos.x + self.offset_x)
