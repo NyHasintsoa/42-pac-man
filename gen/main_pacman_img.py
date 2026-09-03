@@ -1,6 +1,7 @@
 import pyray as pr
 import os
 
+
 class PacmanGame:
     def __init__(self) -> None:
         self.screen_width = 400

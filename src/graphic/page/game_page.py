@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/15 20:39:54 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/22 22:14:07 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,6 +14,7 @@ import pyray as pr
 from typing import TYPE_CHECKING
 from mazegenerator import MazeGenerator
 
+from src.graphic.component import PacmanCharacter, GhostCharacter
 from src.enums import PageState
 from src.graphic.component import (
     Button, MazeComponent, PacgumManager
@@ -45,7 +46,6 @@ class GamePage(ParentPage):
         cell_size_h = available_height // maze_rows
         self.scale = int(min(cell_size_w, cell_size_h))
 
-        # Center the maze
         maze_pixel_width = maze_cols * self.scale
         maze_pixel_height = maze_rows * self.scale
         self.offset_x = (self.window.width - maze_pixel_width) // 2
@@ -65,6 +65,19 @@ class GamePage(ParentPage):
         self.pacgum_manager.generate_pacgums(
             self.maze_gen.maze, self.offset_x, self.offset_y
         )
+
+        self.pacman = PacmanCharacter(
+            maze_data=self.maze_gen.maze, tile_size=self.scale,
+            grid_x=1, grid_y=1, speed=2.0,
+            animation_speed=0.12
+        )
+
+        self.ghost = GhostCharacter(
+            maze_data=self.maze_gen.maze, tile_size=self.scale,
+            grid_x=maze_cols - 2, grid_y=maze_rows - 2, speed=1.5,
+            animation_speed=0.12
+        )
+
         self.btn_back = Button(
             self.window.width - 240, 15, 220, 50, "Main Menu",
             color=pr.DARKPURPLE, hover_color=pr.VIOLET,
@@ -72,24 +85,65 @@ class GamePage(ParentPage):
             font_size=20, border_radius=0.35
         )
 
+    def check_character_collision(self) -> bool:
+        collision_distance = self.scale * 0.75
+        distance = pr.vector2_distance(
+            self.pacman.pixel_pos, self.ghost.pixel_pos
+        )
+        return distance < collision_distance
+
     def _event_listener(self) -> None:
         if self.btn_back.is_clicked:
             self.next_state = PageState.MAIN_MENU
 
+        if not self.pacman.is_dead:
+            if pr.is_key_pressed(pr.KeyboardKey.KEY_G):
+                self.ghost.is_edible = not self.ghost.is_edible
+
+            if self.check_character_collision():
+                self.pacman.is_dead = True
+                self.pacman.frame_index = 0
+
+    def update(self) -> None:
+        self._event_listener()
+        self.pacman.update()
+        self.ghost.update()
+
     def render(self) -> None:
         pr.clear_background(pr.BLACK)
 
-        # Top bar (Relative to window width)
         pr.draw_rectangle(0, 0, self.window.width, 80, pr.DARKBLUE)
         pr.draw_rectangle_lines(0, 0, self.window.width, 80, pr.GOLD)
         pr.draw_text("PAC-MAN", 20, 20, 48, pr.YELLOW)
+
+        self.update()
         self.btn_back.render()
         self.maze_view.render()
         self.pacgum_manager.render()
 
-        # Bottom info bar (Relative to window height/width)
+        orig_pacman_pos = pr.Vector2(
+            self.pacman.pixel_pos.x, self.pacman.pixel_pos.y
+        )
+        orig_ghost_pos = pr.Vector2(
+            self.ghost.pixel_pos.x, self.ghost.pixel_pos.y
+        )
+
+        self.pacman.pixel_pos.x += self.offset_x
+        self.pacman.pixel_pos.y += self.offset_y
+        self.pacman.render()
+        self.pacman.pixel_pos = orig_pacman_pos
+
+        self.ghost.pixel_pos.x += self.offset_x
+        self.ghost.pixel_pos.y += self.offset_y
+        self.ghost.render()
+        self.ghost.pixel_pos = orig_ghost_pos
+
         b_y = self.window.height - 80
         pr.draw_rectangle(0, b_y, self.window.width, 80, pr.DARKBLUE)
         pr.draw_rectangle_lines(0, b_y, self.window.width, 80, pr.GOLD)
-
-        self._event_listener()
+        if self.pacman.is_dead:
+            pr.draw_text("GAME OVER - PACMAN KILLED", 40, b_y + 25, 24, pr.RED)
+        else:
+            ghost_status = "EDIBLE (Frightened)" if self.ghost.is_edible else "CHASE MODE"
+            pr.draw_text(f"SCORE: {self.score}   |   GHOST: {ghost_status}", 40, b_y + 28, 20, pr.RAYWHITE)
+            pr.draw_text("Press [G] to Toggle Frightened State", self.window.width - 400, b_y + 28, 18, pr.GOLD)

@@ -11,7 +11,10 @@ class PacmanGame:
         self.grid_rows = 20
 
         # --- Maze Generation Placeholder ---
-        self.maze_gen = MazeGenerator((self.grid_cols, self.grid_rows))
+        self.maze_gen = MazeGenerator(
+            (self.grid_cols, self.grid_rows),
+            False, (0, 0), (self.grid_cols - 1, self.grid_rows - 1)
+        )
         self.maze_gen.generate()
         self.maze: List[List[int]] = self.maze_gen.maze
         # -----------------------------------
