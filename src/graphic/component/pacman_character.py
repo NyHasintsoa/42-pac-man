@@ -6,14 +6,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/17 20:57:30 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 15:18:40 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
 from typing import List
 
-from src.graphic.component.character_component import CharacterComponent
+from src.graphic.component.character import CharacterComponent
 
 
 class PacmanCharacter(CharacterComponent):
@@ -24,7 +24,7 @@ class PacmanCharacter(CharacterComponent):
         grid_x: int,
         grid_y: int,
         speed: float,
-        animation_speed: float
+        animation_speed: float,
     ) -> None:
         self.assets_path = "assets/pacman"
         self.is_dead = False
@@ -36,7 +36,7 @@ class PacmanCharacter(CharacterComponent):
         self.move_textures = [
             self.load_tex("pacman_closed.png", pr.YELLOW),
             self.load_tex("pacman_move_0.png", pr.YELLOW),
-            self.load_tex("pacman_move_1.png", pr.YELLOW)
+            self.load_tex("pacman_move_1.png", pr.YELLOW),
         ]
         self.death_textures = [
             self.load_tex(f"pacman_death{i}.png", pr.ORANGE) for i in range(11)
@@ -86,11 +86,15 @@ class PacmanCharacter(CharacterComponent):
             ]
 
         pr.draw_texture_pro(
-            tex, pr.Rectangle(0, 0, tex.width, tex.height),
+            tex,
+            pr.Rectangle(0, 0, tex.width, tex.height),
             pr.Rectangle(
-                self.pixel_pos.x, self.pixel_pos.y,
-                self.tile_size, self.tile_size
+                self.pixel_pos.x,
+                self.pixel_pos.y,
+                self.tile_size,
+                self.tile_size,
             ),
             pr.Vector2(self.tile_size / 2, self.tile_size / 2),
-            self.rotation, pr.WHITE
+            self.rotation,
+            pr.WHITE,
         )

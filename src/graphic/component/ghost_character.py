@@ -6,14 +6,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/17 20:23:09 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 15:18:53 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
 from typing import Dict, List
 
-from src.graphic.component.character_component import CharacterComponent
+from src.graphic.component.character import CharacterComponent
 
 
 class GhostCharacter(CharacterComponent):
@@ -24,7 +24,7 @@ class GhostCharacter(CharacterComponent):
         grid_x: int,
         grid_y: int,
         speed: float,
-        animation_speed: float
+        animation_speed: float,
     ) -> None:
         self.assets_path = "assets/ghost"
         super().__init__(
@@ -35,24 +35,24 @@ class GhostCharacter(CharacterComponent):
         self.ghost_move_textures: Dict[int, List[pr.Texture]] = {
             0: [
                 self.load_tex("ghost0_d0_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d0_1.png", pr.ORANGE)
+                self.load_tex("ghost0_d0_1.png", pr.ORANGE),
             ],
             1: [
                 self.load_tex("ghost0_d1_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d1_1.png", pr.ORANGE)
+                self.load_tex("ghost0_d1_1.png", pr.ORANGE),
             ],
             2: [
                 self.load_tex("ghost0_d2_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d2_1.png", pr.ORANGE)
+                self.load_tex("ghost0_d2_1.png", pr.ORANGE),
             ],
             3: [
                 self.load_tex("ghost0_d3_0.png", pr.ORANGE),
-                self.load_tex("ghost0_d3_1.png", pr.ORANGE)
-            ]
+                self.load_tex("ghost0_d3_1.png", pr.ORANGE),
+            ],
         }
         self.ghost_edible_textures = [
             self.load_tex("edible_blue0.png", pr.BLUE),
-            self.load_tex("edible_blue1.png", pr.BLUE)
+            self.load_tex("edible_blue1.png", pr.BLUE),
         ]
 
         self.look_id = 1
@@ -80,17 +80,23 @@ class GhostCharacter(CharacterComponent):
             and abs(self.pixel_pos.y - center.y) < self.speed
         ):
             if self.check_wall_collision(
-                int(self.grid_pos.x), int(self.grid_pos.y),
-                int(self.direction.x), int(self.direction.y)
+                int(self.grid_pos.x),
+                int(self.grid_pos.y),
+                int(self.direction.x),
+                int(self.direction.y),
             ):
                 all_dirs = [
-                    pr.Vector2(1, 0), pr.Vector2(-1, 0),
-                    pr.Vector2(0, -1), pr.Vector2(0, 1)
+                    pr.Vector2(1, 0),
+                    pr.Vector2(-1, 0),
+                    pr.Vector2(0, -1),
+                    pr.Vector2(0, 1),
                 ]
                 for d in all_dirs:
                     if not self.check_wall_collision(
-                        int(self.grid_pos.x), int(self.grid_pos.y),
-                        int(d.x), int(d.y)
+                        int(self.grid_pos.x),
+                        int(self.grid_pos.y),
+                        int(d.x),
+                        int(d.y),
                     ):
                         self.next_direction = d
                         break
@@ -107,10 +113,15 @@ class GhostCharacter(CharacterComponent):
             tex = seq[self.frame_index % len(seq)]
 
         pr.draw_texture_pro(
-            tex, pr.Rectangle(0, 0, tex.width, tex.height),
+            tex,
+            pr.Rectangle(0, 0, tex.width, tex.height),
             pr.Rectangle(
-                self.pixel_pos.x, self.pixel_pos.y,
-                self.tile_size, self.tile_size
+                self.pixel_pos.x,
+                self.pixel_pos.y,
+                self.tile_size,
+                self.tile_size,
             ),
-            pr.Vector2(self.tile_size / 2, self.tile_size / 2), 0.0, pr.WHITE
+            pr.Vector2(self.tile_size / 2, self.tile_size / 2),
+            0.0,
+            pr.WHITE,
         )
