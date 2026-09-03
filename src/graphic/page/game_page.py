@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:27:44 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/30 19:13:57 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -77,7 +77,7 @@ class GamePage(ParentPage):
 
         self.pacman = PacmanCharacter(
             maze_data=self.maze_data, tile_size=self.scale,
-            grid_x=1, grid_y=1, speed=3.0,
+            grid_x=1, grid_y=1, speed=4.0,
             animation_speed=0.12
         )
 
