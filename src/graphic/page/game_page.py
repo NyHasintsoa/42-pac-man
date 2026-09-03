@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/22 23:05:10 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/25 17:30:34 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -33,12 +33,21 @@ class GamePage(ParentPage):
         self.lives = 3
         self.time_elapsed = 0
         self.game_running = True
+        self.is_paused = False
+        
         maze_cols, maze_rows = 20, 10
-        self.maze_gen = MazeGenerator(
-            (maze_cols, maze_rows), False,
-            (0, 0), (maze_cols - 1, maze_rows - 1)
-        )
-        self.maze_gen.generate()
+
+        # Extract the pre-generated thread layout directly from our MainWindow cache
+        if hasattr(self.window, "cached_maze") and self.window.cached_maze is not None:
+            self.maze_data = self.window.cached_maze
+        else:
+            # Fallback local generation if cache is missing
+            self.maze_gen = MazeGenerator(
+                (maze_cols, maze_rows), False,
+                (0, 0), (maze_cols - 1, maze_rows - 1)
+            )
+            self.maze_gen.generate()
+            self.maze_data = self.maze_gen.maze
 
         ui_height = 160
         available_width = self.window.width * 0.95
@@ -53,8 +62,9 @@ class GamePage(ParentPage):
         self.offset_y = (
             80 + ((self.window.height - 160) - maze_pixel_height) // 2
         )
+        
         self.maze_view = MazeComponent(
-            self.maze_gen.maze,
+            self.maze_data,
             x=self.offset_x,
             y=self.offset_y,
             scale=self.scale,
@@ -62,19 +72,20 @@ class GamePage(ParentPage):
             color=pr.Color(4, 4, 214, 255),
             logo_color=pr.Color(33, 208, 220, 255)
         )
+        
         self.pacgum_manager = PacgumManager(self.scale)
         self.pacgum_manager.generate_pacgums(
-            self.maze_gen.maze, self.offset_x, self.offset_y
+            self.maze_data, self.offset_x, self.offset_y
         )
 
         self.pacman = PacmanCharacter(
-            maze_data=self.maze_gen.maze, tile_size=self.scale,
+            maze_data=self.maze_data, tile_size=self.scale,
             grid_x=1, grid_y=1, speed=2.0,
             animation_speed=0.12
         )
 
         self.ghost = GhostCharacter(
-            maze_data=self.maze_gen.maze, tile_size=self.scale,
+            maze_data=self.maze_data, tile_size=self.scale,
             grid_x=maze_cols - 2, grid_y=maze_rows - 2, speed=1.5,
             animation_speed=0.12
         )
@@ -97,7 +108,13 @@ class GamePage(ParentPage):
         if self.btn_back.is_clicked:
             self.next_state = PageState.MAIN_MENU
 
-        if not self.pacman.is_dead:
+        # Keyboard Pause Listeners
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
+            self.is_paused = True
+        elif pr.is_key_pressed(pr.KeyboardKey.KEY_SPACE) and self.is_paused:
+            self.is_paused = False
+
+        if not self.pacman.is_dead and not self.is_paused:
             if pr.is_key_pressed(pr.KeyboardKey.KEY_G):
                 self.ghost.is_edible = not self.ghost.is_edible
 
@@ -107,20 +124,23 @@ class GamePage(ParentPage):
 
     def update(self) -> None:
         self._event_listener()
-        self.pacman.update()
-        self.ghost.update()
+        
+        if not self.is_paused:
+            self.pacman.update()
+            self.ghost.update()
+            self.pacgum_manager.update(pr.get_frame_time())
 
-        self.pacgum_manager.update(pr.get_frame_time())
-
-        if not self.pacman.is_dead:
-            screen_px = int(self.pacman.pixel_pos.x + self.offset_x)
-            screen_py = int(self.pacman.pixel_pos.y + self.offset_y)
-            gained_score = self.pacgum_manager.collect_pacgums(screen_px, screen_py)
-            self.score += gained_score
+            if not self.pacman.is_dead:
+                screen_px = int(self.pacman.pixel_pos.x + self.offset_x)
+                screen_py = int(self.pacman.pixel_pos.y + self.offset_y)
+                gained_score = self.pacgum_manager.collect_pacgums(screen_px, screen_py)
+                self.score += gained_score
 
     def render(self) -> None:
+        # Note: Window open/close drawing contexts are handled by MainWindow loop wrappers
         pr.clear_background(pr.BLACK)
 
+        # Header bar
         pr.draw_rectangle(0, 0, self.window.width, 80, pr.DARKBLUE)
         pr.draw_rectangle_lines(0, 0, self.window.width, 80, pr.GOLD)
         pr.draw_text("PAC-MAN", 20, 20, 48, pr.YELLOW)
@@ -130,12 +150,9 @@ class GamePage(ParentPage):
         self.maze_view.render()
         self.pacgum_manager.render()
 
-        orig_pacman_pos = pr.Vector2(
-            self.pacman.pixel_pos.x, self.pacman.pixel_pos.y
-        )
-        orig_ghost_pos = pr.Vector2(
-            self.ghost.pixel_pos.x, self.ghost.pixel_pos.y
-        )
+        # Isolate screen offsets to render transformations cleanly
+        orig_pacman_pos = pr.Vector2(self.pacman.pixel_pos.x, self.pacman.pixel_pos.y)
+        orig_ghost_pos = pr.Vector2(self.ghost.pixel_pos.x, self.ghost.pixel_pos.y)
 
         self.pacman.pixel_pos.x += self.offset_x
         self.pacman.pixel_pos.y += self.offset_y
@@ -147,12 +164,28 @@ class GamePage(ParentPage):
         self.ghost.render()
         self.ghost.pixel_pos = orig_ghost_pos
 
+        # Bottom Hud Panel
         b_y = self.window.height - 80
         pr.draw_rectangle(0, b_y, self.window.width, 80, pr.DARKBLUE)
         pr.draw_rectangle_lines(0, b_y, self.window.width, 80, pr.GOLD)
+        
         if self.pacman.is_dead:
             pr.draw_text("GAME OVER - PACMAN KILLED", 40, b_y + 25, 24, pr.RED)
         else:
             ghost_status = "EDIBLE (Frightened)" if self.ghost.is_edible else "CHASE MODE"
             pr.draw_text(f"SCORE: {self.score}   |   GHOST: {ghost_status}", 40, b_y + 28, 20, pr.RAYWHITE)
-            pr.draw_text("Press [G] to Toggle Frightened State", self.window.width - 400, b_y + 28, 18, pr.GOLD)
+            pr.draw_text("Press [ESC] to Pause Game", self.window.width - 320, b_y + 28, 18, pr.GOLD)
+
+        # Rendering Overlay if the active game state is paused
+        if self.is_paused:
+            pr.draw_rectangle(0, 0, self.window.width, self.window.height, pr.Color(0, 0, 0, 180))
+            
+            box_w, box_h = 450, 160
+            box_x = (self.window.width - box_w) // 2
+            box_y = (self.window.height - box_h) // 2
+            
+            pr.draw_rectangle_rounded(pr.Rectangle(box_x, box_y, box_w, box_h), 0.15, 4, pr.DARKBLUE)
+            pr.draw_rectangle_rounded_lines(pr.Rectangle(box_x, box_y, box_w, box_h), 0.15, 4, 3.0, pr.GOLD)
+            
+            pr.draw_text("GAME PAUSED", box_x + 115, box_y + 35, 32, pr.YELLOW)
+            pr.draw_text("Press [SPACE] to Resume Playing", box_x + 55, box_y + 95, 20, pr.RAYWHITE)
