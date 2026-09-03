@@ -6,14 +6,15 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/10 21:55:52 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/11 08:10:14 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from typing import Dict, Optional
 import pyray as pr
 
-from src.graphic.page import ParentPage, InitPage, HelpPage, MenuPage
+from src.graphic.page import HelpPage, InitPage, MenuPage, ParentPage
+from src.graphic.page import GamePage, LevelPage
 from src.enums import PageState
 
 
@@ -27,22 +28,28 @@ class MainWindow:
         self.windows: Dict[PageState, ParentPage]
         pr.set_trace_log_level(pr.TraceLogLevel.LOG_NONE)
         pr.init_window(self.width, self.height, self.title)
-        pr.set_target_fps(30)
+        pr.set_target_fps(60)
 
     def add_event(self) -> None:
         pr.set_exit_key(pr.KeyboardKey.KEY_NULL)
 
     def load_page(self) -> None:
-        init_page = InitPage()
-        menu_page = MenuPage()
-        help_page = HelpPage()
+        init_page = InitPage(self)
+        menu_page = MenuPage(self)
+        help_page = HelpPage(self)
+        game_page = GamePage(self)
+        level_page = LevelPage(self)
         self.windows = {
             PageState.INIT_MENU: init_page,
             PageState.MAIN_MENU: menu_page,
             PageState.HELP_MENU: help_page,
+            PageState.LEVEL_MENU: level_page,
+            PageState.GAME_PAGE: game_page
         }
         self.current_state = PageState.INIT_MENU
         self.current_page = self.windows.get(self.current_state)
+        if self.current_page:
+            self.current_page.init()
 
     def render(self) -> None:
         while not pr.window_should_close():
@@ -55,6 +62,6 @@ class MainWindow:
                 self.current_state = self.current_page.next_state
                 self.current_page = self.windows.get(self.current_state)
                 if self.current_page:
-                    self.current_page.on_enter()
+                    self.current_page.init()
             pr.end_drawing()
         pr.close_window()

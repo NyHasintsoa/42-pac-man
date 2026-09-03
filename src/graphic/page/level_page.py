@@ -1,12 +1,12 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  menu_page.py                                      :+:      :+:    :+:    #
+#  level_page.py                                     :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/10 17:00:58 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:13:18 by nramalan        ###   ########.fr        #
+#  Created: 2026/05/11 07:54:19 by nramalan        #+#    #+#               #
+#  Updated: 2026/05/11 08:15:04 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -20,25 +20,21 @@ if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 
 
-class MenuPage(ParentPage):
+class LevelPage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
-        self.state = PageState.MAIN_MENU
-        self.btn_first = Button(50, 50, 100, 40, "Go to Help")
-        self.btn_second = Button(300, 250, 200, 50, "Back to Init")
-        self.btn_third = Button(600, 450, 200, 50, "Level Menu")
+        self.state = PageState.LEVEL_MENU
+        self.btn_first = Button(50, 50, 100, 40, "Start Game")
+        self.btn_second = Button(300, 250, 200, 50, "Go to Main Menu")
 
     def _event_listener(self) -> None:
         if (self.btn_first.is_clicked):
-            self.next_state = PageState.HELP_MENU
+            self.next_state = PageState.GAME_PAGE
         if (self.btn_second.is_clicked):
-            self.next_state = PageState.INIT_MENU
-        if (self.btn_third.is_clicked):
-            self.next_state = PageState.LEVEL_MENU
+            self.next_state = PageState.MAIN_MENU
 
     def render(self) -> None:
-        pr.draw_text("Menu Page", 220, 100, 40, pr.YELLOW)
+        pr.draw_text("Level Page", 220, 100, 40, pr.YELLOW)
         self.btn_first.render()
         self.btn_second.render()
-        self.btn_third.render()
         self._event_listener()
