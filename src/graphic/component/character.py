@@ -1,64 +1,83 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  character_component.py                            :+:      :+:    :+:    #
+#  character.py                                      :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/15 20:50:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 13:23:31 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 17:26:35 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
 import os
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.graphic.main_window import MainWindow
 
 
 class CharacterComponent(ABC):
     def __init__(
         self,
         maze_data: List[List[int]],
-        tile_size: int,
-        grid_x: int,
-        grid_y: int,
+        pos_x: int,
+        pos_y: int,
         speed: float,
-        animation_speed: float
+        animation_speed: float,
+        window: "MainWindow",
+        margin_top: int = 80,
+        margin_bottom: int = 30,
+        padding_x: int = 20,
     ) -> None:
         self.maze_data = maze_data
         self.grid_cols = len(maze_data[0]) if maze_data else 0
         self.grid_rows = len(maze_data) if maze_data else 0
-        self.tile_size = tile_size
         self.speed = speed
         self.animation_speed = animation_speed
         self.assets_path: str
+        available_width = float(window.width - (padding_x * 2))
+        available_height = float(
+            window.height - margin_top - (padding_x * 2) - margin_bottom
+        )
+        scale_x = (
+            available_width / self.grid_cols if self.grid_cols > 0 else 1.0
+        )
+        scale_y = (
+            available_height / self.grid_rows if self.grid_rows > 0 else 1.0
+        )
+        self.scale = min(scale_x, scale_y)
 
-        self.grid_pos = pr.Vector2(grid_x, grid_y)
+        self.offset_x = (window.width - (self.grid_cols * self.scale)) / 2.0
+        self.offset_y = (
+            margin_top
+            + (available_height - (self.grid_rows * self.scale)) / 2.0
+        )
+        self.grid_pos = pr.Vector2(pos_x, pos_y)
         self.pixel_pos = self.get_tile_center(self.grid_pos)
         self.direction = pr.Vector2(0, 0)
         self.next_direction = pr.Vector2(0, 0)
-
         self.frame_index = 0
         self.frame_timer = 0.0
-
         self.load_textures()
 
     def get_tile_center(self, grid_pos: pr.Vector2) -> pr.Vector2:
         return pr.Vector2(
-            grid_pos.x * self.tile_size + self.tile_size // 2,
-            grid_pos.y * self.tile_size + self.tile_size // 2
+            grid_pos.x * self.scale + self.offset_x + (self.scale / 2.0),
+            grid_pos.y * self.scale + self.offset_y + (self.scale / 2.0),
         )
 
     def load_tex(self, filename: str, fallback_color: pr.Color) -> pr.Texture:
         path = os.path.join(self.assets_path, filename)
+        size = int(self.scale) if int(self.scale) > 0 else 1
+
         if not os.path.exists(path):
-            img = pr.gen_image_color(
-                self.tile_size, self.tile_size, fallback_color
-            )
+            img = pr.gen_image_color(size, size, fallback_color)
         else:
             img = pr.load_image(path)
-            pr.image_resize(img, self.tile_size, self.tile_size)
+            pr.image_resize(img, size, size)
         tex = pr.load_texture_from_image(img)
         pr.unload_image(img)
         return tex
@@ -101,22 +120,27 @@ class CharacterComponent(ABC):
             and abs(self.pixel_pos.y - center.y) < self.speed
         ):
             if not self.check_wall_collision(
-                int(self.grid_pos.x), int(self.grid_pos.y),
-                int(self.next_direction.x), int(self.next_direction.y)
+                int(self.grid_pos.x),
+                int(self.grid_pos.y),
+                int(self.next_direction.x),
+                int(self.next_direction.y),
             ):
                 self.direction = self.next_direction
                 self.on_direction_changed()
             if self.check_wall_collision(
-                int(self.grid_pos.x), int(self.grid_pos.y),
-                int(self.direction.x), int(self.direction.y)
+                int(self.grid_pos.x),
+                int(self.grid_pos.y),
+                int(self.direction.x),
+                int(self.direction.y),
             ):
                 self.direction = pr.Vector2(0, 0)
                 self.pixel_pos = center
 
         self.pixel_pos.x += self.direction.x * self.speed
         self.pixel_pos.y += self.direction.y * self.speed
-        self.grid_pos.x = int(self.pixel_pos.x // self.tile_size)
-        self.grid_pos.y = int(self.pixel_pos.y // self.tile_size)
+
+        self.grid_pos.x = int((self.pixel_pos.x - self.offset_x) // self.scale)
+        self.grid_pos.y = int((self.pixel_pos.y - self.offset_y) // self.scale)
 
     def update_animation_timer(self) -> None:
         self.frame_timer += pr.get_frame_time()

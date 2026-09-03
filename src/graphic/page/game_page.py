@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 16:32:15 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 17:32:09 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,7 +15,12 @@ from typing import TYPE_CHECKING
 
 from src.model.game_context import GameContext
 from src.model.enums import PageState
-from src.graphic.component import MazeComponent, ScoreBoardComponent
+from src.graphic.component import (
+    MazeComponent,
+    ScoreBoardComponent,
+    PacmanCharacter,
+    GhostCharacter,
+)
 from src.graphic.page.parent_page import ParentPage
 
 if TYPE_CHECKING:
@@ -59,8 +64,34 @@ class GamePage(ParentPage):
             self.window,
             margin_top=100,
             margin_bottom=30,
+            padding_x=20,
             color=pr.Color(4, 4, 214, 255),
             logo_color=pr.Color(33, 208, 220, 255),
+        )
+        center_y = round(len(self.maze_data) / 2)
+        center_x = round(len(self.maze_data[0]) / 2)
+        self.pacman = PacmanCharacter(
+            self.maze_data,
+            center_x,
+            center_y,
+            2.0,
+            0.15,
+            self.window,
+            100,
+            30,
+            20,
+        )
+
+        self.ghost = GhostCharacter(
+            self.maze_data,
+            1,
+            1,
+            2.0,
+            0.15,
+            self.window,
+            100,
+            30,
+            20,
         )
 
     def _event_listener(self) -> None:
@@ -71,9 +102,13 @@ class GamePage(ParentPage):
         self.score_board.update(
             self.score, self.lives, self.level, self.time_elapsed
         )
+        self.pacman.update()
+        self.ghost.update()
 
     def render(self) -> None:
         pr.clear_background(pr.BLACK)
         self.update()
         self.score_board.render()
         self.maze_view.render()
+        self.pacman.render()
+        self.ghost.render()

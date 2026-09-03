@@ -6,30 +6,44 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 15:18:40 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 17:27:21 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from src.graphic.component.character import CharacterComponent
+
+if TYPE_CHECKING:
+    from src.graphic.main_window import MainWindow
 
 
 class PacmanCharacter(CharacterComponent):
     def __init__(
         self,
         maze_data: List[List[int]],
-        tile_size: int,
-        grid_x: int,
-        grid_y: int,
+        pos_x: int,
+        pos_y: int,
         speed: float,
         animation_speed: float,
+        window: "MainWindow",
+        margin_top: int = 80,
+        margin_bottom: int = 30,
+        padding_x: int = 20,
     ) -> None:
         self.assets_path = "assets/pacman"
         self.is_dead = False
         super().__init__(
-            maze_data, tile_size, grid_x, grid_y, speed, animation_speed
+            maze_data=maze_data,
+            pos_x=pos_x,
+            pos_y=pos_y,
+            speed=speed,
+            animation_speed=animation_speed,
+            window=window,
+            margin_top=margin_top,
+            margin_bottom=margin_bottom,
+            padding_x=padding_x,
         )
 
     def load_textures(self) -> None:
@@ -91,10 +105,10 @@ class PacmanCharacter(CharacterComponent):
             pr.Rectangle(
                 self.pixel_pos.x,
                 self.pixel_pos.y,
-                self.tile_size,
-                self.tile_size,
+                (self.scale - 5),
+                (self.scale - 5),
             ),
-            pr.Vector2(self.tile_size / 2, self.tile_size / 2),
+            pr.Vector2((self.scale - 5) / 2.0, (self.scale - 5) / 2.0),
             self.rotation,
             pr.WHITE,
         )
