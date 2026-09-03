@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:00:48 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:03:22 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/11 08:33:04 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -24,17 +24,47 @@ class HelpPage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.HELP_MENU
-        self.btn_first = Button(50, 50, 100, 40, "Back to Menu")
-        self.btn_second = Button(300, 250, 200, 50, "Close")
+        self.btn_back = Button(
+            360, 760, 280, 70, "Back to Menu",
+            color=pr.DARKBLUE, hover_color=pr.SKYBLUE,
+            clicked_color=pr.GOLD, font_size=24, border_radius=0.35
+        )
+        self.btn_quit = Button(
+            360, 840, 280, 70, "Quit Game",
+            color=pr.MAROON, hover_color=pr.RED,
+            clicked_color=pr.GOLD, font_size=24, border_radius=0.35
+        )
 
     def _event_listener(self) -> None:
-        if (self.btn_first.is_clicked):
+        if self.btn_back.is_clicked:
             self.next_state = PageState.MAIN_MENU
-        if (self.btn_second.is_clicked):
-            print("Help page -> closing application")
+        if self.btn_quit.is_clicked:
+            pr.close_window()
 
     def render(self) -> None:
-        pr.draw_text("Help Page", 220, 100, 40, pr.YELLOW)
-        self.btn_first.render()
-        self.btn_second.render()
+        panel = pr.Rectangle(100, 140, 800, 760)
+        pr.draw_rectangle_rounded(panel, 0.3, 16, pr.DARKBLUE)
+        pr.draw_rectangle_rounded_lines(panel, 0.3, 16, pr.GOLD)
+
+        pr.draw_text("HELP & CONTROLS", 240, 180, 58, pr.YELLOW)
+        pr.draw_text(
+            "Keep your finger on the mouse and click the buttons to navigate.",
+            140, 240, 22, pr.LIGHTGRAY
+        )
+        pr.draw_text("- Use the menu to start the game or choose a level.", 140, 320, 22, pr.LIGHTGRAY)
+        pr.draw_text("- Explore the maze and enjoy the arcade-style UI.", 140, 360, 22, pr.LIGHTGRAY)
+        pr.draw_text("- Return any time with the main menu button.", 140, 400, 22, pr.LIGHTGRAY)
+
+        pr.draw_text("Tip:", 140, 470, 28, pr.GOLD)
+        pr.draw_text(
+            "A glowing golden path guides your way through the maze.",
+            190, 470, 22, pr.LIGHTGRAY
+        )
+
+        pr.draw_circle(840, 200, 18, pr.GOLD)
+        pr.draw_circle(820, 260, 14, pr.SKYBLUE)
+        pr.draw_circle(840, 320, 10, pr.LIGHTGRAY)
+
+        self.btn_back.render()
+        self.btn_quit.render()
         self._event_listener()
