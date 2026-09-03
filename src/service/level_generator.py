@@ -1,19 +1,18 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  __init__.py                                       :+:      :+:    :+:    #
+#  level_generator.py                                :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/10 16:46:31 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/10 18:37:24 by nramalan        ###   ########.fr        #
+#  Created: 2026/05/27 17:33:57 by nramalan        #+#    #+#               #
+#  Updated: 2026/05/27 17:56:17 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from typing import List
+from src.model import GameConfig
 
-from src.enums.page_state import PageState
 
-__all__: List[str] = [
-    "PageState",
-]
+class LevelGenerator:
+    def __init__(self, config: GameConfig) -> None:
+        self.config = config

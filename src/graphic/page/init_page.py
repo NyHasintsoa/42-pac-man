@@ -6,14 +6,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:21:14 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:33:04 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
 from typing import TYPE_CHECKING
 
-from src.enums import PageState
+from src.model.enums import PageState
 from src.graphic.component import Button
 from src.graphic.page.parent_page import ParentPage
 if TYPE_CHECKING:

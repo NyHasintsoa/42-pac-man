@@ -6,15 +6,15 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 17:07:23 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 17:02:09 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from abc import abstractmethod, ABC
 from typing import TYPE_CHECKING
 
-from src.data import GameContext
-from src.enums.page_state import PageState
+from src.model import GameContext
+from src.model.enums.page_state import PageState
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 

@@ -6,16 +6,16 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 17:20:57 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import pyray as pr
 from typing import TYPE_CHECKING
 
-from src.data.game_context import GameContext
+from src.model.game_context import GameContext
 from src.graphic.component import PacmanCharacter, GhostCharacter
-from src.enums import PageState
+from src.model.enums import PageState
 from src.graphic.component import (
     Button, MazeComponent, PacgumManager
 )

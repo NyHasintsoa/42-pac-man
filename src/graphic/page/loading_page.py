@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/25 17:26:20 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 17:15:14 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,7 +14,7 @@ import pyray as pr
 from threading import Thread
 from typing import TYPE_CHECKING
 from mazegenerator import MazeGenerator
-from src.enums import PageState
+from src.model.enums import PageState
 from src.graphic.page.parent_page import ParentPage
 
 if TYPE_CHECKING:

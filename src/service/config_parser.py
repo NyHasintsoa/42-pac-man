@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 13:26:44 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 16:09:11 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 17:56:17 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,7 +14,7 @@ from pathlib import Path
 import re
 from pydantic import ValidationError
 
-from src.data import GameConfig
+from src.model import GameConfig
 from src.exception import ConfigError
 
 

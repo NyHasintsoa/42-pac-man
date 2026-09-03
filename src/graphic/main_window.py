@@ -6,18 +6,18 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 17:03:25 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/27 18:07:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from typing import Dict, Optional
 import pyray as pr
 
-from src.data import GameContext
+from src.model import GameContext
 from src.graphic.page import HelpPage, InitPage, MenuPage, ParentPage
 from src.graphic.page import GamePage
 from src.graphic.page.loading_page import LoadingPage
-from src.enums import PageState
+from src.model.enums import PageState
 
 
 class MainWindow:
