@@ -1,1 +1,31 @@
-{}
+// -----------------------------------------------
+// CRITICAL HARDCORE MODE RUNTIME SETTINGS
+// -----------------------------------------------
+{
+  "highscore_filename": "scores/hardcore_leaderboard.log",
+  "lives": 1, // One strike and you are out
+  "level_max_time": 45, // Extremely tight time limit
+  "seed": 42, // Keeps the map generation predictable
+
+  "points_per_ghost": 500, // High risk, high reward
+
+  // Single massive map structure
+  "levels": [
+    {
+      "width": 50,
+      "height": 50
+    },
+    {
+      "width": 50,
+      "height": 50
+    },
+    {
+      "width": 50,
+      "height": 50
+    },
+    {
+      "width": 50,
+      "height": 50
+    }
+  ]
+}

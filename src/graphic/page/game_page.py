@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/25 17:30:34 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/25 17:41:57 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -34,14 +34,12 @@ class GamePage(ParentPage):
         self.time_elapsed = 0
         self.game_running = True
         self.is_paused = False
-        
+
         maze_cols, maze_rows = 20, 10
 
-        # Extract the pre-generated thread layout directly from our MainWindow cache
         if hasattr(self.window, "cached_maze") and self.window.cached_maze is not None:
             self.maze_data = self.window.cached_maze
         else:
-            # Fallback local generation if cache is missing
             self.maze_gen = MazeGenerator(
                 (maze_cols, maze_rows), False,
                 (0, 0), (maze_cols - 1, maze_rows - 1)
@@ -62,7 +60,6 @@ class GamePage(ParentPage):
         self.offset_y = (
             80 + ((self.window.height - 160) - maze_pixel_height) // 2
         )
-        
         self.maze_view = MazeComponent(
             self.maze_data,
             x=self.offset_x,
@@ -72,7 +69,7 @@ class GamePage(ParentPage):
             color=pr.Color(4, 4, 214, 255),
             logo_color=pr.Color(33, 208, 220, 255)
         )
-        
+
         self.pacgum_manager = PacgumManager(self.scale)
         self.pacgum_manager.generate_pacgums(
             self.maze_data, self.offset_x, self.offset_y
@@ -124,7 +121,7 @@ class GamePage(ParentPage):
 
     def update(self) -> None:
         self._event_listener()
-        
+
         if not self.is_paused:
             self.pacman.update()
             self.ghost.update()
@@ -137,7 +134,6 @@ class GamePage(ParentPage):
                 self.score += gained_score
 
     def render(self) -> None:
-        # Note: Window open/close drawing contexts are handled by MainWindow loop wrappers
         pr.clear_background(pr.BLACK)
 
         # Header bar
@@ -150,7 +146,6 @@ class GamePage(ParentPage):
         self.maze_view.render()
         self.pacgum_manager.render()
 
-        # Isolate screen offsets to render transformations cleanly
         orig_pacman_pos = pr.Vector2(self.pacman.pixel_pos.x, self.pacman.pixel_pos.y)
         orig_ghost_pos = pr.Vector2(self.ghost.pixel_pos.x, self.ghost.pixel_pos.y)
 
@@ -168,7 +163,6 @@ class GamePage(ParentPage):
         b_y = self.window.height - 80
         pr.draw_rectangle(0, b_y, self.window.width, 80, pr.DARKBLUE)
         pr.draw_rectangle_lines(0, b_y, self.window.width, 80, pr.GOLD)
-        
         if self.pacman.is_dead:
             pr.draw_text("GAME OVER - PACMAN KILLED", 40, b_y + 25, 24, pr.RED)
         else:
@@ -176,16 +170,15 @@ class GamePage(ParentPage):
             pr.draw_text(f"SCORE: {self.score}   |   GHOST: {ghost_status}", 40, b_y + 28, 20, pr.RAYWHITE)
             pr.draw_text("Press [ESC] to Pause Game", self.window.width - 320, b_y + 28, 18, pr.GOLD)
 
-        # Rendering Overlay if the active game state is paused
         if self.is_paused:
             pr.draw_rectangle(0, 0, self.window.width, self.window.height, pr.Color(0, 0, 0, 180))
-            
+
             box_w, box_h = 450, 160
             box_x = (self.window.width - box_w) // 2
             box_y = (self.window.height - box_h) // 2
-            
+
             pr.draw_rectangle_rounded(pr.Rectangle(box_x, box_y, box_w, box_h), 0.15, 4, pr.DARKBLUE)
-            pr.draw_rectangle_rounded_lines(pr.Rectangle(box_x, box_y, box_w, box_h), 0.15, 4, 3.0, pr.GOLD)
-            
+            pr.draw_rectangle_rounded_lines(pr.Rectangle(box_x, box_y, box_w, box_h), 0.15, 4, pr.GOLD)
+
             pr.draw_text("GAME PAUSED", box_x + 115, box_y + 35, 32, pr.YELLOW)
             pr.draw_text("Press [SPACE] to Resume Playing", box_x + 55, box_y + 95, 20, pr.RAYWHITE)
