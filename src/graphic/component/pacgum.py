@@ -1,77 +1,100 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  pacgum_component.py                               :+:      :+:    :+:    #
+#  pacgum.py                                         :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:26:57 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 20:04:41 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-import pyray as pr
-from typing import List
+from typing import TYPE_CHECKING, List, Tuple
 
-from src.model import SuperPacgum, SimplePacgum
+import pyray as pr
+
+from src.model import SimplePacgum, SuperPacgum
+
+if TYPE_CHECKING:
+    from src.graphic.main_window import MainWindow
 
 
 class PacgumComponent:
-    def __init__(self, scale: int = 40) -> None:
-        self.pacgums: List[SimplePacgum] = []
-        self.power_pacgums: List[SuperPacgum] = []
-        self.scale = scale
-
-    def add_pacgum(self, x: int, y: int) -> None:
-        self.pacgums.append(SimplePacgum(x, y, radius=2, color=pr.WHITE))
-
-    def add_power_pacgum(self, x: int, y: int) -> None:
-        self.power_pacgums.append(SuperPacgum(x, y, radius=6, color=pr.WHITE))
-
-    def generate_pacgums(
-        self, maze_data: List[List[int]], offset_x: int, offset_y: int
+    def __init__(
+        self,
+        maze_data: List[List[int]],
+        window: "MainWindow",
+        pacgums: Tuple[List[SuperPacgum], List[SimplePacgum]],
+        margin_top: int = 100,
+        margin_bottom: int = 30,
+        padding_x: int = 20,
     ) -> None:
-        for row_idx, row in enumerate(maze_data):
-            for col_idx, cell in enumerate(row):
-                if cell != 15:
-                    x = offset_x + col_idx * self.scale + \
-                        self.scale // 2
-                    y = offset_y + row_idx * self.scale + \
-                        self.scale // 2
-                    if (
-                        (row_idx % 5 == 1 and col_idx % 5 == 1)
-                        or (row_idx % 5 == 1 and col_idx % 5 == 4)
-                        or (row_idx % 5 == 4 and col_idx % 5 == 1)
-                        or (row_idx % 5 == 4 and col_idx % 5 == 4)
-                    ):
-                        self.add_power_pacgum(x, y)
-                    else:
-                        self.add_pacgum(x, y)
+        self.pacgums: List[SimplePacgum] = pacgums[1]
+        self.super_pacgums: List[SuperPacgum] = pacgums[0]
+
+        self.grid_cols = len(maze_data[0]) if maze_data else 0
+        self.grid_rows = len(maze_data) if maze_data else 0
+
+        available_width = float(window.width - (padding_x * 2))
+        available_height = float(
+            window.height - margin_top - (padding_x * 2) - margin_bottom
+        )
+        scale_x = (
+            available_width / self.grid_cols if self.grid_cols > 0 else 1.0
+        )
+        scale_y = (
+            available_height / self.grid_rows if self.grid_rows > 0 else 1.0
+        )
+        self.scale = min(scale_x, scale_y)
+
+        self.offset_x = (window.width - (self.grid_cols * self.scale)) / 2.0
+        self.offset_y = (
+            margin_top
+            + (available_height - (self.grid_rows * self.scale)) / 2.0
+        )
+
+    def get_pixel_position(self, grid_x: int, grid_y: int) -> pr.Vector2:
+        return pr.Vector2(
+            grid_x * self.scale + self.offset_x + (self.scale / 2.0),
+            grid_y * self.scale + self.offset_y + (self.scale / 2.0),
+        )
 
     def render(self) -> None:
         for simple_pacgum in self.pacgums:
-            simple_pacgum.render()
-        for power_pacgum in self.power_pacgums:
-            power_pacgum.render()
+            if not simple_pacgum.collected:
+                pos = self.get_pixel_position(simple_pacgum.x, simple_pacgum.y)
+                pr.draw_circle_v(
+                    pos, simple_pacgum.radius, simple_pacgum.color
+                )
+
+        for power_pacgum in self.super_pacgums:
+            if not power_pacgum.collected:
+                pos = self.get_pixel_position(power_pacgum.x, power_pacgum.y)
+                pr.draw_circle_v(pos, power_pacgum.radius, power_pacgum.color)
 
     def update(self) -> None:
-        for power_pacgum in self.power_pacgums:
+        for power_pacgum in self.super_pacgums:
             power_pacgum.update()
 
     def collect_pacgums(self, px: int, py: int) -> int:
         score = 0
         for simple_pacgum in self.pacgums:
-            if (
-                not simple_pacgum.collected
-                and simple_pacgum.check_collision(px, py)
-            ):
-                simple_pacgum.collected = True
-                score += 10
-        for power_pacgum in self.power_pacgums:
-            if (
-                not power_pacgum.collected
-                and power_pacgum.check_collision(px, py)
-            ):
-                power_pacgum.collected = True
-                score += 50
+            if not simple_pacgum.collected:
+                pos = self.get_pixel_position(simple_pacgum.x, simple_pacgum.y)
+                dx = pos.x - px
+                dy = pos.y - py
+                if (dx * dx + dy * dy) < (15 * 15):
+                    simple_pacgum.collected = True
+                    score += 10
+
+        for power_pacgum in self.super_pacgums:
+            if not power_pacgum.collected:
+                pos = self.get_pixel_position(power_pacgum.x, power_pacgum.y)
+                dx = pos.x - px
+                dy = pos.y - py
+                if (dx * dx + dy * dy) < (15 * 15):
+                    power_pacgum.collected = True
+                    score += 50
+
         return score

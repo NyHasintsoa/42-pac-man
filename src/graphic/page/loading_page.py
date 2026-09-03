@@ -6,17 +6,18 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/25 17:26:20 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 19:04:26 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 18:55:47 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-import pyray as pr
 from threading import Thread
 from typing import TYPE_CHECKING
 
-from src.service import LevelGenerator
-from src.model.enums import PageState
+import pyray as pr
+
 from src.graphic.page.parent_page import ParentPage
+from src.model.enums import PageState
+from src.service import LevelGenerator
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -50,8 +51,7 @@ class LoadingPage(ParentPage):
             generated = level_gen.generate_levels()
             self.context.levels = generated
             if generated:
-                self.context.current_level_index = 0
-                self.context.maze_level = generated[0].maze_data
+                self.context.current_level = 0
             self.context.lives = config.lives
         finally:
             self.is_generation_done = True
@@ -74,7 +74,7 @@ class LoadingPage(ParentPage):
             self.rotation_angle,
             self.rotation_angle + 270.0,
             36,
-            pr.YELLOW
+            pr.YELLOW,
         )
 
         txt_size = pr.measure_text(self.loading_message, 22)
@@ -83,7 +83,7 @@ class LoadingPage(ParentPage):
             center_x - (txt_size // 2),
             center_y + 65,
             22,
-            pr.GOLD
+            pr.GOLD,
         )
 
         sub_txt = "Please wait while system matrices align"
@@ -93,7 +93,7 @@ class LoadingPage(ParentPage):
             center_x - (sub_size // 2),
             center_y + 105,
             14,
-            pr.DARKGRAY
+            pr.DARKGRAY,
         )
 
     def render(self) -> None:

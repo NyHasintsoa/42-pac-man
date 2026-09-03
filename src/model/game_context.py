@@ -6,29 +6,39 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 16:10:07 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/27 18:54:09 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 18:59:03 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Tuple
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from src.model.game_config import GameConfig
+from src.model.pacgum import SimplePacgum, SuperPacgum
 
 
 class LevelData(BaseModel):
-    width: int
-    height: int
-    maze_data: List[List[int]]
-    # simple_pacgum: List[SimplePacgum] = Field(default_factory=list)
-    # super_pacgum: List[SuperPacgum] = Field(default_factory=list)
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    width: int = Field()
+    height: int = Field()
+    maze_data: List[List[int]] = Field()
+    pacgums: Tuple[List[SuperPacgum], List[SimplePacgum]] = Field(
+        default_factory=lambda: ([], [])
+    )
 
 
 class GameContext(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     config: Optional[GameConfig] = None
     levels: List[LevelData] = Field(default_factory=list)
-    current_level_index: int = 0
-    maze_level: List[List[int]] = Field(default_factory=lambda: [[]])
+    current_level: int = 0
+    maze_level: List[List[int]] = Field(default_factory=list)
+    pacgums: Tuple[List[SuperPacgum], List[SimplePacgum]] = Field(
+        default_factory=lambda: ([], [])
+    )
     score: int = 0
     lives: int = 3
     time_elapsed: int = 0

@@ -6,22 +6,24 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 17:32:09 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 20:15:30 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-import pyray as pr
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
-from src.model.game_context import GameContext
-from src.model.enums import PageState
+import pyray as pr
+
 from src.graphic.component import (
-    MazeComponent,
-    ScoreBoardComponent,
-    PacmanCharacter,
     GhostCharacter,
+    MazeComponent,
+    PacgumComponent,
+    PacmanCharacter,
+    ScoreBoardComponent,
 )
 from src.graphic.page.parent_page import ParentPage
+from src.model import GameContext, LevelData
+from src.model.enums import PageState
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -31,19 +33,20 @@ class GamePage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.GAME_PAGE
-        self.score = 0
-        self.lives = 5
-        self.level = 1
-        self.time_elapsed = 0
-        self.game_running = True
-        self.score_board = ScoreBoardComponent(
-            self.window,
-            padding_x=50,
-        )
+        self.score: int = 0
+        self.lives: int = 5
+        self.levels: List[LevelData]
+        self.current_level: int = 1
+        self.maze_data: List[List[int]]
+        self.time_elapsed: int = 0
+        self.game_running: bool = True
 
     def init(self, context: GameContext) -> None:
         super().init(context)
-        self.maze_data = self.context.maze_level
+        self.levels = self.context.levels
+        self.maze_data = self.levels[self.current_level - 1].maze_data
+        pacgums = self.levels[self.current_level - 1].pacgums
+
         maze_cols, maze_rows = 20, 10
 
         ui_height = 160
@@ -58,6 +61,11 @@ class GamePage(ParentPage):
         self.offset_x = (self.window.width - maze_pixel_width) // 2
         self.offset_y = (
             80 + ((self.window.height - 160) - maze_pixel_height) // 2
+        )
+        self.score_board = ScoreBoardComponent(
+            self.window,
+            high_score=120,
+            padding_x=50,
         )
         self.maze_view = MazeComponent(
             self.maze_data,
@@ -74,14 +82,13 @@ class GamePage(ParentPage):
             self.maze_data,
             center_x,
             center_y,
-            2.0,
+            5.0,
             0.15,
             self.window,
             100,
             30,
             20,
         )
-
         self.ghost = GhostCharacter(
             self.maze_data,
             1,
@@ -93,6 +100,9 @@ class GamePage(ParentPage):
             30,
             20,
         )
+        self.pacgums = PacgumComponent(
+            self.maze_data, self.window, pacgums, 100, 30, 20
+        )
 
     def _event_listener(self) -> None:
         pass
@@ -100,8 +110,12 @@ class GamePage(ParentPage):
     def update(self) -> None:
         self._event_listener()
         self.score_board.update(
-            self.score, self.lives, self.level, self.time_elapsed
+            self.score, self.lives, self.current_level, self.time_elapsed
         )
+        screen_px = int(self.pacman.pixel_pos.x)
+        screen_py = int(self.pacman.pixel_pos.y)
+        gained_score = self.pacgums.collect_pacgums(screen_px, screen_py)
+        self.score += gained_score
         self.pacman.update()
         self.ghost.update()
 
@@ -112,3 +126,4 @@ class GamePage(ParentPage):
         self.maze_view.render()
         self.pacman.render()
         self.ghost.render()
+        self.pacgums.render()

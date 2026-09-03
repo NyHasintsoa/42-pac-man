@@ -6,12 +6,13 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/07/10 15:26:50 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 16:32:57 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 20:14:46 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-import pyray as pr
 from typing import TYPE_CHECKING
+
+import pyray as pr
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -19,14 +20,13 @@ if TYPE_CHECKING:
 
 class ScoreBoardComponent:
     def __init__(
-        self, window: "MainWindow", margin: int = 50, padding_x: int = 20
+        self, window: "MainWindow", high_score: int = 0, padding_x: int = 20
     ) -> None:
         self.width = window.width
         self.height = window.height
-        self.margin_x = margin
         self.padding_x = padding_x
         self.score = 0
-        self.high_score = 0
+        self.high_score = high_score
         self.lives = 3
         self.level = 1
         self.time_elapsed = 0.0

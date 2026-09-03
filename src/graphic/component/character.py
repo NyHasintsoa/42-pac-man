@@ -6,14 +6,15 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/15 20:50:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 17:26:35 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 19:46:27 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-import pyray as pr
 import os
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING, List
+
+import pyray as pr
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -56,14 +57,14 @@ class CharacterComponent(ABC):
             + (available_height - (self.grid_rows * self.scale)) / 2.0
         )
         self.grid_pos = pr.Vector2(pos_x, pos_y)
-        self.pixel_pos = self.get_tile_center(self.grid_pos)
+        self.pixel_pos = self.get_pixel_position(self.grid_pos)
         self.direction = pr.Vector2(0, 0)
         self.next_direction = pr.Vector2(0, 0)
         self.frame_index = 0
         self.frame_timer = 0.0
         self.load_textures()
 
-    def get_tile_center(self, grid_pos: pr.Vector2) -> pr.Vector2:
+    def get_pixel_position(self, grid_pos: pr.Vector2) -> pr.Vector2:
         return pr.Vector2(
             grid_pos.x * self.scale + self.offset_x + (self.scale / 2.0),
             grid_pos.y * self.scale + self.offset_y + (self.scale / 2.0),
@@ -114,7 +115,7 @@ class CharacterComponent(ABC):
         return True
 
     def update_movement_and_grid(self) -> None:
-        center = self.get_tile_center(self.grid_pos)
+        center = self.get_pixel_position(self.grid_pos)
         if (
             abs(self.pixel_pos.x - center.x) < self.speed
             and abs(self.pixel_pos.y - center.y) < self.speed

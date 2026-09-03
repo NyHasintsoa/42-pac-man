@@ -6,12 +6,13 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/10 17:26:53 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/10 19:46:27 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
+from typing import TYPE_CHECKING, Dict, List
+
 import pyray as pr
-from typing import Dict, List, TYPE_CHECKING
 
 from src.graphic.component.character import CharacterComponent
 
@@ -89,7 +90,7 @@ class GhostCharacter(CharacterComponent):
         if pr.is_key_pressed(pr.KeyboardKey.KEY_G):
             self.is_edible = not self.is_edible
 
-        center = self.get_tile_center(self.grid_pos)
+        center = self.get_pixel_position(self.grid_pos)
         if (
             abs(self.pixel_pos.x - center.x) < self.speed
             and abs(self.pixel_pos.y - center.y) < self.speed
