@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/15 19:59:01 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/15 20:39:54 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@ from mazegenerator import MazeGenerator
 
 from src.enums import PageState
 from src.graphic.component import (
-    Button, MazeComponent
+    Button, MazeComponent, PacgumManager
 )
 from src.graphic.page.parent_page import ParentPage
 
@@ -61,6 +61,10 @@ class GamePage(ParentPage):
             color=pr.Color(4, 4, 214, 255),
             logo_color=pr.Color(33, 208, 220, 255)
         )
+        self.pacgum_manager = PacgumManager(self.scale)
+        self.pacgum_manager.generate_pacgums(
+            self.maze_gen.maze, self.offset_x, self.offset_y
+        )
         self.btn_back = Button(
             self.window.width - 240, 15, 220, 50, "Main Menu",
             color=pr.DARKPURPLE, hover_color=pr.VIOLET,
@@ -80,16 +84,12 @@ class GamePage(ParentPage):
         pr.draw_rectangle_lines(0, 0, self.window.width, 80, pr.GOLD)
         pr.draw_text("PAC-MAN", 20, 20, 48, pr.YELLOW)
         self.btn_back.render()
-
         self.maze_view.render()
+        self.pacgum_manager.render()
 
         # Bottom info bar (Relative to window height/width)
         b_y = self.window.height - 80
         pr.draw_rectangle(0, b_y, self.window.width, 80, pr.DARKBLUE)
         pr.draw_rectangle_lines(0, b_y, self.window.width, 80, pr.GOLD)
-
-        pr.draw_text(f"Score: {self.score}", 20, b_y + 25, 28, pr.YELLOW)
-        pr.draw_text(f"Lives: {self.lives}", self.window.width // 2 - 50, b_y + 25, 28, pr.LIME)
-        pr.draw_text(f"Time: {int(self.time_elapsed)}", self.window.width - 200, b_y + 25, 28, pr.LIGHTGRAY)
 
         self._event_listener()
