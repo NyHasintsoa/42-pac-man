@@ -6,18 +6,17 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/10 16:44:52 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:02:16 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:38:15 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from enum import IntEnum
+from enum import StrEnum
 
 
-class PageState(IntEnum):
-    LOADING_PAGE = 0
-    INIT_MENU = 1
-    MAIN_MENU = 2
-    HELP_MENU = 3
-    GAME_PAGE = 4
-    PLAYER_NAME_PAGE = 5
-    HIGH_SCORES_PAGE = 6
+class PageState(StrEnum):
+    LOADING_PAGE = "LOADING_PAGE"
+    MAIN_MENU = "MAIN_MENU"
+    HELP_MENU = "HELP_MENU"
+    GAME_PAGE = "GAME_PAGE"
+    PLAYER_NAME_PAGE = "PLAYER_NAME_PAGE"
+    HIGH_SCORES_PAGE = "HIGH_SCORES_PAGE"

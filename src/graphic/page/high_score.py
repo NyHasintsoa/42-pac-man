@@ -186,7 +186,7 @@ class HighScorePage(ParentPage):
                     self.last_input_time = total_time
 
         if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
-            self.next_state = PageState.INIT_MENU
+            self.next_state = PageState.MAIN_MENU
 
     def render(self) -> None:
         self._event_listener()
@@ -251,7 +251,6 @@ class HighScorePage(ParentPage):
             spacing,
             self.color_headers,
         )
-
         pr.draw_line(
             start_x,
             y_start + 28,

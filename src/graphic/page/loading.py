@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/25 17:26:20 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:38:49 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -62,7 +62,7 @@ class LoadingPage(ParentPage):
             self.rotation_angle -= 360.0
 
         if self.is_generation_done:
-            self.next_state = PageState.INIT_MENU
+            self.next_state = PageState.MAIN_MENU
 
     def draw(self) -> None:
         center_x = self.window.width // 2

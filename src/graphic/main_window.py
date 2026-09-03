@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:44:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:18:22 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:39:00 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -18,7 +18,6 @@ from src.graphic.page import (
     GamePage,
     HighScorePage,
     HowToPlayPage,
-    InitialPage,
     LoadingPage,
     MenuPage,
     ParentPage,
@@ -49,7 +48,6 @@ class MainWindow:
     def load_page(self) -> None:
         self.windows = {
             PageState.LOADING_PAGE: LoadingPage(self),
-            PageState.INIT_MENU: InitialPage(self),
             PageState.MAIN_MENU: MenuPage(self),
             PageState.HELP_MENU: HowToPlayPage(self),
             PageState.GAME_PAGE: GamePage(self),

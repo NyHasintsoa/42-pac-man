@@ -1,20 +1,8 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  menu.py                                           :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/10 17:00:58 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
-
 from typing import TYPE_CHECKING
 
 import pyray as pr
 
-from src.graphic.component import Button
+from src.graphic.component import MenuButton, PageFrame
 from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 
@@ -26,67 +14,88 @@ class MenuPage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.MAIN_MENU
-        self.btn_play = Button(
-            360,
-            340,
-            280,
-            70,
-            "Play Game",
-            font_size=24,
-        )
-        self.btn_level = Button(
-            360,
-            440,
-            280,
-            70,
-            "Level Select",
-            font_size=24,
-        )
-        self.btn_help = Button(
-            360,
-            540,
-            280,
-            70,
-            "Help & Controls",
-            font_size=24,
-        )
-        self.btn_exit = Button(
-            360,
-            640,
-            280,
-            70,
-            "Quit Game",
-            font_size=24,
-        )
+        self.page_frame = PageFrame(window.width, window.height)
+        self.selected_index = 0
+        btn_width = 400
+        btn_height = 50
+        btn_x = (window.width - btn_width) // 2
+
+        self.buttons = [
+            MenuButton(
+                btn_x,
+                500,
+                btn_width,
+                btn_height,
+                "Play Game",
+                font_size=24,
+            ),
+            MenuButton(
+                btn_x,
+                570,
+                btn_width,
+                btn_height,
+                "How To Play",
+                font_size=24,
+            ),
+            MenuButton(
+                btn_x,
+                640,
+                btn_width,
+                btn_height,
+                "High Scores",
+                font_size=24,
+            ),
+            MenuButton(
+                btn_x,
+                710,
+                btn_width,
+                btn_height,
+                "Quit Game",
+                font_size=24,
+            ),
+        ]
 
     def _event_listener(self) -> None:
-        if self.btn_play.is_clicked:
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_UP) or pr.is_key_pressed(
+            pr.KeyboardKey.KEY_W
+        ):
+            self.selected_index = (self.selected_index - 1) % len(self.buttons)
+
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_DOWN) or pr.is_key_pressed(
+            pr.KeyboardKey.KEY_S
+        ):
+            self.selected_index = (self.selected_index + 1) % len(self.buttons)
+
+        enter_pressed = pr.is_key_pressed(
+            pr.KeyboardKey.KEY_ENTER
+        ) or pr.is_key_pressed(pr.KeyboardKey.KEY_KP_ENTER)
+
+        if self.buttons[0].is_clicked or (
+            self.selected_index == 0 and enter_pressed
+        ):
             self.next_state = PageState.GAME_PAGE
-        if self.btn_help.is_clicked:
+        elif self.buttons[1].is_clicked or (
+            self.selected_index == 1 and enter_pressed
+        ):
             self.next_state = PageState.HELP_MENU
-        if self.btn_exit.is_clicked:
+        if self.buttons[2].is_clicked or (
+            self.selected_index == 2 and enter_pressed
+        ):
+            self.next_state = PageState.HIGH_SCORES_PAGE
+        elif self.buttons[3].is_clicked or (
+            self.selected_index == 3 and enter_pressed
+        ):
             pr.close_window()
 
     def render(self) -> None:
-        panel = pr.Rectangle(120, 120, 760, 720)
-        pr.draw_rectangle_rounded(panel, 0.3, 16, pr.DARKBLUE)
-        pr.draw_rectangle_rounded_lines(panel, 0.3, 16, pr.GOLD)
-
-        pr.draw_text("MAIN MENU", 320, 180, 60, pr.YELLOW)
-        pr.draw_text(
-            "Select your next challenge and jump back into the maze.",
-            210,
-            250,
-            22,
-            pr.LIGHTGRAY,
-        )
-
-        pr.draw_circle(180, 220, 24, pr.GOLD)
-        pr.draw_circle(820, 220, 20, pr.SKYBLUE)
-        pr.draw_text("Ready?", 720, 300, 32, pr.SKYBLUE)
-
-        self.btn_play.render()
-        self.btn_level.render()
-        self.btn_help.render()
-        self.btn_exit.render()
         self._event_listener()
+        self.page_frame.render()
+        pr.draw_text("PAC-MAN", 320, 180, 72, pr.YELLOW)
+
+        mouse_pos = pr.get_mouse_position()
+        for i, button in enumerate(self.buttons):
+            if pr.check_collision_point_rec(mouse_pos, button.rect):
+                self.selected_index = i
+
+        for i, button in enumerate(self.buttons):
+            button.render(is_focused=(i == self.selected_index))

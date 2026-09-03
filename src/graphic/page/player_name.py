@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/07/11 18:05:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/07/13 15:15:43 by nramalan        ###   ########.fr        #
+#  Updated: 2026/07/13 15:20:56 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 
 import pyray as pr
 
-from src.graphic.component import Button, Input
+from src.graphic.component import Button, Input, PageFrame
 from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
 from src.model.game_context import GameContext
@@ -27,12 +27,11 @@ class PlayerNamePage(ParentPage):
     def __init__(self, window: MainWindow) -> None:
         super().__init__(window)
         self.state = PageState.PLAYER_NAME_PAGE
-
+        self.page_frame = PageFrame(window.width, window.height)
         box_width = 300
         box_height = 50
         box_x = (self.window.width // 2) - (box_width // 2)
         self.box_y = (self.window.height // 2) - 40
-
         btn_width = 160
         btn_height = 45
         btn_x = (self.window.width // 2) - (btn_width // 2)
@@ -61,9 +60,7 @@ class PlayerNamePage(ParentPage):
 
     def update(self) -> None:
         self.name_input.update()
-
         enter_pressed = pr.is_key_pressed(pr.KeyboardKey.KEY_ENTER)
-
         if self.submit_btn.is_clicked or enter_pressed:
             self._handle_submit()
 
@@ -77,7 +74,7 @@ class PlayerNamePage(ParentPage):
 
     def render(self) -> None:
         self.update()
-
+        self.page_frame.render()
         title_text = "ENTER PLAYER NAME"
         title_size = 28
         title_width = pr.measure_text(title_text, title_size)
