@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 08:07:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 10:47:24 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/15 19:59:01 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@ from mazegenerator import MazeGenerator
 
 from src.enums import PageState
 from src.graphic.component import (
-    Button, MazeComponent, PacmanCharacter, Ghost, PelletManager
+    Button, MazeComponent
 )
 from src.graphic.page.parent_page import ParentPage
 
@@ -32,38 +32,37 @@ class GamePage(ParentPage):
         self.lives = 3
         self.time_elapsed = 0
         self.game_running = True
-
-        self.maze_gen = MazeGenerator(size=(18, 11), perfect=False)
+        maze_cols, maze_rows = 20, 10
+        self.maze_gen = MazeGenerator(
+            (maze_cols, maze_rows), False, (0, 0), (14, 14)
+        )
         self.maze_gen.generate()
+
+        ui_height = 160
+        available_width = self.window.width * 0.95
+        available_height = (self.window.height - ui_height) * 0.95
+        cell_size_w = available_width // maze_cols
+        cell_size_h = available_height // maze_rows
+        self.scale = int(min(cell_size_w, cell_size_h))
+
+        # Center the maze
+        maze_pixel_width = maze_cols * self.scale
+        maze_pixel_height = maze_rows * self.scale
+        self.offset_x = (self.window.width - maze_pixel_width) // 2
+        self.offset_y = (
+            80 + ((self.window.height - 160) - maze_pixel_height) // 2
+        )
         self.maze_view = MazeComponent(
             self.maze_gen.maze,
-            x=50,
-            y=100,
-            cell_size=38,
-            wall_width=10.0,
-            color=pr.GRAY,
-            logo_color=pr.BLUE
-            # color=pr.Color(160, 160, 164, 1),
-            # logo_color=pr.Color(60, 91, 197, 1)
-        )
-        self.pacman = PacmanCharacter(
-            x=360, y=300, size=28, color=pr.YELLOW
-        )
-        self.ghost_red = Ghost(
-            x=480, y=300, size=26, color=pr.RED
-        )
-        self.ghost_green = Ghost(
-            x=50, y=820, size=24, color=pr.LIME
-        )
-        self.ghost_pink = Ghost(
-            x=920, y=820, size=24, color=pr.MAGENTA
-        )
-        self.pellet_manager = PelletManager(cell_size=38)
-        self.pellet_manager.generate_pellets(
-            self.maze_gen.maze, 50, 100
+            x=self.offset_x,
+            y=self.offset_y,
+            scale=self.scale,
+            wall_thickness=5.0,
+            color=pr.Color(4, 4, 214, 255),
+            logo_color=pr.Color(33, 208, 220, 255)
         )
         self.btn_back = Button(
-            760, 20, 220, 50, "Main Menu",
+            self.window.width - 240, 15, 220, 50, "Main Menu",
             color=pr.DARKPURPLE, hover_color=pr.VIOLET,
             clicked_color=pr.GOLD, text_color=pr.WHITE,
             font_size=20, border_radius=0.35
@@ -74,36 +73,23 @@ class GamePage(ParentPage):
             self.next_state = PageState.MAIN_MENU
 
     def render(self) -> None:
-        # Dark arcade background
         pr.clear_background(pr.BLACK)
 
-        # Top bar
-        top_bar = pr.Rectangle(0, 0, 1000, 80)
-        pr.draw_rectangle(int(top_bar.x), int(top_bar.y), int(top_bar.width), int(top_bar.height), pr.DARKBLUE)
-        pr.draw_rectangle_lines(int(top_bar.x), int(top_bar.y), int(top_bar.width), int(top_bar.height), pr.GOLD)
-
+        # Top bar (Relative to window width)
+        pr.draw_rectangle(0, 0, self.window.width, 80, pr.DARKBLUE)
+        pr.draw_rectangle_lines(0, 0, self.window.width, 80, pr.GOLD)
         pr.draw_text("PAC-MAN", 20, 20, 48, pr.YELLOW)
         self.btn_back.render()
 
-        # Render maze
         self.maze_view.render()
 
-        # Render pellets
-        self.pellet_manager.render()
+        # Bottom info bar (Relative to window height/width)
+        b_y = self.window.height - 80
+        pr.draw_rectangle(0, b_y, self.window.width, 80, pr.DARKBLUE)
+        pr.draw_rectangle_lines(0, b_y, self.window.width, 80, pr.GOLD)
 
-        # Render characters
-        self.pacman.render()
-        self.ghost_red.render()
-        self.ghost_green.render()
-        self.ghost_pink.render()
-
-        # Bottom info bar
-        bottom_bar = pr.Rectangle(0, 920, 1000, 80)
-        pr.draw_rectangle(int(bottom_bar.x), int(bottom_bar.y), int(bottom_bar.width), int(bottom_bar.height), pr.DARKBLUE)
-        pr.draw_rectangle_lines(int(bottom_bar.x), int(bottom_bar.y), int(bottom_bar.width), int(bottom_bar.height), pr.GOLD)
-
-        pr.draw_text(f"Score: {self.score}", 20, 935, 28, pr.YELLOW)
-        pr.draw_text(f"Lives: {self.lives}", 350, 935, 28, pr.LIME)
-        pr.draw_text(f"Time: {int(self.time_elapsed)}", 650, 935, 28, pr.LIGHTGRAY)
+        pr.draw_text(f"Score: {self.score}", 20, b_y + 25, 28, pr.YELLOW)
+        pr.draw_text(f"Lives: {self.lives}", self.window.width // 2 - 50, b_y + 25, 28, pr.LIME)
+        pr.draw_text(f"Time: {int(self.time_elapsed)}", self.window.width - 200, b_y + 25, 28, pr.LIGHTGRAY)
 
         self._event_listener()

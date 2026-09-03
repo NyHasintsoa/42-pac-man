@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/11 09:00:00 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:57:14 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/12 20:31:53 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,7 +14,9 @@ import pyray as pr
 
 
 class Ghost:
-    def __init__(self, x: int, y: int, size: int = 30, color: pr.Color = pr.RED) -> None:
+    def __init__(
+        self, x: int, y: int, size: int = 30, color: pr.Color = pr.RED
+    ) -> None:
         self.x = x
         self.y = y
         self.size = size

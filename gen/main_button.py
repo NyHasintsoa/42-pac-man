@@ -10,7 +10,7 @@ class Button:
         self.text_color = text_color
         self.is_clicked = False
 
-    def draw(self):
+    def draw(self) -> None:
         # 1. Get mouse position
         mouse_pos = rl.get_mouse_position()
 

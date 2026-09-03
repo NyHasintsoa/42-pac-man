@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/06 18:37:48 by nramalan        #+#    #+#               #
-#  Updated: 2026/05/11 08:33:33 by nramalan        ###   ########.fr        #
+#  Updated: 2026/05/12 20:31:42 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -37,26 +37,32 @@ class Button:
         is_hovered = pr.check_collision_point_rec(mouse_pos, self.rect)
         self.is_clicked = False
         current_color = self.hover_color if is_hovered else self.color
-
         if is_hovered and pr.is_mouse_button_pressed(
             pr.MouseButton.MOUSE_BUTTON_LEFT
         ):
             self.is_clicked = True
             current_color = self.clicked_color
-
         shadow_rect = pr.Rectangle(
             self.rect.x + 4,
             self.rect.y + 4,
             self.rect.width,
             self.rect.height,
         )
-        pr.draw_rectangle_rounded(shadow_rect, self.border_radius, 12, self.shadow_color)
-        pr.draw_rectangle_rounded(self.rect, self.border_radius, 12, current_color)
-        pr.draw_rectangle_rounded_lines(self.rect, self.border_radius, 12, self.border_color)
-
+        pr.draw_rectangle_rounded(
+            shadow_rect, self.border_radius, 12, self.shadow_color
+        )
+        pr.draw_rectangle_rounded(
+            self.rect, self.border_radius, 12, current_color
+        )
+        pr.draw_rectangle_rounded_lines(
+            self.rect, self.border_radius, 12, self.border_color
+        )
         text_width = pr.measure_text(self.text, self.font_size)
         tx = self.rect.x + (self.rect.width - text_width) / 2
         ty = self.rect.y + (self.rect.height - self.font_size) / 2
-
-        pr.draw_text(str(self.text), int(tx + 2), int(ty + 2), self.font_size, pr.BLACK)
-        pr.draw_text(str(self.text), int(tx), int(ty), self.font_size, self.text_color)
+        pr.draw_text(
+            str(self.text), int(tx + 2), int(ty + 2), self.font_size, pr.BLACK
+        )
+        pr.draw_text(
+            str(self.text), int(tx), int(ty), self.font_size, self.text_color
+        )
