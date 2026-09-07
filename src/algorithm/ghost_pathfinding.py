@@ -1,3 +1,5 @@
+"""Find paths for ghosts navigating the maze."""
+
 from collections import deque
 from typing import TYPE_CHECKING, List, Optional, Tuple
 
@@ -8,6 +10,8 @@ if TYPE_CHECKING:
 
 
 class GhostPathfinding:
+    """Find shortest paths through the maze for returning ghosts."""
+
     @staticmethod
     def find_bfs_path(
         start: Tuple[int, int],
@@ -15,6 +19,17 @@ class GhostPathfinding:
         maze_data: List[List[int]],
         ghost: "GhostCharacter",
     ) -> Optional[pr.Vector2]:
+        """Find the first step of a breadth-first path to a target tile.
+
+        Args:
+            start: The starting maze coordinate.
+            target: The destination maze coordinate.
+            maze_data: The maze grid encoded with wall bit flags.
+            ghost: The ghost whose movement is being calculated.
+
+        Returns:
+            The first movement vector toward the target, or None.
+        """
         if start == target:
             return None
         directions = [

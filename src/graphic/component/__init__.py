@@ -1,3 +1,5 @@
+"""Expose reusable graphical components."""
+
 from src.graphic.component.button import Button
 from src.graphic.component.cheat import CheatComponent
 from src.graphic.component.ghost_character import GhostCharacter

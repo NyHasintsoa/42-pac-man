@@ -1,3 +1,5 @@
+"""Calculate targets for the different ghost personalities."""
+
 from typing import TYPE_CHECKING
 
 import pyray as pr
@@ -7,6 +9,8 @@ if TYPE_CHECKING:
 
 
 class GhostTargeting:
+    """Calculate the target tile for each ghost behavior."""
+
     PERIMETER_RADIUS: float = 8.0
 
     @staticmethod
@@ -16,6 +20,18 @@ class GhostTargeting:
         blinky: "GhostCharacter",
         is_angry_blinky: bool,
     ) -> pr.Vector2:
+        """Calculate the tile targeted by a ghost personality.
+
+        Args:
+            ghost: The ghost whose movement is being calculated.
+            pacman: The current Pac-Man character and its position or
+        direction.
+            blinky: Blinky, used as a reference for Inky targeting.
+            is_angry_blinky: Whether Blinky should directly chase Pac-Man.
+
+        Returns:
+            The target tile as a Raylib vector.
+        """
         rows = len(ghost.maze_data)
         cols = len(ghost.maze_data[0]) if rows > 0 else 0
 

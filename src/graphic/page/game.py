@@ -1,3 +1,5 @@
+"""Run the active Pac-Man game page."""
+
 from typing import TYPE_CHECKING, List
 
 import pyray as pr
@@ -26,7 +28,17 @@ if TYPE_CHECKING:
 
 
 class GamePage(ParentPage):
+    """Run one playable level and coordinate its components."""
+
     def __init__(self, window: "MainWindow") -> None:
+        """Initialize the GamePage instance.
+
+        Args:
+            window: The application window owning the component.
+
+        Returns:
+            The requested result.
+        """
         super().__init__(window)
         self.state = PageState.GAME_PAGE
         self.super_duration: float = 8
@@ -50,6 +62,14 @@ class GamePage(ParentPage):
         self.is_cheating: bool = False
 
     def init(self, context: "GameContext") -> None:
+        """Initialize the page with a shared game context.
+
+        Args:
+            context: The shared mutable game context.
+
+        Returns:
+            The requested result.
+        """
         super().init(context)
         if self.current_level == 1:
             self.reset_runtime_state()
@@ -107,6 +127,11 @@ class GamePage(ParentPage):
         )
 
     def unload(self) -> None:
+        """Release graphical resources owned by the component.
+
+        Returns:
+            The requested result.
+        """
         if self._is_unloaded:
             return
         if hasattr(self, "score_board"):
@@ -119,6 +144,11 @@ class GamePage(ParentPage):
         super().unload()
 
     def _event_listener(self) -> None:
+        """Process keyboard and mouse events for the page.
+
+        Returns:
+            The requested result.
+        """
         if not self.is_cheating and pr.is_key_pressed(
             pr.KeyboardKey.KEY_ESCAPE
         ):
@@ -131,17 +161,37 @@ class GamePage(ParentPage):
             self.is_cheating = not self.is_cheating
 
     def resume_game(self) -> None:
+        """Resume play from the pause menu.
+
+        Returns:
+            The requested result.
+        """
         self.is_paused = False
 
     def restart_game(self) -> None:
+        """Reset runtime state and restart the current game.
+
+        Returns:
+            The requested result.
+        """
         self.reset_runtime_state()
         self.init(self.context)
 
     def return_to_menu(self) -> None:
+        """Reset runtime state and switch to the main menu.
+
+        Returns:
+            The requested result.
+        """
         self.reset_runtime_state()
         self.next_state = PageState.MAIN_MENU
 
     def reset_runtime_state(self) -> None:
+        """Reset score, level, timers, lives, and related context state.
+
+        Returns:
+            The requested result.
+        """
         self.current_level = 1
         self.score = 0
         self.lives = self.context.lives
@@ -156,15 +206,38 @@ class GamePage(ParentPage):
         self.context.is_winner = False
 
     def add_extra_life(self) -> None:
+        """Add one life to the active game page.
+
+        Returns:
+            The requested result.
+        """
         self.cheat_manager.add_extra_life(self)
 
     def skip_level(self) -> None:
+        """Move to the next level or return to the menu after the final level.
+
+        Returns:
+            The requested result.
+        """
         self.cheat_manager.skip_level(self)
 
     def close_cheats(self) -> None:
+        """Close the cheat panel.
+
+        Returns:
+            The requested result.
+        """
         self.is_cheating = False
 
     def finish_game(self, is_winner: bool = False) -> None:
+        """Store final game state and switch to player-name entry.
+
+        Args:
+            is_winner: Whether the game ended in a win.
+
+        Returns:
+            The requested result.
+        """
         self.context.score = self.score
         self.context.current_level = self.current_level
         self.context.time_elapsed = int(self.time_elapsed)
@@ -172,6 +245,11 @@ class GamePage(ParentPage):
         self.next_state = PageState.PLAYER_NAME_PAGE
 
     def check_character_collision(self) -> bool:
+        """Return whether Pac-Man collides with an active ghost.
+
+        Returns:
+            True when an active ghost hits Pac-Man.
+        """
         if self.cheat_manager.invincible:
             return False
 
@@ -192,9 +270,22 @@ class GamePage(ParentPage):
         return False
 
     def reset_ghost_position(self, ghost: "GhostCharacter") -> None:
+        """Return a ghost to its eye-returning respawn state.
+
+        Args:
+            ghost: The ghost whose movement is being calculated.
+
+        Returns:
+            The requested result.
+        """
         self.ghost_manager.reset_ghost_position(ghost)
 
     def reset_positions(self) -> None:
+        """Reset Pac-Man and ghost positions for another life.
+
+        Returns:
+            The requested result.
+        """
         self.ready_timer = 3.0
         self.pacman.is_dead = False
         self.pacman.frame_index = 0
@@ -216,6 +307,11 @@ class GamePage(ParentPage):
             ghost.is_returning_eyes = False
 
     def render_pacman_spawn_bg(self) -> None:
+        """Draw the spawn marker around Pac-Man.
+
+        Returns:
+            The requested result.
+        """
         home_pixel = self.pacman.get_pixel_position(
             pr.Vector2(self.initial_pacman_x, self.initial_pacman_y)
         )
@@ -244,6 +340,11 @@ class GamePage(ParentPage):
         )
 
     def update(self) -> None:
+        """Update component state from current input or timers.
+
+        Returns:
+            The requested result.
+        """
         self._event_listener()
 
         if self.is_paused:
@@ -333,6 +434,11 @@ class GamePage(ParentPage):
             self.level_manager.advance_level(self)
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         pr.clear_background(pr.BLACK)
 
         self.update()

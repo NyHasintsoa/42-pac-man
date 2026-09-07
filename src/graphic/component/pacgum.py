@@ -1,3 +1,5 @@
+"""Render and collect pellets in the maze."""
+
 import math
 from typing import TYPE_CHECKING, List, Tuple
 
@@ -10,12 +12,24 @@ if TYPE_CHECKING:
 
 
 class PacgumComponent:
+    """Manage and render simple and super pellets."""
+
     def __init__(
         self,
         maze_data: List[List[int]],
         window: "MainWindow",
         pacgums: "Pacgums",
     ) -> None:
+        """Initialize the PacgumComponent instance.
+
+        Args:
+            maze_data: The maze grid encoded with wall bit flags.
+            window: The application window owning the component.
+            pacgums: The pacgums value.
+
+        Returns:
+            The requested result.
+        """
         margin_top: int = 80
         margin_bottom: int = 30
         padding_x: int = 20
@@ -45,12 +59,26 @@ class PacgumComponent:
         )
 
     def get_pixel_position(self, grid_x: int, grid_y: int) -> pr.Vector2:
+        """Convert a grid coordinate to the corresponding pixel center.
+
+        Args:
+            grid_x: The grid x value.
+            grid_y: The grid y value.
+
+        Returns:
+            The pixel center corresponding to the grid position.
+        """
         return pr.Vector2(
             grid_x * self.scale + self.offset_x + (self.scale / 2.0),
             grid_y * self.scale + self.offset_y + (self.scale / 2.0),
         )
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         simple_radius = self.scale * 0.1
         base_super_radius = self.scale * 0.18
 
@@ -70,10 +98,24 @@ class PacgumComponent:
                 )
 
     def update(self) -> None:
+        """Update component state from current input or timers.
+
+        Returns:
+            The requested result.
+        """
         for power_pacgum in self.super_pacgums:
             power_pacgum.update()
 
     def collect_pacgums(self, px: int, py: int) -> Tuple[int, bool]:
+        """Collect pellets near a pixel position and return gained points.
+
+        Args:
+            px: The px value.
+            py: The py value.
+
+        Returns:
+            A tuple of points gained and whether a power pellet was eaten.
+        """
         score = 0
         super_collected = False
         collection_threshold = self.scale * 0.45

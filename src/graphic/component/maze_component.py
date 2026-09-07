@@ -1,3 +1,5 @@
+"""Render the maze walls and logo tiles."""
+
 from typing import TYPE_CHECKING, List
 
 import pyray as pr
@@ -7,6 +9,8 @@ if TYPE_CHECKING:
 
 
 class MazeComponent:
+    """Render a maze encoded with wall bit flags."""
+
     def __init__(
         self,
         maze: List[List[int]],
@@ -17,6 +21,20 @@ class MazeComponent:
         color: pr.Color = pr.Color(4, 4, 214, 255),
         logo_color: pr.Color = pr.Color(33, 208, 220, 255),
     ) -> None:
+        """Initialize the MazeComponent instance.
+
+        Args:
+            maze: The generated maze grid.
+            window: The application window owning the component.
+            margin_top: The top layout margin in pixels.
+            margin_bottom: The bottom layout margin in pixels.
+            padding_x: The horizontal layout padding in pixels.
+            color: The drawing color.
+            logo_color: The logo color value.
+
+        Returns:
+            The requested result.
+        """
         self.maze = maze
         self.color = color
         self.logo_color = logo_color
@@ -42,6 +60,15 @@ class MazeComponent:
             self.wall_thickness = 1.5
 
     def _draw_maze_lines(self, thickness: float, color: pr.Color) -> None:
+        """Draw maze wall segments with the requested style.
+
+        Args:
+            thickness: The line thickness in pixels.
+            color: The drawing color.
+
+        Returns:
+            The requested result.
+        """
         radius = thickness / 2.0
         for r in range(len(self.maze)):
             for c in range(len(self.maze[0])):
@@ -105,6 +132,11 @@ class MazeComponent:
                     )
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         self._draw_maze_lines(self.wall_thickness * 2.5, self.color)
         self._draw_maze_lines(self.wall_thickness * 1.2, pr.BLACK)
         for r in range(len(self.maze)):

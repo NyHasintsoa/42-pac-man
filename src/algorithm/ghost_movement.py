@@ -1,3 +1,5 @@
+"""Choose movement directions for ghost characters."""
+
 from typing import TYPE_CHECKING, List
 
 import pyray as pr
@@ -10,6 +12,8 @@ if TYPE_CHECKING:
 
 
 class GhostMovement:
+    """Choose movement directions for a ghost based on its state and target."""
+
     @staticmethod
     def get_next_direction(
         ghost: "GhostCharacter",
@@ -18,6 +22,19 @@ class GhostMovement:
         is_angry_blinky: bool = False,
         history_limit: int = 20,
     ) -> pr.Vector2:
+        """Choose the next legal direction for a ghost.
+
+        Args:
+            ghost: The ghost whose movement is being calculated.
+            pacman: The current Pac-Man character and its position or
+        direction.
+            blinky: Blinky, used as a reference for Inky targeting.
+            is_angry_blinky: Whether Blinky should directly chase Pac-Man.
+            history_limit: Maximum number of recent movement tiles to retain.
+
+        Returns:
+            A legal movement vector for the ghost.
+        """
         directions = [
             pr.Vector2(1, 0),
             pr.Vector2(-1, 0),

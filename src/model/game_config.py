@@ -1,3 +1,5 @@
+"""Define validated game and level configuration models."""
+
 from typing import List
 
 from pydantic import BaseModel, Field, model_validator
@@ -6,6 +8,8 @@ from src.exception import ConfigError
 
 
 class LevelConfig(BaseModel):
+    """Store validated overrides for one generated level."""
+
     width: int = 20
     height: int = 10
 
@@ -18,6 +22,8 @@ class LevelConfig(BaseModel):
 
 
 class GameConfig(BaseModel):
+    """Store validated application-wide and per-level settings."""
+
     highscore_filename: str = Field(min_length=6, default="highscores.json")
     cheating: bool = Field(default=False)
     lives: int = Field(default=3, ge=1)
@@ -31,6 +37,11 @@ class GameConfig(BaseModel):
 
     @model_validator(mode="after")
     def populate_level_defaults(self) -> "GameConfig":
+        """Fill level settings that use sentinel defaults from game settings.
+
+        Returns:
+            This GameConfig after applying defaults.
+        """
         count: int = 1
         for level in self.levels:
             if level.seed == 1:
@@ -52,4 +63,12 @@ class GameConfig(BaseModel):
 
     @classmethod
     def parse_json(cls, json_str: str) -> "GameConfig":
+        """Parse a JSON string into a validated game configuration.
+
+        Args:
+            json_str: The JSON configuration text to parse.
+
+        Returns:
+            A validated GameConfig instance.
+        """
         return cls.model_validate_json(json_str)

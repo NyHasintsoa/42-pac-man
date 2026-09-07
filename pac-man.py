@@ -1,3 +1,5 @@
+"""Run the Pac-Man game from a configuration file."""
+
 import sys
 
 from src.exception import ArgsError
@@ -6,6 +8,11 @@ from src.service import ConfigParser
 
 
 def main() -> None:
+    """Start the game using the configuration.
+
+    Returns:
+        The requested result.
+    """
     if len(sys.argv) <= 1:
         raise ArgsError("Usage: python3 ./pac-man.py <config_file>")
     config = ConfigParser.parse_file(sys.argv[1])

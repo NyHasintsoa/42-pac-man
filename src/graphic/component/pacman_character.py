@@ -1,3 +1,5 @@
+"""Render and update the player-controlled Pac-Man character."""
+
 from typing import TYPE_CHECKING, List
 
 import pyray as pr
@@ -9,6 +11,8 @@ if TYPE_CHECKING:
 
 
 class PacmanCharacter(CharacterComponent):
+    """Represent the player-controlled Pac-Man character."""
+
     def __init__(
         self,
         maze_data: List[List[int]],
@@ -21,6 +25,22 @@ class PacmanCharacter(CharacterComponent):
         margin_bottom: int = 30,
         padding_x: int = 20,
     ) -> None:
+        """Initialize the PacmanCharacter instance.
+
+        Args:
+            maze_data: The maze grid encoded with wall bit flags.
+            pos_x: The horizontal position or grid coordinate.
+            pos_y: The vertical position or grid coordinate.
+            speed: The movement speed in pixels per frame.
+            animation_speed: The interval between animation frames.
+            window: The application window owning the component.
+            margin_top: The top layout margin in pixels.
+            margin_bottom: The bottom layout margin in pixels.
+            padding_x: The horizontal layout padding in pixels.
+
+        Returns:
+            The requested result.
+        """
         self.assets_path = "assets/pacman"
         self.is_dead = False
         super().__init__(
@@ -36,6 +56,11 @@ class PacmanCharacter(CharacterComponent):
         )
 
     def load_textures(self) -> None:
+        """Load textures required by the concrete character.
+
+        Returns:
+            The requested result.
+        """
         self.move_textures = [
             self.load_tex("pacman_closed.png", pr.YELLOW),
             self.load_tex("pacman_move_0.png", pr.YELLOW),
@@ -48,6 +73,11 @@ class PacmanCharacter(CharacterComponent):
         self.is_dead = False
 
     def on_direction_changed(self) -> None:
+        """Update direction-dependent visual state.
+
+        Returns:
+            The requested result.
+        """
         if self.direction.x == 1:
             self.rotation = 0.0
         elif self.direction.x == -1:
@@ -58,6 +88,11 @@ class PacmanCharacter(CharacterComponent):
             self.rotation = 90.0
 
     def update(self) -> None:
+        """Update component state from current input or timers.
+
+        Returns:
+            The requested result.
+        """
         if self.is_dead:
             self.direction = pr.Vector2(0, 0)
             self.next_direction = pr.Vector2(0, 0)
@@ -88,6 +123,11 @@ class PacmanCharacter(CharacterComponent):
         self.update_animation_timer()
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         if self.is_dead:
             tex = self.death_textures[self.frame_index]
         else:

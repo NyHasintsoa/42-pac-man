@@ -1,8 +1,21 @@
+"""Render the decorative frame shared by menu pages."""
+
 import pyray as pr
 
 
 class PageFrame:
+    """Render the neon decorative frame used by menu pages."""
+
     def __init__(self, width: int, height: int) -> None:
+        """Initialize the PageFrame instance.
+
+        Args:
+            width: The width in tiles or pixels.
+            height: The height in tiles or pixels.
+
+        Returns:
+            The requested result.
+        """
         self.width = width
         self.height = height
         self.neon_cyan = pr.Color(15, 215, 228, 255)
@@ -22,17 +35,41 @@ class PageFrame:
         self.c_len = 30
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         pr.clear_background(self.dark_blue)
 
         def draw_rounded_line(
             p1: pr.Vector2, p2: pr.Vector2, thickness: float, color: pr.Color
         ) -> None:
+            """Process the draw rounded line operation.
+
+            Args:
+                p1: The first line endpoint.
+                p2: The second line endpoint.
+                thickness: The line thickness in pixels.
+                color: The drawing color.
+
+            Returns:
+                The requested result.
+            """
             pr.draw_line_ex(p1, p2, thickness, color)
             pr.draw_circle_v(p1, thickness / 2.0, color)
             pr.draw_circle_v(p2, thickness / 2.0, color)
 
         def draw_ribbons(thickness: float, color: pr.Color) -> None:
+            """Process the draw ribbons operation.
 
+            Args:
+                thickness: The line thickness in pixels.
+                color: The drawing color.
+
+            Returns:
+                The requested result.
+            """
             draw_rounded_line(
                 pr.Vector2(self.out_pad, self.out_pad),
                 pr.Vector2(self.width - self.out_pad, self.out_pad),

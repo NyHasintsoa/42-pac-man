@@ -1,3 +1,5 @@
+"""Generate mazes and pellet placements for levels."""
+
 import random
 from typing import List, Optional, Set, Tuple
 
@@ -14,10 +16,29 @@ from src.model import (
 
 
 class LevelGenerator:
+    """Generate maze layouts and their pellet placements."""
+
     def __init__(self, config: GameConfig) -> None:
+        """Initialize the LevelGenerator instance.
+
+        Args:
+            config: The validated game configuration.
+
+        Returns:
+            The requested result.
+        """
         self.config = config
 
     def _get_wall_42_spots(self, rows: int, cols: int) -> Set[Tuple[int, int]]:
+        """Return maze coordinates reserved for the 42 logo.
+
+        Args:
+            rows: The number of maze rows.
+            cols: The number of maze columns.
+
+        Returns:
+            Coordinates occupied by the 42 logo.
+        """
         ft_small = [
             [1, 0, 0, 0, 1, 1, 1],
             [1, 0, 0, 0, 0, 0, 1],
@@ -44,6 +65,17 @@ class LevelGenerator:
         wall_42_spots: Set[Tuple[int, int]],
         score: int,
     ) -> List[SuperPacgum]:
+        """Create power pellets at available maze corners.
+
+        Args:
+            rows: The number of maze rows.
+            cols: The number of maze columns.
+            wall_42_spots: Coordinates reserved for the 42 logo.
+            score: The points awarded when collected.
+
+        Returns:
+            Power pellets placed at available corners.
+        """
         chosen_super_spots: Set[Tuple[int, int]] = set()
         corners = [(0, 0), (0, cols - 1), (rows - 1, 0), (rows - 1, cols - 1)]
 
@@ -61,6 +93,20 @@ class LevelGenerator:
         chosen_super_spots: Set[Tuple[int, int]],
         score: int,
     ) -> List[SimplePacgum]:
+        """Choose and create separated standard pellet positions.
+
+        Args:
+            maze: The generated maze grid.
+            num_pacgums: The requested number of standard pellets.
+            min_distance_tiles: The preferred Manhattan distance between
+        pellets.
+            wall_42_spots: Coordinates reserved for the 42 logo.
+            chosen_super_spots: Coordinates already occupied by power pellets.
+            score: The points awarded when collected.
+
+        Returns:
+            The generated standard pellets.
+        """
         rows = len(maze)
         cols = len(maze[0])
 
@@ -84,6 +130,16 @@ class LevelGenerator:
             existing_spots: Set[Tuple[int, int]],
             dist_threshold: int,
         ) -> bool:
+            """Check tile spacing.
+
+            Args:
+                pos: The pos value.
+                existing_spots: Coordinates already selected.
+                dist_threshold: The minimum Manhattan distance.
+
+            Returns:
+                The requested result.
+            """
             for ep in existing_spots:
                 if abs(pos[0] - ep[0]) + abs(pos[1] - ep[1]) < dist_threshold:
                     return False
@@ -127,6 +183,17 @@ class LevelGenerator:
         level: LevelConfig,
         min_distance_tiles: int = 3,
     ) -> Pacgums:
+        """Generate both power and standard pellets for one maze.
+
+        Args:
+            maze: The generated maze grid.
+            level: The level configuration supplying pellet settings.
+            min_distance_tiles: The preferred Manhattan distance between
+        pellets.
+
+        Returns:
+            A tuple containing power and standard pellets.
+        """
         rows = len(maze)
         cols = len(maze[0])
 
@@ -150,6 +217,11 @@ class LevelGenerator:
         return super_pacgums_list, simple_pacgums_list
 
     def generate_levels(self) -> Tuple[List[MazeData], List[Pacgums]]:
+        """Generate all configured mazes and their pellet collections.
+
+        Returns:
+            A tuple of maze grids and pellet collections.
+        """
         levels: List[MazeData] = []
         pacgums: List[Pacgums] = []
         for _, lvl in enumerate(self.config.levels):
@@ -162,6 +234,16 @@ class LevelGenerator:
     def _generate_maze(
         self, width: int, height: int, seed: Optional[int]
     ) -> MazeData:
+        """Generate one maze using the requested dimensions and seed.
+
+        Args:
+            width: The width in tiles or pixels.
+            height: The height in tiles or pixels.
+            seed: The optional random seed.
+
+        Returns:
+            A generated maze grid.
+        """
         gen = MazeGenerator(
             size=(width, height),
             perfect=False,

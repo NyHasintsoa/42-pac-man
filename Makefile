@@ -6,7 +6,7 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/04 16:13:37 by nramalan          #+#    #+#              #
-#    Updated: 2026/07/30 17:43:22 by nramalan         ###   ########.fr        #
+#    Updated: 2026/09/07 16:25:22 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ FLAKE8_EXCLUDE_LINT := $(VENV),.cache
 #----------------------------------------------
 .PHONY: install
 install: $(VENV)
-	@echo "Installing project and its dependencies"
+	echo "Installing project and its dependencies"
 	UV_CACHE_DIR=$(FT_CACHE_DIR)/uv \
 	$(UV) sync
 
@@ -45,14 +45,14 @@ debug: $(VENV)
 
 .PHONY: clean
 clean:
-	@echo "Cleaning project"
-	@find . -type d -name "__pycache__" -exec rm -rf {} +
-	@find . -type d -name ".mypy_cache" -exec rm -rf {} +
-	@find . -type d -name "*.egg-info" -exec rm -rf {} +
+	echo "Cleaning project"
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
 
 .PHONY: lint
 lint: $(VENV)
-	@echo "Check Project Types"
+	echo "Check Project Types"
 	$(FLAKE8) . --exclude $(FLAKE8_EXCLUDE_LINT)
 	$(MYPY) . --warn-return-any --warn-unused-ignores \
 			--ignore-missing-imports --disallow-untyped-defs \
@@ -60,15 +60,33 @@ lint: $(VENV)
 
 .PHONY: lint-strict
 lint-strict: $(VENV)
-	@echo "Check Project Types Strict Mode"
+	echo "Check Project Types Strict Mode"
 	$(FLAKE8) . --exclude $(FLAKE8_EXCLUDE_LINT)
 	$(MYPY) . --strict
+
+.PHONY: package
+package:
+	echo "Syncing dependencies with uv..."
+	$(UV) sync
+	echo "Building standalone executable..."
+	$(UV) run pyinstaller -F pac-man.py --noconfirm --clean --distpath dist/pac-man
+	echo "Adding minimal instructions..."
+	echo "==================================================" > dist/pac-man/README.txt
+	echo "                 PAC-MAN CONTROLS                 " >> dist/pac-man/README.txt
+	echo "==================================================" >> dist/pac-man/README.txt
+	echo "• Movement    : WASD / Arrow Keys" >> dist/pac-man/README.txt
+	echo "• Options     : ESC" >> dist/pac-man/README.txt
+	echo "• Select      : Enter / Space" >> dist/pac-man/README.txt
+	echo "• Config      : Edit config.json in root directory" >> dist/pac-man/README.txt
+	echo "Zipping package for distribution..."
+	cd dist && zip -r ../pacman-desktop.zip pac-man
+	echo "Build complete: pacman-desktop.zip"
 
 #----------------------------------------------
 # Dependencies
 #----------------------------------------------
 $(VENV): lib/mazegenerator-2.1.0-py3-none-any.whl
-	@echo "Creating virtual environment and installing dependencies"
+	echo "Creating virtual environment and installing dependencies"
 	$(UV) venv
 	UV_CACHE_DIR=$(FT_CACHE_DIR)/uv \
 	$(UV) sync

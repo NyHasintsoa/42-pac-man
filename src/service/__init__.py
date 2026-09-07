@@ -1,3 +1,5 @@
+"""Expose application service classes."""
+
 from src.service.cheating_manager import CheatingManager
 from src.service.config_parser import ConfigParser
 from src.service.ghost_manager import GhostManager

@@ -1,3 +1,5 @@
+"""Generate levels while displaying the loading page."""
+
 from threading import Thread
 from typing import TYPE_CHECKING
 
@@ -12,7 +14,17 @@ if TYPE_CHECKING:
 
 
 class LoadingPage(ParentPage):
+    """Generate game levels asynchronously before showing the menu."""
+
     def __init__(self, window: "MainWindow") -> None:
+        """Initialize the LoadingPage instance.
+
+        Args:
+            window: The application window owning the component.
+
+        Returns:
+            The requested result.
+        """
         super().__init__(window)
         self.state = PageState.LOADING_PAGE
         self.next_state = PageState.LOADING_PAGE
@@ -29,6 +41,11 @@ class LoadingPage(ParentPage):
             self.is_generation_done = True
 
     def _perform_heavy_generation(self) -> None:
+        """Generate configured levels on the loading worker thread.
+
+        Returns:
+            The requested result.
+        """
         try:
             config = self.context.config
             if not config:
@@ -45,6 +62,11 @@ class LoadingPage(ParentPage):
             self.is_generation_done = True
 
     def update(self) -> None:
+        """Update component state from current input or timers.
+
+        Returns:
+            The requested result.
+        """
         self.rotation_angle += 180.0 * pr.get_frame_time()
         if self.rotation_angle >= 360.0:
             self.rotation_angle -= 360.0
@@ -53,6 +75,11 @@ class LoadingPage(ParentPage):
             self.next_state = PageState.MAIN_MENU
 
     def draw(self) -> None:
+        """Draw the loading indicator and status text.
+
+        Returns:
+            The requested result.
+        """
         center_x = self.window.width // 2
         center_y = self.window.height // 2
 
@@ -85,5 +112,10 @@ class LoadingPage(ParentPage):
         )
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         self.update()
         self.draw()

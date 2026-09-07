@@ -1,3 +1,5 @@
+"""Render and operate the in-game cheat panel."""
+
 from typing import TYPE_CHECKING, Callable, Dict
 
 import pyray as pr
@@ -10,9 +12,20 @@ if TYPE_CHECKING:
 
 
 class CheatComponent:
+    """Represent the modal panel for optional gameplay cheats."""
+
     def __init__(
         self, window: "MainWindow", manager: "CheatingManager"
     ) -> None:
+        """Initialize the CheatComponent instance.
+
+        Args:
+            window: The application window owning the component.
+            manager: The manager value.
+
+        Returns:
+            The requested result.
+        """
         self.window = window
         self.manager = manager
 
@@ -70,6 +83,16 @@ class CheatComponent:
         on_skip_level: Callable[[], None],
         on_close: Callable[[], None],
     ) -> None:
+        """Process mouse input and invoke the selected callback.
+
+        Args:
+            on_add_life: Callback invoked to add a life.
+            on_skip_level: Callback invoked to skip the level.
+            on_close: Callback invoked to close the modal.
+
+        Returns:
+            The requested result.
+        """
         if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
             mouse_pos = pr.get_mouse_position()
 
@@ -94,6 +117,16 @@ class CheatComponent:
     def _draw_checkbox(
         self, rect: pr.Rectangle, checked: bool, label: str
     ) -> None:
+        """Draw one labeled checkbox in the cheat panel.
+
+        Args:
+            rect: The checkbox rectangle to draw.
+            checked: Whether the checkbox is selected.
+            label: The checkbox label.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_rectangle_lines_ex(rect, 2, pr.Color(33, 208, 220, 255))
 
         if checked:
@@ -115,6 +148,11 @@ class CheatComponent:
         )
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_rectangle(
             0, 0, self.window.width, self.window.height, pr.fade(pr.BLACK, 0.7)
         )

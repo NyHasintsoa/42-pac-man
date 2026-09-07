@@ -1,7 +1,11 @@
+"""Render a clickable rectangular button."""
+
 import pyray as pr
 
 
 class Button:
+    """Represent a clickable, styled rectangular button."""
+
     def __init__(
         self,
         pos_x: int,
@@ -20,6 +24,28 @@ class Button:
         border_color: pr.Color = pr.Color(15, 215, 228, 255),
         disabled: bool = False,
     ) -> None:
+        """Initialize the Button instance.
+
+        Args:
+            pos_x: The horizontal position or grid coordinate.
+            pos_y: The vertical position or grid coordinate.
+            width: The width in tiles or pixels.
+            height: The height in tiles or pixels.
+            text: The text to display or process.
+            bg_color: The bg color value.
+            hover_bg_color: The hover bg color value.
+            clicked_color: The clicked color value.
+            text_color: The foreground text color.
+            hover_text_color: The hover text color value.
+            font_size: The font size in pixels.
+            border_radius: The border radius value.
+            border_width: The border width value.
+            border_color: The border color value.
+            disabled: The disabled value.
+
+        Returns:
+            The requested result.
+        """
         self.rect = pr.Rectangle(pos_x, pos_y, width, height)
         self.text: str = text
         self.bg_color: pr.Color = bg_color
@@ -36,6 +62,11 @@ class Button:
         self.disabled = disabled
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         self.is_clicked = False
         current_border_color = self.border_color
         if self.disabled:

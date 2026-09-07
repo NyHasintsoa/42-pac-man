@@ -1,3 +1,5 @@
+"""Load game configuration files with comments removed."""
+
 import re
 from pathlib import Path
 
@@ -8,8 +10,18 @@ from src.model import GameConfig
 
 
 class ConfigParser:
+    """Parse configuration files into validated game settings."""
+
     @staticmethod
     def _strip_comments(json_str: str) -> str:
+        """Remove line and block comments from JSON-like configuration text.
+
+        Args:
+            json_str: The JSON configuration text to parse.
+
+        Returns:
+            The configuration text without comments.
+        """
         json_str = re.sub(r"/\*.*?\*/", "", json_str, flags=re.DOTALL)
 
         clean_lines = []
@@ -23,6 +35,14 @@ class ConfigParser:
 
     @staticmethod
     def parse_file(file_path: str) -> GameConfig:
+        """Load and validate a game configuration from a file.
+
+        Args:
+            file_path: The configuration file path to read.
+
+        Returns:
+            A validated GameConfig instance.
+        """
         try:
             path = Path(file_path)
             if not path.is_file():

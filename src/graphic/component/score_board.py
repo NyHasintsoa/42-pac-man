@@ -1,3 +1,5 @@
+"""Render the score, lives, level, and timer display."""
+
 from typing import TYPE_CHECKING
 
 import pyray as pr
@@ -7,9 +9,21 @@ if TYPE_CHECKING:
 
 
 class ScoreBoardComponent:
+    """Display the current score, lives, level, and time."""
+
     def __init__(
         self, window: "MainWindow", high_score: int = 0, padding_x: int = 20
     ) -> None:
+        """Initialize the ScoreBoardComponent instance.
+
+        Args:
+            window: The application window owning the component.
+            high_score: The high score value.
+            padding_x: The horizontal layout padding in pixels.
+
+        Returns:
+            The requested result.
+        """
         self.width = window.width
         self.height = window.height
         self.padding_x = padding_x
@@ -31,6 +45,17 @@ class ScoreBoardComponent:
         current_level: int,
         time_passed: float,
     ) -> None:
+        """Update component state from current input or timers.
+
+        Args:
+            current_score: The current game score.
+            current_lives: The number of remaining lives.
+            current_level: The one-based level currently being initialized.
+            time_passed: The elapsed game time in seconds.
+
+        Returns:
+            The requested result.
+        """
         self.score = current_score
         self.lives = current_lives
         self.level = current_level
@@ -40,6 +65,16 @@ class ScoreBoardComponent:
             self.high_score = self.score
 
     def _draw_pacman_icon(self, cx: float, cy: float, radius: float) -> None:
+        """Process the  draw pacman icon operation.
+
+        Args:
+            cx: The icon center x coordinate.
+            cy: The icon center y coordinate.
+            radius: The icon radius in pixels.
+
+        Returns:
+            The requested result.
+        """
         draw_x = int(cx - radius)
         draw_y = int(cy - radius)
         scale_x = (radius * 2.0) / self.life_texture.width
@@ -52,6 +87,11 @@ class ScoreBoardComponent:
         )
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         score_str = f"{self.score:06d}"
         high_score_str = f"{self.high_score:06d}"
 
@@ -95,6 +135,11 @@ class ScoreBoardComponent:
         )
 
     def unload(self) -> None:
+        """Release graphical resources owned by the component.
+
+        Returns:
+            The requested result.
+        """
         if self._is_unloaded:
             return
         pr.unload_texture(self.life_texture)

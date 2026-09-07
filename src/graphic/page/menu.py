@@ -1,3 +1,5 @@
+"""Display the main menu and handle its navigation."""
+
 from typing import TYPE_CHECKING
 
 import pyray as pr
@@ -11,7 +13,17 @@ if TYPE_CHECKING:
 
 
 class MenuPage(ParentPage):
+    """Display the main menu and route the selected action."""
+
     def __init__(self, window: "MainWindow") -> None:
+        """Initialize the MenuPage instance.
+
+        Args:
+            window: The application window owning the component.
+
+        Returns:
+            The requested result.
+        """
         super().__init__(window)
         self.state = PageState.MAIN_MENU
         self.page_frame = PageFrame(window.width, window.height)
@@ -56,6 +68,11 @@ class MenuPage(ParentPage):
         ]
 
     def unload(self) -> None:
+        """Release graphical resources owned by the component.
+
+        Returns:
+            The requested result.
+        """
         if self._is_unloaded:
             return
         for button in self.buttons:
@@ -63,6 +80,11 @@ class MenuPage(ParentPage):
         super().unload()
 
     def _event_listener(self) -> None:
+        """Process keyboard and mouse events for the page.
+
+        Returns:
+            The requested result.
+        """
         if pr.is_key_pressed(pr.KeyboardKey.KEY_UP) or pr.is_key_pressed(
             pr.KeyboardKey.KEY_W
         ):
@@ -95,6 +117,11 @@ class MenuPage(ParentPage):
             self.window.close()
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         self._event_listener()
         self.page_frame.render()
         pr.draw_text("PAC-MAN", 320, 180, 72, pr.YELLOW)

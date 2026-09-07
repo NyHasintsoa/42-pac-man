@@ -1,3 +1,5 @@
+"""Collect a player name after a game finishes."""
+
 from typing import TYPE_CHECKING
 
 import pyray as pr
@@ -13,7 +15,17 @@ if TYPE_CHECKING:
 
 
 class PlayerNamePage(ParentPage):
+    """Collect and save the name associated with a final score."""
+
     def __init__(self, window: "MainWindow") -> None:
+        """Initialize the PlayerNamePage instance.
+
+        Args:
+            window: The application window owning the component.
+
+        Returns:
+            The requested result.
+        """
         super().__init__(window)
         self.state = PageState.PLAYER_NAME_PAGE
         self.page_frame = PageFrame(window.width, window.height)
@@ -46,16 +58,34 @@ class PlayerNamePage(ParentPage):
         )
 
     def init(self, context: "GameContext") -> None:
+        """Initialize the page with a shared game context.
+
+        Args:
+            context: The shared mutable game context.
+
+        Returns:
+            The requested result.
+        """
         super().init(context)
         self.name_input.clear()
 
     def update(self) -> None:
+        """Update component state from current input or timers.
+
+        Returns:
+            The requested result.
+        """
         self.name_input.update()
         enter_pressed = pr.is_key_pressed(pr.KeyboardKey.KEY_ENTER)
         if self.submit_btn.is_clicked or enter_pressed:
             self._handle_submit()
 
     def _handle_submit(self) -> None:
+        """Save the entered player name and final score.
+
+        Returns:
+            The requested result.
+        """
         raw_name = self.name_input.value.strip()
         display_name = raw_name if raw_name else "AAA"
 
@@ -74,6 +104,11 @@ class PlayerNamePage(ParentPage):
         self.next_state = PageState.HIGH_SCORES_PAGE
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         self.update()
         self.page_frame.render()
 

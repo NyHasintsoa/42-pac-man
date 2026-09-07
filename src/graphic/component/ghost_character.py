@@ -1,3 +1,5 @@
+"""Render and update an autonomous ghost character."""
+
 from typing import TYPE_CHECKING, Dict, List, Tuple
 
 import pyray as pr
@@ -11,6 +13,8 @@ if TYPE_CHECKING:
 
 
 class GhostCharacter(CharacterComponent):
+    """Represent an autonomous ghost with normal and frightened states."""
+
     def __init__(
         self,
         maze_data: List[List[int]],
@@ -22,6 +26,21 @@ class GhostCharacter(CharacterComponent):
         score: int,
         ghost_name: str = "clyde",
     ) -> None:
+        """Initialize the GhostCharacter instance.
+
+        Args:
+            maze_data: The maze grid encoded with wall bit flags.
+            pos_x: The horizontal position or grid coordinate.
+            pos_y: The vertical position or grid coordinate.
+            speed: The movement speed in pixels per frame.
+            animation_speed: The interval between animation frames.
+            window: The application window owning the component.
+            score: The points awarded when collected.
+            ghost_name: The ghost name value.
+
+        Returns:
+            The requested result.
+        """
         self.ghost_name: str = ghost_name
         self.assets_path: str = "assets/ghost"
         self.super_timer: float = 0.0
@@ -47,6 +66,11 @@ class GhostCharacter(CharacterComponent):
         )
 
     def load_textures(self) -> None:
+        """Load textures required by the concrete character.
+
+        Returns:
+            The requested result.
+        """
         self.ghost_move_textures: Dict[int, List[pr.Texture]] = {
             0: [
                 self.load_tex(f"ghost_{self.ghost_name}_d0_0.png", pr.ORANGE),
@@ -82,6 +106,11 @@ class GhostCharacter(CharacterComponent):
         self.is_edible = False
 
     def on_direction_changed(self) -> None:
+        """Update direction-dependent visual state.
+
+        Returns:
+            The requested result.
+        """
         if self.direction.x == 1:
             self.look_id = 0
         elif self.direction.x == -1:
@@ -98,6 +127,18 @@ class GhostCharacter(CharacterComponent):
         blinky: "GhostCharacter",
         is_angry_blinky: bool = False,
     ) -> None:
+        """Update component state from current input or timers.
+
+        Args:
+            super_timer: The remaining power-pellet duration in seconds.
+            pacman: The current Pac-Man character and its position or
+        direction.
+            blinky: Blinky, used as a reference for Inky targeting.
+            is_angry_blinky: Whether Blinky should directly chase Pac-Man.
+
+        Returns:
+            The requested result.
+        """
         self.super_timer = super_timer
         if self.is_waiting_to_respawn:
             self.respawn_timer -= pr.get_frame_time()
@@ -144,6 +185,11 @@ class GhostCharacter(CharacterComponent):
         self.update_animation_timer()
 
     def render_spawn_background(self) -> None:
+        """Process the render spawn background operation.
+
+        Returns:
+            The requested result.
+        """
         home_pixel = self.get_pixel_position(self.initial_grid_pos)
         hx = int(home_pixel.x)
         hy = int(home_pixel.y)
@@ -170,6 +216,11 @@ class GhostCharacter(CharacterComponent):
         )
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         if self.is_returning_eyes or self.is_waiting_to_respawn:
             hx = int(self.pixel_pos.x)
             hy = int(self.pixel_pos.y)

@@ -1,3 +1,5 @@
+"""Define mutable state shared across game pages."""
+
 from typing import List, TypeAlias
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -9,6 +11,8 @@ MazeData: TypeAlias = List[List[int]]
 
 
 class GameContext(BaseModel):
+    """Store mutable state shared by game pages."""
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     config: GameConfig

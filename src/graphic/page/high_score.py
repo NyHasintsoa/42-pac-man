@@ -1,3 +1,5 @@
+"""Display and navigate saved high scores."""
+
 import math
 from typing import TYPE_CHECKING, Any, List
 
@@ -14,7 +16,17 @@ if TYPE_CHECKING:
 
 
 class HighScorePage(ParentPage):
+    """Display saved scores and handle score-list navigation."""
+
     def __init__(self, window: "MainWindow") -> None:
+        """Initialize the HighScorePage instance.
+
+        Args:
+            window: The application window owning the component.
+
+        Returns:
+            The requested result.
+        """
         super().__init__(window)
         self.state = PageState.HIGH_SCORES_PAGE
         self.page_frame = PageFrame(window.width, window.height)
@@ -37,10 +49,23 @@ class HighScorePage(ParentPage):
         self.high_scores: List[Any] = []
 
     def init(self, context: "GameContext") -> None:
+        """Initialize the page with a shared game context.
+
+        Args:
+            context: The shared mutable game context.
+
+        Returns:
+            The requested result.
+        """
         super().init(context)
         self.refresh_scores()
 
     def refresh_scores(self) -> None:
+        """Reload high scores and reset list navigation.
+
+        Returns:
+            The requested result.
+        """
         filename = getattr(
             self.context.config, "highscore_filename", "high_scores.json"
         )
@@ -50,6 +75,11 @@ class HighScorePage(ParentPage):
         self.scroll_offset = 0
 
     def unload(self) -> None:
+        """Release graphical resources owned by the component.
+
+        Returns:
+            The requested result.
+        """
         if self._is_unloaded:
             return
         pr.unload_font(self.font)
@@ -66,6 +96,21 @@ class HighScorePage(ParentPage):
         shadow_color: pr.Color,
         offset: int = 2,
     ) -> None:
+        """Draw text with a configurable offset shadow.
+
+        Args:
+            text: The text to display or process.
+            x: The horizontal drawing coordinate.
+            y: The vertical drawing coordinate.
+            font_size: The font size in pixels.
+            spacing: The spacing between rendered characters.
+            text_color: The foreground text color.
+            shadow_color: The shadow color.
+            offset: The shadow offset in pixels.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_text_ex(
             self.font,
             text,
@@ -81,6 +126,17 @@ class HighScorePage(ParentPage):
     def _draw_retro_trophy(
         self, x: int, y: int, scale: float, color: pr.Color
     ) -> None:
+        """Draw a small trophy beside the selected score.
+
+        Args:
+            x: The horizontal drawing coordinate.
+            y: The vertical drawing coordinate.
+            scale: The scale value.
+            color: The drawing color.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_rectangle(
             int(x - 10 * scale),
             int(y - 12 * scale),
@@ -138,6 +194,11 @@ class HighScorePage(ParentPage):
         )
 
     def _event_listener(self) -> None:
+        """Process keyboard and mouse events for the page.
+
+        Returns:
+            The requested result.
+        """
         total_time = pr.get_time()
         total_scores = len(self.high_scores)
 
@@ -172,6 +233,11 @@ class HighScorePage(ParentPage):
             self.next_state = PageState.MAIN_MENU
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         self._event_listener()
         total_time = pr.get_time()
         self.page_frame.render()

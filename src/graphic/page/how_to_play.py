@@ -1,3 +1,5 @@
+"""Display the game instructions and animated examples."""
+
 import math
 from typing import TYPE_CHECKING, Dict
 
@@ -12,7 +14,17 @@ if TYPE_CHECKING:
 
 
 class HowToPlayPage(ParentPage):
+    """Display controls, objectives, and scoring instructions."""
+
     def __init__(self, window: "MainWindow") -> None:
+        """Initialize the HowToPlayPage instance.
+
+        Args:
+            window: The application window owning the component.
+
+        Returns:
+            The requested result.
+        """
         super().__init__(window)
         self.state = PageState.HELP_MENU
         self.page_frame = PageFrame(window.width, window.height)
@@ -67,6 +79,11 @@ GHOSTS: 200 PTS.
         )
 
     def unload(self) -> None:
+        """Release graphical resources owned by the component.
+
+        Returns:
+            The requested result.
+        """
         if self._is_unloaded:
             return
         pr.unload_font(self.font)
@@ -85,6 +102,21 @@ GHOSTS: 200 PTS.
         shadow_color: pr.Color,
         offset: int = 2,
     ) -> None:
+        """Draw text with a configurable offset shadow.
+
+        Args:
+            text: The text to display or process.
+            x: The horizontal drawing coordinate.
+            y: The vertical drawing coordinate.
+            font_size: The font size in pixels.
+            spacing: The spacing between rendered characters.
+            text_color: The foreground text color.
+            shadow_color: The shadow color.
+            offset: The shadow offset in pixels.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_text_ex(
             self.font,
             text,
@@ -98,6 +130,17 @@ GHOSTS: 200 PTS.
         )
 
     def _draw_key_button(self, text: str, x: int, y: int, size: int) -> None:
+        """Draw a styled keyboard key.
+
+        Args:
+            text: The text to display or process.
+            x: The horizontal drawing coordinate.
+            y: The vertical drawing coordinate.
+            size: The rendered sprite or key size.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_rectangle_rounded(
             pr.Rectangle(x, y + 4, size, size), 0.2, 8, pr.DARKGRAY
         )
@@ -124,6 +167,18 @@ GHOSTS: 200 PTS.
         frame_index: int,
         rotation: float = 0.0,
     ) -> None:
+        """Position and render the Pac-Man preview sprite.
+
+        Args:
+            x: The horizontal drawing coordinate.
+            y: The vertical drawing coordinate.
+            size: The rendered sprite or key size.
+            frame_index: The animation frame to display.
+            rotation: The sprite rotation in degrees.
+
+        Returns:
+            The requested result.
+        """
         self.pacman_preview.scale = size
         self.pacman_preview.pixel_pos = pr.Vector2(x, y)
         self.pacman_preview.frame_index = frame_index
@@ -140,6 +195,19 @@ GHOSTS: 200 PTS.
         is_edible: bool = False,
         look_id: int = 1,
     ) -> None:
+        """Position and render the ghost preview sprite.
+
+        Args:
+            x: The horizontal drawing coordinate.
+            y: The vertical drawing coordinate.
+            size: The rendered sprite or key size.
+            frame_index: The animation frame to display.
+            is_edible: Whether the ghost uses its frightened appearance.
+            look_id: The ghost direction sprite index.
+
+        Returns:
+            The requested result.
+        """
         self.ghost_preview.scale = size
         self.ghost_preview.pixel_pos = pr.Vector2(x, y)
         self.ghost_preview.frame_index = frame_index
@@ -148,6 +216,11 @@ GHOSTS: 200 PTS.
         self.ghost_preview.render()
 
     def _event_listener(self) -> None:
+        """Process keyboard and mouse events for the page.
+
+        Returns:
+            The requested result.
+        """
         if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE) or pr.is_key_pressed(
             pr.KeyboardKey.KEY_ENTER
         ):
@@ -164,6 +237,21 @@ GHOSTS: 200 PTS.
         body_font_size: int,
         spacing: float,
     ) -> None:
+        """Draw one instruction card and its text.
+
+        Args:
+            sec: The instruction section data to render.
+            box_x: The card left coordinate.
+            box_y: The card top coordinate.
+            cell_width: The card width in pixels.
+            cell_height: The card height in pixels.
+            header_font_size: The instruction header font size.
+            body_font_size: The instruction body font size.
+            spacing: The spacing between rendered characters.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_rectangle_rounded(
             pr.Rectangle(box_x, box_y, cell_width, cell_height),
             0.08,
@@ -213,6 +301,21 @@ GHOSTS: 200 PTS.
         global_frame_tick: int,
         spacing: float,
     ) -> None:
+        """Draw the animated illustration for an instruction card.
+
+        Args:
+            header: The instruction section heading.
+            box_x: The card left coordinate.
+            box_y: The card top coordinate.
+            cell_width: The card width in pixels.
+            cell_height: The card height in pixels.
+            total_time: The current animation time in seconds.
+            global_frame_tick: The shared animation frame index.
+            spacing: The spacing between rendered characters.
+
+        Returns:
+            The requested result.
+        """
         visual_area_y = box_y + int(cell_height * 0.72)
         sprite_size = int(cell_height * 0.18)
 
@@ -411,6 +514,11 @@ GHOSTS: 200 PTS.
             )
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         self._event_listener()
         self.page_frame.render()
         total_time = pr.get_time()

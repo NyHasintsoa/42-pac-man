@@ -1,3 +1,5 @@
+"""Expose application-specific exception types."""
+
 from src.exception.args_error import ArgsError
 from src.exception.config_error import ConfigError
 

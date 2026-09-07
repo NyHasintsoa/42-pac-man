@@ -1,3 +1,5 @@
+"""Render and operate the pause dialog."""
+
 from typing import TYPE_CHECKING, Callable
 
 import pyray as pr
@@ -9,7 +11,17 @@ if TYPE_CHECKING:
 
 
 class PauseComponent:
+    """Represent the modal pause menu."""
+
     def __init__(self, window: "MainWindow") -> None:
+        """Initialize the PauseComponent instance.
+
+        Args:
+            window: The application window owning the component.
+
+        Returns:
+            The requested result.
+        """
         self.window = window
 
         self.modal_w = 280
@@ -47,7 +59,16 @@ class PauseComponent:
         on_restart: Callable[[], None],
         on_menu: Callable[[], None],
     ) -> None:
+        """Process mouse input and invoke the selected callback.
 
+        Args:
+            on_resume: Callback invoked when the player resumes.
+            on_restart: Callback invoked when the player restarts.
+            on_menu: Callback invoked when the player returns to the menu.
+
+        Returns:
+            The requested result.
+        """
         if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
             mouse_pos = pr.get_mouse_position()
 
@@ -63,6 +84,11 @@ class PauseComponent:
                 pr.close_window()
 
     def render(self) -> None:
+        """Render the component for the current frame.
+
+        Returns:
+            The requested result.
+        """
         pr.draw_rectangle(
             0,
             0,
