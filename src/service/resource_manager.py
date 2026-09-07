@@ -11,7 +11,7 @@ class ResourceManager:
     def _root() -> Path:
         """Return the application resource root."""
         if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-            return Path(sys._MEIPASS)  # type: ignore[attr-defined]
+            return Path(getattr(sys, "_MEIPASS", ""))
         return Path(__file__).resolve().parents[2]
 
     @classmethod
