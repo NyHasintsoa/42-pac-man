@@ -6,7 +6,7 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/04 16:13:37 by nramalan          #+#    #+#              #
-#    Updated: 2026/09/07 17:08:00 by nramalan         ###   ########.fr        #
+#    Updated: 2026/09/07 18:26:40 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ MYPY := $(UV) run mypy
 
 .DEFAULT_GOAL := run
 
-FLAKE8_EXCLUDE_LINT := $(VENV),.cache
+FLAKE8_EXCLUDE_LINT := $(VENV),.cache,build,dist,assets
 
 #----------------------------------------------
 # Main Commands
@@ -69,7 +69,7 @@ package:
 	echo "Syncing dependencies with uv..."
 	$(UV) sync
 	echo "Building standalone executable..."
-	$(UV) run pyinstaller -F pac-man.py --noconfirm --clean --distpath dist/pac-man
+	$(UV) run pyinstaller pac-man.spec --noconfirm --clean --distpath dist/pac-man
 	echo "Adding minimal instructions..."
 	echo "==================================================" > dist/pac-man/README.txt
 	echo "                 PAC-MAN CONTROLS                 " >> dist/pac-man/README.txt

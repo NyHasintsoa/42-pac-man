@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, List
 import pyray as pr
 
 from src.graphic.component.character import CharacterComponent
+from src.service.resource_manager import ResourceManager
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -41,7 +42,7 @@ class PacmanCharacter(CharacterComponent):
         Returns:
             The requested result.
         """
-        self.assets_path = "assets/pacman"
+        self.assets_path = ResourceManager.asset("pacman")
         self.is_dead = False
         super().__init__(
             maze_data=maze_data,

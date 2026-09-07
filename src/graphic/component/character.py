@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING, List
 
 import pyray as pr
 
+from src.service.resource_manager import ResourceManager
+
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 
@@ -98,7 +100,7 @@ class CharacterComponent(ABC):
         Returns:
             The loaded or fallback texture.
         """
-        path = os.path.join(self.assets_path, filename)
+        path = ResourceManager.path(self.assets_path, filename)
         size = int(self.scale) if int(self.scale) > 0 else 1
 
         if not os.path.exists(path):

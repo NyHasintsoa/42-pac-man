@@ -6,6 +6,7 @@ import pyray as pr
 
 from src.algorithm import GhostMovement
 from src.graphic.component.character import CharacterComponent
+from src.service.resource_manager import ResourceManager
 
 if TYPE_CHECKING:
     from src.graphic.component import PacmanCharacter
@@ -42,7 +43,7 @@ class GhostCharacter(CharacterComponent):
             The requested result.
         """
         self.ghost_name: str = ghost_name
-        self.assets_path: str = "assets/ghost"
+        self.assets_path: str = ResourceManager.asset("ghost")
         self.super_timer: float = 0.0
         self.score: int = score
         self.movement_history: List[Tuple[int, int]] = []

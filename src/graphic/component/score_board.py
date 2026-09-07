@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 import pyray as pr
 
+from src.service.resource_manager import ResourceManager
+
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
 
@@ -34,7 +36,7 @@ class ScoreBoardComponent:
         self.time_elapsed = 0.0
 
         self.life_texture: pr.Texture = pr.load_texture(
-            "assets/pacman/pacman_lives.png"
+            ResourceManager.asset("pacman", "pacman_lives.png")
         )
         self._is_unloaded = False
 

@@ -8,6 +8,7 @@ import pyray as pr
 from src.graphic.component import GhostCharacter, PacmanCharacter, PageFrame
 from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
+from src.service.resource_manager import ResourceManager
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -28,7 +29,7 @@ class HowToPlayPage(ParentPage):
         super().__init__(window)
         self.state = PageState.HELP_MENU
         self.page_frame = PageFrame(window.width, window.height)
-        self.font_path = "assets/fonts/emulogic.ttf"
+        self.font_path = ResourceManager.font("emulogic.ttf")
         self.font = pr.load_font(self.font_path)
 
         self.color_title = pr.Color(249, 44, 114, 255)

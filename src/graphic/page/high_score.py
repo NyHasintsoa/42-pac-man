@@ -8,6 +8,7 @@ import pyray as pr
 from src.graphic.component import PageFrame
 from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
+from src.service.resource_manager import ResourceManager
 from src.service.score_manager import ScoreManager
 
 if TYPE_CHECKING:
@@ -37,7 +38,7 @@ class HighScorePage(ParentPage):
         self.last_input_time = 0.0
         self.input_cooldown = 0.16
 
-        self.font_path = "assets/fonts/emulogic.ttf"
+        self.font_path = ResourceManager.font("emulogic.ttf")
         self.font = pr.load_font(self.font_path)
 
         self.color_title = pr.Color(249, 44, 114, 255)
@@ -344,7 +345,7 @@ class HighScorePage(ParentPage):
             )
         else:
             visible_subset = self.high_scores[
-                self.scroll_offset: self.scroll_offset + self.max_visible_rows
+                self.scroll_offset : self.scroll_offset + self.max_visible_rows
             ]
 
             for i, entry in enumerate(visible_subset):

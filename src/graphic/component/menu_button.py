@@ -2,6 +2,8 @@
 
 import pyray as pr
 
+from src.service.resource_manager import ResourceManager
+
 
 class MenuButton:
     """Represent a selectable button in a menu."""
@@ -32,7 +34,7 @@ class MenuButton:
         self.text = text
         self.font_size = font_size
         self.is_clicked = False
-        self.font: pr.Font = pr.load_font("assets/fonts/emulogic.ttf")
+        self.font: pr.Font = pr.load_font(ResourceManager.font("emulogic.ttf"))
         self._is_unloaded = False
         self.initial_text_color = pr.Color(220, 235, 245, 255)
         self.active_text_color = pr.Color(255, 215, 45, 255)
