@@ -14,4 +14,7 @@ test
 .venv
 .python-version
 
+# Building pac-man
 highscores.json
+pacman-desktop.tar.gz
+pac-man.spec

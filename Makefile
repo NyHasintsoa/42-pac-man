@@ -6,7 +6,7 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/04 16:13:37 by nramalan          #+#    #+#              #
-#    Updated: 2026/09/07 16:25:22 by nramalan         ###   ########.fr        #
+#    Updated: 2026/09/07 17:08:00 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,9 +78,9 @@ package:
 	echo "• Options     : ESC" >> dist/pac-man/README.txt
 	echo "• Select      : Enter / Space" >> dist/pac-man/README.txt
 	echo "• Config      : Edit config.json in root directory" >> dist/pac-man/README.txt
-	echo "Zipping package for distribution..."
-	cd dist && zip -r ../pacman-desktop.zip pac-man
-	echo "Build complete: pacman-desktop.zip"
+	echo "Archiving package with tar..."
+	tar -czvf pacman-desktop.tar.gz -C dist pac-man
+	echo "Build complete: pacman-desktop.tar.gz"
 
 #----------------------------------------------
 # Dependencies

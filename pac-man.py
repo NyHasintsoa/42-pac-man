@@ -2,7 +2,6 @@
 
 import sys
 
-from src.exception import ArgsError
 from src.graphic.main_window import MainWindow
 from src.service import ConfigParser
 
@@ -13,9 +12,9 @@ def main() -> None:
     Returns:
         The requested result.
     """
-    if len(sys.argv) <= 1:
-        raise ArgsError("Usage: python3 ./pac-man.py <config_file>")
-    config = ConfigParser.parse_file(sys.argv[1])
+    config_file = sys.argv[1] if len(sys.argv) > 1 else "config.json"
+
+    config = ConfigParser.parse_file(config_file)
     window = MainWindow(1177, 920, config, "pac-man")
     window.add_event()
     window.load_page()
