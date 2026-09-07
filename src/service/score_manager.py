@@ -4,6 +4,9 @@ import json
 import os
 from typing import Any, Dict, List
 
+from pydantic import ValidationError
+
+from src.exception import ScoreError
 from src.model import ScoreListModel
 
 
@@ -27,18 +30,19 @@ class ScoreManager:
         Returns:
             Validated scores sorted from highest to lowest.
         """
-        if not os.path.exists(self.filepath):
-            self.save_scores([])
-            return []
-
         try:
-            with open(self.filepath, "r") as f:
-                raw_data = json.load(f)
+            if not os.path.exists(self.filepath):
+                self.save_scores([])
+                return []
+
+            with open(self.filepath, "r", encoding="utf-8") as score_file:
+                raw_data = json.load(score_file)
             validated_data = ScoreListModel.model_validate(raw_data)
             scores = [entry.model_dump() for entry in validated_data.root]
-        except Exception:
-            self.save_scores([])
-            scores = []
+        except (OSError, json.JSONDecodeError, ValidationError) as error:
+            raise ScoreError(
+                f"Unable to load high scores from '{self.filepath}'."
+            ) from error
 
         scores.sort(key=lambda x: x["score"], reverse=True)
         return scores
@@ -54,14 +58,16 @@ class ScoreManager:
         """
         try:
             validated_data = ScoreListModel.model_validate(scores)
-            with open(self.filepath, "w") as f:
+            with open(self.filepath, "w", encoding="utf-8") as score_file:
                 json.dump(
                     [item.model_dump() for item in validated_data.root],
-                    f,
+                    score_file,
                     indent=4,
                 )
-        except Exception as e:
-            print(f"[ScoreManager] Failed to validate or save scores: {e}")
+        except (OSError, TypeError, ValidationError) as error:
+            raise ScoreError(
+                f"Unable to save high scores to '{self.filepath}'."
+            ) from error
 
     def get_high_score(self) -> int:
         """Return the highest saved score, or zero when none exist.

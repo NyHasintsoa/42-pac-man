@@ -28,3 +28,4 @@ exclude = [
     '.venv',
     '.cache',
 ]
+disable_error_code = ["import-untyped"]

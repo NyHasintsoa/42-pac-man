@@ -46,18 +46,21 @@ class ConfigParser:
         try:
             path = Path(file_path)
             if not path.is_file():
-                raise FileNotFoundError(
-                    f"Configuration file target does not exist: '{file_path}'"
+                raise ConfigError(
+                    f"Configuration file '{file_path}' not found."
                 )
             raw_data = path.read_text(encoding="utf-8")
             sanitized_json = ConfigParser._strip_comments(raw_data)
             return GameConfig.parse_json(sanitized_json)
-        except FileNotFoundError:
-            raise ConfigError(f"Configuration file '{file_path}' not found.")
-        except PermissionError:
-            raise ConfigError(f"Permission denied when trying \
-to read '{file_path}'.")
-        except ValidationError as e:
-            raise ConfigError(e.errors())
-        except Exception as e:
-            raise ConfigError(e)
+        except PermissionError as error:
+            raise ConfigError(
+                f"Permission denied when trying to read '{file_path}'."
+            ) from error
+        except OSError as error:
+            raise ConfigError(
+                f"Unable to read configuration file '{file_path}'."
+            ) from error
+        except ValidationError as error:
+            raise ConfigError(
+                f"Invalid configuration in '{file_path}': {error}"
+            ) from error

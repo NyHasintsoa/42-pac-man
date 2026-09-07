@@ -40,6 +40,7 @@ class MainWindow:
         self.current_state: PageState
         self.current_page: Optional[ParentPage] = None
         self.windows: Dict[PageState, ParentPage] = {}
+        self._closed = False
         self.context = GameContext(
             config=config,
             lives=config.lives,
@@ -63,10 +64,16 @@ class MainWindow:
         Returns:
             The requested result.
         """
-        for page in self.windows.values():
-            if not getattr(page, "_is_unloaded", False):
-                page.unload()
-        pr.close_window()
+        if self._closed:
+            return
+
+        try:
+            for page in self.windows.values():
+                if not getattr(page, "_is_unloaded", False):
+                    page.unload()
+        finally:
+            pr.close_window()
+            self._closed = True
 
     def load_page(self) -> None:
         """Create all pages and initialize the loading page.
