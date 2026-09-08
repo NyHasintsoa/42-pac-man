@@ -2,7 +2,7 @@
 
 import pyray as pr
 
-from src.graphic.utils.resource_manager import ResourceManager
+from src.graphic.utils import ResourceManager
 
 
 class MenuButton:

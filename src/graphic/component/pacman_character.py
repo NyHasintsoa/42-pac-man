@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, List
 import pyray as pr
 
 from src.graphic.component.character import CharacterComponent
-from src.graphic.utils.resource_manager import ResourceManager
+from src.graphic.utils import ResourceManager
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
