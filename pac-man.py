@@ -1,60 +1,89 @@
-"""Run the Pac-Man game from a configuration file."""
+"""Module entrypoint for Pac-Man with granular error handling.
+
+Provides top-level CLI execution and distinct handling for domain-specific
+Pac-Man exceptions, terminal interrupts, and unexpected errors.
+"""
 
 import sys
-from typing import Optional, Sequence
+from typing import Sequence
 
-from src.exception import ApplicationError, ArgsError, PacmanError
+from src.exception import (
+    ConfigError,
+    PacmanError,
+    ScoreError,
+)
 from src.graphic.main_window import MainWindow
 from src.service import ConfigParser
 
+COLOR_RED = "\033[31m"
+COLOR_YELLOW = "\033[33m"
+COLOR_RESET = "\033[0m"
 
-def _run(arguments: Sequence[str]) -> None:
-    """Run the game and convert unexpected failures to project errors.
+
+def print_cli_error(
+    category: str, details: object, color: str = COLOR_RED
+) -> None:
+    """Print styled, categorized error messages to standard error.
 
     Args:
-        arguments: Command-line arguments excluding the executable name.
+        category: Descriptive category label for the intercepted error.
+        details: Exception details, message, or printable object.
+        color: ANSI escape sequence used for terminal styling. Defaults to
+          COLOR_RED.
+    """
+    sys.stderr.write(f"{color}[{category}]{COLOR_RESET} {details}\n")
+
+
+def _run(arguments: Sequence[str]) -> None:
+    """Execute game setup and rendering.
+
+    Args:
+        arguments: Command-line arguments excluding executable name.
 
     Raises:
-        ArgsError: If more than one configuration path is provided.
-        PacmanError: If the game cannot be started or run.
+        ArgsError: If invalid arguments are provided.
     """
-    if len(arguments) > 1:
-        raise ArgsError("Usage: uv run python pac-man.py [config-file]")
-
     config_file = arguments[0] if arguments else "config.json"
     window = None
     try:
         config = ConfigParser.parse_file(config_file)
-        window = MainWindow(1177, 920, config, "pac-man")
+        window = MainWindow(1177, 920, config, "Pac-Man")
         window.add_event()
         window.load_page()
         window.render()
-    except PacmanError:
-        raise
-    except Exception as error:
-        raise ApplicationError("The game could not be started.") from error
     finally:
         if window is not None:
             window.close()
 
 
-def main(arguments: Optional[Sequence[str]] = None) -> int:
-    """Start the game using the configuration.
+def main() -> None:
+    """Start the Pac-Man application with granular error handling.
 
-    Returns:
-        The requested result.
+    Catches individual subclass exceptions to print distinct category tags
+    and status messages before exiting.
     """
-    command_arguments = sys.argv[1:] if arguments is None else arguments
     try:
-        _run(command_arguments)
+        _run(sys.argv[1:])
+    except ConfigError as err:
+        print_cli_error("Configuration Error", err)
+        sys.exit(1)
+    except ScoreError as err:
+        print_cli_error("Score Error", err)
+        sys.exit(1)
+    except PacmanError as err:
+        print_cli_error("Pac-Man Application Error", err)
+        sys.exit(1)
     except KeyboardInterrupt:
-        print("Game interrupted.", file=sys.stderr)
-        return 130
-    except PacmanError as error:
-        print(f"Error: {error}", file=sys.stderr)
-        return 1
-    return 0
+        print_cli_error(
+            "Interrupt", "Operation cancelled by user.", color=COLOR_YELLOW
+        )
+        sys.exit(130)
+    except Exception as err:
+        print_cli_error(
+            "Unexpected Fatal Exception", f"{type(err).__name__}: {err}"
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

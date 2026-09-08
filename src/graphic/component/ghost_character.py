@@ -6,7 +6,7 @@ import pyray as pr
 
 from src.algorithm import GhostMovement
 from src.graphic.component.character import CharacterComponent
-from src.service.resource_manager import ResourceManager
+from src.graphic.utils.resource_manager import ResourceManager
 
 if TYPE_CHECKING:
     from src.graphic.component import PacmanCharacter

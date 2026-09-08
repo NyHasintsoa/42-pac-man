@@ -23,18 +23,6 @@ dev = [
     "mypy>=1.20.2",
 ]
 
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
-artifacts = [
-    "assets/",
-]
-
-[project.scripts]
-pacman = "pac-man:main"
-
-[tool.hatch.build.targets.wheel.force-include]
-"assets" = "assets"
-
 [tool.mypy]
 exclude = [
     '.venv',
@@ -44,7 +32,3 @@ exclude = [
     'assets',
 ]
 disable_error_code = ["import-untyped"]
-
-[build-system]
-requires = ["hatchling >= 1.26"]
-build-backend = "hatchling.build"

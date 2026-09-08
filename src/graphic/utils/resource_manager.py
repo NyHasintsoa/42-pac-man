@@ -12,7 +12,7 @@ class ResourceManager:
         """Return the application resource root."""
         if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
             return Path(getattr(sys, "_MEIPASS", ""))
-        return Path(__file__).resolve().parents[2]
+        return Path(__file__).resolve().parents[3]
 
     @classmethod
     def path(cls, *parts: str) -> str:

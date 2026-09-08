@@ -16,5 +16,7 @@ test
 
 # Building pac-man
 highscores.json
-pacman-desktop.tar.gz
+pacman-desktop.zip
 pac-man.spec
+
+pac-man

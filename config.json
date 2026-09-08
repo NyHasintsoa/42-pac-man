@@ -4,11 +4,10 @@
 {
   "highscore_filename": "highscores.json",
   "cheating": true,
-  "lives": 1,
-  "level_max_time": 90,
+  "lives": 3,
+  "level_max_time": 120,
   "seed": 42,
   "pacgum": 42,
-
   "points_per_pacgum": 10,
   "points_per_super_pacgum": 50,
   "points_per_ghost": 200,
@@ -18,68 +17,104 @@
   // -----------------------------------------------
   "levels": [
     {
-      "width": 20,
-      "height": 18,
-      "seed": 20,
-      "pacgum": 2
-    },
-    {
-      "width": 30,
-      "height": 20,
-      "seed": 42,
-      "pacgum": 2,
-      "level_max_time": 90,
-      "points_per_ghost": 200
-    },
-    {
-      "width": 30,
-      "height": 20,
-      "seed": 42
-    },
-    {
-      "width": 30,
-      "height": 20,
-      "seed": 42,
+      "width": 19,
+      "height": 15,
+      "seed": 101,
+      "pacgum": 25,
+      "level_max_time": 120,
       "points_per_pacgum": 10,
       "points_per_super_pacgum": 50,
       "points_per_ghost": 200
     },
     {
-      "width": 30,
-      "height": 20,
-      "seed": 42,
-      "level_max_time": 90,
-      "points_per_ghost": 200
-    },
-    {
-      "width": 30,
-      "height": 20,
-      "seed": 42
-    },
-    {
-      "width": 30,
-      "height": 20,
-      "seed": 42,
+      "width": 21,
+      "height": 17,
+      "seed": 202,
+      "pacgum": 40,
+      "level_max_time": 110,
       "points_per_pacgum": 10,
-      "points_per_super_pacgum": 50,
-      "points_per_ghost": 200
+      "points_per_super_pacgum": 60,
+      "points_per_ghost": 250
     },
     {
-      "width": 30,
-      "height": 20,
-      "seed": 42,
+      "width": 25,
+      "height": 19,
+      "seed": 303,
+      "pacgum": 60,
+      "level_max_time": 100,
+      "points_per_pacgum": 15,
+      "points_per_super_pacgum": 75,
+      "points_per_ghost": 300
+    },
+    {
+      "width": 29,
+      "height": 19,
+      "seed": 404,
+      "pacgum": 80,
+      "level_max_time": 95,
+      "points_per_pacgum": 15,
+      "points_per_super_pacgum": 80,
+      "points_per_ghost": 400
+    },
+    {
+      "width": 31,
+      "height": 21,
+      "seed": 505,
+      "pacgum": 100,
       "level_max_time": 90,
-      "points_per_ghost": 200
+      "points_per_pacgum": 20,
+      "points_per_super_pacgum": 100,
+      "points_per_ghost": 500
     },
     {
-      "width": 30,
-      "height": 20,
-      "seed": 42
+      "width": 33,
+      "height": 21,
+      "seed": 606,
+      "pacgum": 120,
+      "level_max_time": 85,
+      "points_per_pacgum": 25,
+      "points_per_super_pacgum": 125,
+      "points_per_ghost": 600
     },
     {
-      "width": 30,
-      "height": 20,
-      "seed": 42
+      "width": 35,
+      "height": 23,
+      "seed": 707,
+      "pacgum": 140,
+      "level_max_time": 80,
+      "points_per_pacgum": 30,
+      "points_per_super_pacgum": 150,
+      "points_per_ghost": 800
+    },
+    {
+      "width": 37,
+      "height": 23,
+      "seed": 808,
+      "pacgum": 160,
+      "level_max_time": 75,
+      "points_per_pacgum": 35,
+      "points_per_super_pacgum": 175,
+      "points_per_ghost": 1000
+    },
+    {
+      "width": 39,
+      "height": 25,
+      "seed": 909,
+      "pacgum": 180,
+      "level_max_time": 70,
+      "points_per_pacgum": 40,
+      "points_per_super_pacgum": 200,
+      "points_per_ghost": 1200
+    },
+    {
+      "width": 41,
+      "height": 27,
+      "seed": 1010,
+      "pacgum": 210,
+      "level_max_time": 65,
+      "points_per_pacgum": 50,
+      "points_per_super_pacgum": 250,
+      "points_per_ghost": 1600
     }
   ]
 }

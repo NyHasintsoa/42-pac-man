@@ -1,34 +1,16 @@
-"""Expose application service classes without importing them eagerly."""
+"""Expose application service classes."""
 
-from importlib import import_module
-from typing import Any, Dict, Tuple
-
-_EXPORTS: Dict[str, Tuple[str, str]] = {
-    "CheatingManager": ("src.service.cheating_manager", "CheatingManager"),
-    "ConfigParser": ("src.service.config_parser", "ConfigParser"),
-    "GhostManager": ("src.service.ghost_manager", "GhostManager"),
-    "LevelGenerator": ("src.service.level_generator", "LevelGenerator"),
-    "LevelManager": ("src.service.level_manager", "LevelManager"),
-    "ResourceManager": ("src.service.resource_manager", "ResourceManager"),
-    "ScoreManager": ("src.service.score_manager", "ScoreManager"),
-}
-
-
-def __getattr__(name: str) -> Any:
-    """Load a service class only when it is requested."""
-    if name not in _EXPORTS:
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    module_name, class_name = _EXPORTS[name]
-    service_class = getattr(import_module(module_name), class_name)
-    globals()[name] = service_class
-    return service_class
-
+from src.service.cheating_manager import CheatingManager
+from src.service.config_parser import ConfigParser
+from src.service.ghost_manager import GhostManager
+from src.service.level_generator import LevelGenerator
+from src.service.level_manager import LevelManager
+from src.service.score_manager import ScoreManager
 
 __all__ = [
     "ConfigParser",
     "LevelGenerator",
     "LevelManager",
-    "ResourceManager",
     "CheatingManager",
     "GhostManager",
     "ScoreManager",

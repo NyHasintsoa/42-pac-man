@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pyray as pr
 
-from src.service.resource_manager import ResourceManager
+from src.graphic.utils.resource_manager import ResourceManager
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow

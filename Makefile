@@ -1,20 +1,11 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/05/04 16:13:37 by nramalan          #+#    #+#              #
-#    Updated: 2026/09/07 18:26:40 by nramalan         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 .SILENT:
 
 VENV := .venv
 
 FT_CACHE_DIR := $(PWD)/.cache
+
+export UV_CACHE_DIR := $(FT_CACHE_DIR)/uv
+export PYINSTALLER_CONFIG_DIR := $(FT_CACHE_DIR)/pyinstaller
 
 UV := uv
 PYTHON := $(UV) run python
@@ -24,6 +15,8 @@ MYPY := $(UV) run mypy
 
 .DEFAULT_GOAL := run
 
+PACKAGE_NAME := pacman-desktop.zip
+
 FLAKE8_EXCLUDE_LINT := $(VENV),.cache,build,dist,assets
 
 #----------------------------------------------
@@ -32,7 +25,6 @@ FLAKE8_EXCLUDE_LINT := $(VENV),.cache,build,dist,assets
 .PHONY: install
 install: $(VENV)
 	echo "Installing project and its dependencies"
-	UV_CACHE_DIR=$(FT_CACHE_DIR)/uv \
 	$(UV) sync
 
 .PHONY: run
@@ -49,6 +41,12 @@ clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	rm -rf build dist
+
+.PHONY: fclean
+fclean: clean
+	echo "Cleaning build and dist folders ... 🗑️"
+	rm -f $(PACKAGE_NAME) pac-man.spec
 
 .PHONY: lint
 lint: $(VENV)
@@ -69,18 +67,28 @@ package:
 	echo "Syncing dependencies with uv..."
 	$(UV) sync
 	echo "Building standalone executable..."
-	$(UV) run pyinstaller pac-man.spec --noconfirm --clean --distpath dist/pac-man
+	rm -rf build dist
+	$(UV) run pyinstaller --noconfirm --clean --distpath dist \
+		--onedir \
+		--windowed \
+		--name pac-man \
+		--add-data "assets:assets" \
+		--add-data "lib:lib" \
+		pac-man.py
+	rm -f pac-man.spec
+	echo "Copying external configuration files beside executable..."
+	cp config.json dist/pac-man/config.json
 	echo "Adding minimal instructions..."
 	echo "==================================================" > dist/pac-man/README.txt
 	echo "                 PAC-MAN CONTROLS                 " >> dist/pac-man/README.txt
 	echo "==================================================" >> dist/pac-man/README.txt
-	echo "• Movement    : WASD / Arrow Keys" >> dist/pac-man/README.txt
-	echo "• Options     : ESC" >> dist/pac-man/README.txt
-	echo "• Select      : Enter / Space" >> dist/pac-man/README.txt
-	echo "• Config      : Edit config.json in root directory" >> dist/pac-man/README.txt
-	echo "Archiving package with tar..."
-	tar -czvf pacman-desktop.tar.gz -C dist pac-man
-	echo "Build complete: pacman-desktop.tar.gz"
+	echo "Movement    : WASD / Arrow Keys" >> dist/pac-man/README.txt
+	echo "Options     : ESC" >> dist/pac-man/README.txt
+	echo "Select      : Enter / Space" >> dist/pac-man/README.txt
+	echo "Config      : Edit config.json beside the executable" >> dist/pac-man/README.txt
+	echo "Archiving package with zip..."
+	cd dist && zip -r ../$(PACKAGE_NAME) pac-man
+	echo "Build complete: $(PACKAGE_NAME)"
 
 #----------------------------------------------
 # Dependencies
@@ -88,5 +96,4 @@ package:
 $(VENV): lib/mazegenerator-2.1.0-py3-none-any.whl
 	echo "Creating virtual environment and installing dependencies"
 	$(UV) venv
-	UV_CACHE_DIR=$(FT_CACHE_DIR)/uv \
 	$(UV) sync

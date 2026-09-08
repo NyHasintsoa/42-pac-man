@@ -8,7 +8,7 @@ import pyray as pr
 from src.graphic.component import PageFrame
 from src.graphic.page.parent import ParentPage
 from src.model.enums import PageState
-from src.service.resource_manager import ResourceManager
+from src.graphic.utils.resource_manager import ResourceManager
 from src.service.score_manager import ScoreManager
 
 if TYPE_CHECKING:
