@@ -107,7 +107,6 @@ class GhostManager:
         ghost.is_waiting_to_respawn = False
         ghost.respawn_timer = 0.0
         ghost.is_edible = False
-        ghost.movement_history = []
 
     def update_ghosts(
         self,

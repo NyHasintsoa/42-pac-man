@@ -20,17 +20,15 @@ class GhostMovement:
         pacman: "PacmanCharacter",
         blinky: "GhostCharacter",
         is_angry_blinky: bool = False,
-        history_limit: int = 20,
     ) -> pr.Vector2:
         """Choose the next legal direction for a ghost.
 
         Args:
             ghost: The ghost whose movement is being calculated.
             pacman: The current Pac-Man character and its position or
-        direction.
+              direction.
             blinky: Blinky, used as a reference for Inky targeting.
             is_angry_blinky: Whether Blinky should directly chase Pac-Man.
-            history_limit: Maximum number of recent movement tiles to retain.
 
         Returns:
             A legal movement vector for the ghost.
@@ -44,8 +42,8 @@ class GhostMovement:
         valid_choices: List[pr.Vector2] = []
         for d in directions:
             if not ghost.check_wall_collision(
-                int(ghost.grid_pos.x),
-                int(ghost.grid_pos.y),
+                int(round(ghost.grid_pos.x)),
+                int(round(ghost.grid_pos.y)),
                 int(d.x),
                 int(d.y),
             ):
@@ -55,22 +53,22 @@ class GhostMovement:
                     valid_choices.append(d)
 
         if not valid_choices:
-            fallback_dir = pr.Vector2(-ghost.direction.x, -ghost.direction.y)
-            chosen_tile = (
-                int(ghost.grid_pos.x + fallback_dir.x),
-                int(ghost.grid_pos.y + fallback_dir.y),
-            )
-            ghost.movement_history.append(chosen_tile)
-            if len(ghost.movement_history) > history_limit:
-                ghost.movement_history.pop(0)
-            return fallback_dir
+            return pr.Vector2(-ghost.direction.x, -ghost.direction.y)
 
         if ghost.is_returning_eyes:
-            start_tile = (int(ghost.grid_pos.x), int(ghost.grid_pos.y))
-            target_tile = (
-                int(ghost.initial_grid_pos.x),
-                int(ghost.initial_grid_pos.y),
+            start_tile = (
+                int(round(ghost.grid_pos.x)),
+                int(round(ghost.grid_pos.y)),
             )
+            target_tile = (
+                int(round(ghost.initial_grid_pos.x)),
+                int(round(ghost.initial_grid_pos.y)),
+            )
+
+            if start_tile == target_tile:
+                ghost.is_returning_eyes = False
+                ghost.is_edible = False
+                return valid_choices[0]
 
             bfs_dir = GhostPathfinding.find_bfs_path(
                 start_tile, target_tile, ghost.maze_data, ghost
@@ -90,42 +88,25 @@ class GhostMovement:
 
         extreme_score = -999999.0 if ghost.is_edible else float("inf")
         for choice in valid_choices:
-            step_x = int(ghost.grid_pos.x + choice.x)
-            step_y = int(ghost.grid_pos.y + choice.y)
-            step_tile = (step_x, step_y)
+            step_x = int(round(ghost.grid_pos.x + choice.x))
+            step_y = int(round(ghost.grid_pos.y + choice.y))
             projected_pos = ghost.get_pixel_position(
                 pr.Vector2(step_x, step_y)
             )
 
             if ghost.is_edible:
-
                 simulated_dist = pr.vector2_distance(
                     projected_pos, pacman.pixel_pos
                 )
-                recent_visits = ghost.movement_history.count(step_tile)
-                history_penalty = recent_visits * (ghost.scale * 2.0)
-                score = simulated_dist - history_penalty
-                if score > extreme_score:
-                    extreme_score = score
+                if simulated_dist > extreme_score:
+                    extreme_score = simulated_dist
                     best_direction = choice
             else:
-
                 simulated_dist = pr.vector2_distance(
                     projected_pos, target_pixel_pos
                 )
-                recent_visits = ghost.movement_history.count(step_tile)
-                history_penalty = recent_visits * (ghost.scale * 2.5)
-                score = simulated_dist + history_penalty
-                if score < extreme_score:
-                    extreme_score = score
+                if simulated_dist < extreme_score:
+                    extreme_score = simulated_dist
                     best_direction = choice
-
-        chosen_tile = (
-            int(ghost.grid_pos.x + best_direction.x),
-            int(ghost.grid_pos.y + best_direction.y),
-        )
-        ghost.movement_history.append(chosen_tile)
-        if len(ghost.movement_history) > history_limit:
-            ghost.movement_history.pop(0)
 
         return best_direction

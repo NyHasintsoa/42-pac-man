@@ -32,12 +32,28 @@ class GhostPathfinding:
         """
         if start == target:
             return None
-        directions = [
+
+        all_directions = [
             (1, 0),
             (-1, 0),
             (0, -1),
             (0, 1),
         ]
+
+        curr_dir = (int(ghost.direction.x), int(ghost.direction.y))
+        rev_dir = (-curr_dir[0], -curr_dir[1])
+
+        preferred_directions = []
+        if curr_dir in all_directions:
+            preferred_directions.append(curr_dir)
+        for d in all_directions:
+            if d != curr_dir and d != rev_dir:
+                preferred_directions.append(d)
+        if rev_dir in all_directions and rev_dir != (0, 0):
+            preferred_directions.append(rev_dir)
+
+        if not preferred_directions:
+            preferred_directions = all_directions
 
         queue = deque([[start]])
         visited = {start}
@@ -54,7 +70,7 @@ class GhostPathfinding:
                     )
                 return None
 
-            for dx, dy in directions:
+            for dx, dy in preferred_directions:
                 nx, ny = curr_x + dx, curr_y + dy
                 if 0 <= ny < len(maze_data) and 0 <= nx < len(maze_data[0]):
                     if not ghost.check_wall_collision(curr_x, curr_y, dx, dy):

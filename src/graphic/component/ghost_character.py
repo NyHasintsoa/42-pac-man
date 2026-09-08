@@ -1,6 +1,6 @@
 """Render and update an autonomous ghost character."""
 
-from typing import TYPE_CHECKING, Dict, List, Tuple
+from typing import TYPE_CHECKING, Dict, List
 
 import pyray as pr
 
@@ -46,7 +46,6 @@ class GhostCharacter(CharacterComponent):
         self.assets_path: str = ResourceManager.asset("ghost")
         self.super_timer: float = 0.0
         self.score: int = score
-        self.movement_history: List[Tuple[int, int]] = []
 
         self.initial_grid_pos = pr.Vector2(pos_x, pos_y)
         self.is_returning_eyes: bool = False
@@ -147,7 +146,6 @@ class GhostCharacter(CharacterComponent):
                 self.is_waiting_to_respawn = False
                 self.is_returning_eyes = False
                 self.is_edible = False
-                self.movement_history = []
             return
 
         if self.is_returning_eyes:

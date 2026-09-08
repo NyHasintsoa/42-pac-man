@@ -105,8 +105,9 @@ class GamePage(ParentPage):
             logo_color=pr.Color(33, 208, 220, 255),
         )
 
-        self.initial_pacman_x = round(len(self.maze_data[0]) / 2) - 1
-        self.initial_pacman_y = round(len(self.maze_data) / 2)
+        self.initial_pacman_x, self.initial_pacman_y = (
+            self._find_pacman_spawn()
+        )
 
         self.pacman = PacmanCharacter(
             self.maze_data,
@@ -125,6 +126,20 @@ class GamePage(ParentPage):
         self.pacgums = PacgumComponent(
             self.maze_data, self.window, level_pacgums
         )
+
+    def _find_pacman_spawn(self) -> tuple[int, int]:
+        """Return the walkable tile closest to the cente."""
+        rows = len(self.maze_data)
+        cols = len(self.maze_data[0]) if rows else 0
+        if cols % 2 == 0:
+            cols -= 1
+        if not rows or not cols:
+            raise ValueError("Maze data is empty")
+
+        center_x = cols // 2
+        center_y = rows // 2
+
+        return (center_x, center_y)
 
     def unload(self) -> None:
         """Release graphical resources owned by the component.
