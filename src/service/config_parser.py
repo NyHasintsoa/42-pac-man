@@ -2,6 +2,7 @@
 
 import re
 from pathlib import Path
+from typing import List
 
 from pydantic import ValidationError
 
@@ -61,6 +62,9 @@ class ConfigParser:
                 f"Unable to read configuration file '{file_path}'."
             ) from error
         except ValidationError as error:
+            messages: List[str] = []
+            for err in error.errors():
+                messages.append(err["msg"])
             raise ConfigError(
-                f"Invalid configuration in '{file_path}': {error}"
-            ) from error
+                f"Invalid configuration in '{file_path}': {",".join(messages)}"
+            )
