@@ -3,7 +3,7 @@
 import pyray as pr
 
 from src.graphic.utils.text_helper import centered_text_position
-from src.utils import ft_check_collision_point_rec, ft_fade
+from src.utils import ft_check_collision_point_rec
 
 
 class Button:
@@ -57,7 +57,7 @@ class Button:
         self.clicked_color: pr.Color = clicked_color
         self.text_color: pr.Color = text_color
         self.border_color: pr.Color = border_color
-        self.shadow_color = ft_fade(pr.BLACK, 0.45)
+        self.shadow_color = pr.Color(0, 0, 0, 115)
         self.is_clicked = False
         self.font_size = font_size
         self.border_radius = border_radius
@@ -129,7 +129,7 @@ class Button:
                 int(tx + 1),
                 int(ty + 1),
                 self.font_size,
-                pr.fade(pr.WHITE, 0.5),
+                pr.Color(255, 255, 255, 128),
             )
         pr.draw_text(
             str(self.text), int(tx), int(ty), self.font_size, text_disp_color
