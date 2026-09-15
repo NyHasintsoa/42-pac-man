@@ -267,7 +267,7 @@ class HighScorePage(ParentPage):
         )
 
         header_font_size = int(18 * layout_scale)
-        y_start = int(title_y + title_size + (usable_height * 0.08))
+        y_start = int(title_y + 50 + (usable_height * 0.08))
 
         pr.draw_text(
             "RANK",
@@ -328,7 +328,7 @@ class HighScorePage(ParentPage):
             )
         else:
             visible_subset = self.high_scores[
-                self.scroll_offset : self.scroll_offset + self.max_visible_rows
+                self.scroll_offset: self.scroll_offset + self.max_visible_rows
             ]
 
             for i, entry in enumerate(visible_subset):

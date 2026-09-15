@@ -31,12 +31,12 @@ class CheatComponent:
         self.window = window
         self.manager = manager
 
-        self.modal_w = 340
+        self.modal_w = 450
         self.modal_h = 420
         self.modal_x = (self.window.width - self.modal_w) // 2
         self.modal_y = (self.window.height - self.modal_h) // 2
 
-        btn_w, btn_h = 120, 35
+        btn_w, btn_h = 170, 35
         btn_x_left = self.modal_x + 30
         btn_x_right = self.modal_x + self.modal_w - btn_w - 30
 

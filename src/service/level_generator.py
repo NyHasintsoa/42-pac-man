@@ -225,7 +225,6 @@ class LevelGenerator:
         levels: List[MazeData] = []
         pacgums: List[Pacgums] = []
         for _, lvl in enumerate(self.config.levels):
-            print(f"level {lvl.model_dump_json()}")
             maze = self._generate_maze(lvl.width, lvl.height, lvl.seed)
             pacgums.append(self._generate_pacgums(maze, lvl))
             levels.append(maze)
