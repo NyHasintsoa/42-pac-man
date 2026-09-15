@@ -6,7 +6,6 @@ import pyray as pr
 
 from src.graphic.component import Button
 from src.graphic.utils.text_helper import centered_x
-from src.graphic.utils import ft_check_collision_point_rec
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -33,7 +32,8 @@ class PauseComponent:
 
         btn_w, btn_h = 200, 40
         btn_x = self.modal_x + (self.modal_w - btn_w) // 2
-        start_y = self.modal_y + 80
+        start_y = self.modal_y + 120
+        margin_top = 60
 
         self.resume_btn = Button(
             btn_x,
@@ -44,15 +44,11 @@ class PauseComponent:
             bg_color=pr.Color(0, 162, 255, 255),
             text_color=pr.WHITE,
         )
-        self.restart_btn = Button(btn_x, start_y + 50, btn_w, btn_h, "RESTART")
-        self.menu_btn = Button(btn_x, start_y + 100, btn_w, btn_h, "MAIN MENU")
-        self.quit_btn = Button(
-            btn_x,
-            start_y + 150,
-            btn_w,
-            btn_h,
-            "QUIT",
-            bg_color=pr.RED,
+        self.restart_btn = Button(
+            btn_x, start_y + margin_top, btn_w, btn_h, "RESTART"
+        )
+        self.menu_btn = Button(
+            btn_x, start_y + (margin_top * 2), btn_w, btn_h, "MAIN MENU"
         )
 
     def handle_input(
@@ -71,19 +67,15 @@ class PauseComponent:
         Returns:
             The requested result.
         """
-        if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
-            mouse_pos = pr.get_mouse_position()
-
-            if ft_check_collision_point_rec(mouse_pos, self.resume_btn.rect):
-                on_resume()
-            elif ft_check_collision_point_rec(
-                mouse_pos, self.restart_btn.rect
-            ):
-                on_restart()
-            elif ft_check_collision_point_rec(mouse_pos, self.menu_btn.rect):
-                on_menu()
-            elif ft_check_collision_point_rec(mouse_pos, self.quit_btn.rect):
-                pr.close_window()
+        if self.resume_btn.is_clicked:
+            on_resume()
+            self.resume_btn.is_clicked = False
+        elif self.restart_btn.is_clicked:
+            on_restart()
+            self.restart_btn.is_clicked = False
+        elif self.menu_btn.is_clicked:
+            on_menu()
+            self.menu_btn.is_clicked = False
 
     def render(self) -> None:
         """Render the component for the current frame.
@@ -126,4 +118,3 @@ class PauseComponent:
         self.resume_btn.render()
         self.restart_btn.render()
         self.menu_btn.render()
-        self.quit_btn.render()
