@@ -2,6 +2,9 @@
 
 import pyray as pr
 
+import time
+from src.graphic.utils.text_helper import centered_y
+
 
 class Input:
     """Represent a bounded text input field."""
@@ -76,9 +79,13 @@ class Input:
         )
 
         display_text = self.value
-        if int(pr.get_time() * 2) % 2 == 0:
+        if int(time.perf_counter() * 2) % 2 == 0:
             display_text += "_"
 
         pr.draw_text(
-            display_text, self.box_x + 15, self.box_y + 13, 24, pr.WHITE
+            display_text,
+            self.box_x + 15,
+            centered_y(self.box_y, self.box_height, 24),
+            24,
+            pr.WHITE,
         )

@@ -3,6 +3,7 @@
 from typing import TYPE_CHECKING, Dict, List
 
 import pyray as pr
+import time
 
 from src.algorithm import GhostMovement
 from src.graphic.component.character import CharacterComponent
@@ -248,7 +249,7 @@ class GhostCharacter(CharacterComponent):
 
         if self.is_edible:
             if 0.0 < self.super_timer < 2.5:
-                use_flash_texture = int(pr.get_time() / 0.25) % 2 == 0
+                use_flash_texture = int(time.perf_counter() / 0.25) % 2 == 0
                 if use_flash_texture:
                     tex = self.ghost_flash_textures[
                         self.frame_index % len(self.ghost_flash_textures)

@@ -2,7 +2,8 @@
 
 import pyray as pr
 
-from src.graphic.utils import ResourceManager
+from src.graphic.utils.text_helper import centered_text_position
+from src.utils import ft_check_collision_point_rec
 
 
 class MenuButton:
@@ -34,7 +35,6 @@ class MenuButton:
         self.text = text
         self.font_size = font_size
         self.is_clicked = False
-        self.font: pr.Font = pr.load_font(ResourceManager.font("emulogic.ttf"))
         self._is_unloaded = False
         self.initial_text_color = pr.Color(220, 235, 245, 255)
         self.active_text_color = pr.Color(255, 215, 45, 255)
@@ -48,7 +48,6 @@ class MenuButton:
         """
         if self._is_unloaded:
             return
-        pr.unload_font(self.font)
         self._is_unloaded = True
 
     def render(self, is_focused: bool = False) -> None:
@@ -63,7 +62,7 @@ class MenuButton:
         self.is_clicked = False
 
         mouse_pos = pr.get_mouse_position()
-        is_hovered = pr.check_collision_point_rec(mouse_pos, self.rect)
+        is_hovered = ft_check_collision_point_rec(mouse_pos, self.rect)
         active = is_focused or is_hovered
 
         if active and pr.is_mouse_button_pressed(
@@ -75,34 +74,32 @@ class MenuButton:
             self.active_text_color if active else self.initial_text_color
         )
 
-        spacing = 2
-        text_size_vec = pr.measure_text_ex(
-            self.font, self.text, self.font_size, spacing
-        )
-        tx = self.rect.x + (self.rect.width - text_size_vec.x) / 2
-        ty = self.rect.y + (self.rect.height - text_size_vec.y) / 2
-
-        pr.draw_text_ex(
-            self.font,
+        tx, ty = centered_text_position(
             self.text,
-            pr.Vector2(int(tx + 2), int(ty + 2)),
+            self.rect.x + (self.rect.width / 2),
+            self.rect.y,
+            self.rect.height,
             self.font_size,
-            spacing,
+        )
+        pr.draw_text(
+            self.text,
+            int(tx + 2),
+            int(ty + 2),
+            self.font_size,
             self.shadow_color,
         )
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             self.text,
-            pr.Vector2(int(tx), int(ty)),
+            int(tx),
+            int(ty),
             self.font_size,
-            spacing,
             current_color,
         )
 
         if active:
             arrow_size = int(self.font_size * 0.75)
             arrow_x = int(tx - arrow_size - 12)
-            arrow_y = int(ty + (text_size_vec.y - arrow_size) / 2)
+            arrow_y = int(ty + (self.font_size - arrow_size) / 2)
 
             v1 = pr.Vector2(arrow_x, arrow_y)
             v2 = pr.Vector2(arrow_x, arrow_y + arrow_size)

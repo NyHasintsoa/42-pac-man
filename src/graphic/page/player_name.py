@@ -6,6 +6,7 @@ import pyray as pr
 
 from src.graphic.component import Button, Input, PageFrame
 from src.graphic.page.parent import ParentPage
+from src.graphic.utils.text_helper import centered_x
 from src.model import GameContext
 from src.model.enums import PageState
 from src.service.score_manager import ScoreManager
@@ -120,10 +121,9 @@ class PlayerNamePage(ParentPage):
             outcome_color = pr.Color(231, 76, 60, 255)
 
         outcome_font_size = 52
-        outcome_width = pr.measure_text(outcome_text, outcome_font_size)
         pr.draw_text(
             outcome_text,
-            (self.window.width // 2) - (outcome_width // 2),
+            centered_x(outcome_text, self.window.width / 2, outcome_font_size),
             self.box_y - 180,
             outcome_font_size,
             outcome_color,
@@ -131,10 +131,9 @@ class PlayerNamePage(ParentPage):
 
         score_text = f"FINAL SCORE: {getattr(self.context, 'score', 0)}"
         score_font_size = 24
-        score_width = pr.measure_text(score_text, score_font_size)
         pr.draw_text(
             score_text,
-            (self.window.width // 2) - (score_width // 2),
+            centered_x(score_text, self.window.width / 2, score_font_size),
             self.box_y - 120,
             score_font_size,
             pr.WHITE,
@@ -142,10 +141,9 @@ class PlayerNamePage(ParentPage):
 
         prompt_text = "ENTER PLAYER NAME"
         prompt_size = 18
-        prompt_width = pr.measure_text(prompt_text, prompt_size)
         pr.draw_text(
             prompt_text,
-            (self.window.width // 2) - (prompt_width // 2),
+            centered_x(prompt_text, self.window.width / 2, prompt_size),
             self.box_y - 30,
             prompt_size,
             pr.YELLOW,

@@ -2,6 +2,9 @@
 
 import pyray as pr
 
+from src.graphic.utils.text_helper import centered_text_position
+from src.utils import ft_check_collision_point_rec, ft_fade
+
 
 class Button:
     """Represent a clickable, styled rectangular button."""
@@ -54,7 +57,7 @@ class Button:
         self.clicked_color: pr.Color = clicked_color
         self.text_color: pr.Color = text_color
         self.border_color: pr.Color = border_color
-        self.shadow_color = pr.fade(pr.BLACK, 0.45)
+        self.shadow_color = ft_fade(pr.BLACK, 0.45)
         self.is_clicked = False
         self.font_size = font_size
         self.border_radius = border_radius
@@ -73,7 +76,7 @@ class Button:
             current_color = pr.GRAY
         else:
             mouse_pos = pr.get_mouse_position()
-            is_hovered = pr.check_collision_point_rec(mouse_pos, self.rect)
+            is_hovered = ft_check_collision_point_rec(mouse_pos, self.rect)
 
             if is_hovered:
                 current_color = self.hover_bg_color
@@ -113,9 +116,13 @@ class Button:
         pr.draw_rectangle_rounded(
             self.rect, self.border_radius, 12, current_color
         )
-        text_width = pr.measure_text(self.text, self.font_size)
-        tx = self.rect.x + (self.rect.width - text_width) / 2
-        ty = self.rect.y + (self.rect.height - self.font_size) / 2
+        tx, ty = centered_text_position(
+            self.text,
+            self.rect.x + (self.rect.width / 2),
+            self.rect.y,
+            self.rect.height,
+            self.font_size,
+        )
         if current_color != self.clicked_color:
             pr.draw_text(
                 str(self.text),

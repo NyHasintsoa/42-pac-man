@@ -2,7 +2,11 @@
 
 from typing import TYPE_CHECKING
 
+
 import pyray as pr
+import time
+
+from src.utils import ft_vector2_distance
 
 if TYPE_CHECKING:
     from src.graphic.component import GhostCharacter, PacmanCharacter
@@ -40,12 +44,12 @@ class GhostTargeting:
         corner_down_right = pr.Vector2(cols - 1, rows - 1)
         corner_down_left = pr.Vector2(0, rows - 1)
 
-        dist_to_pacman = pr.vector2_distance(ghost.grid_pos, pacman.grid_pos)
+        dist_to_pacman = ft_vector2_distance(ghost.grid_pos, pacman.grid_pos)
         if dist_to_pacman <= GhostTargeting.PERIMETER_RADIUS:
             return pacman.grid_pos
 
         is_scatter = (ghost.super_timer <= 0.0) and (
-            int(pr.get_time() / 20.0) % 2 == 0
+            int(time.perf_counter() / 20.0) % 2 == 0
         )
 
         if ghost.ghost_name == "blinky":

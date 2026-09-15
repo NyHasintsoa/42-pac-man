@@ -6,6 +6,7 @@ import pyray as pr
 
 from src.algorithm.ghost_pathfinding import GhostPathfinding
 from src.algorithm.ghost_targeting import GhostTargeting
+from src.utils import ft_vector2_distance
 
 if TYPE_CHECKING:
     from src.graphic.component import GhostCharacter, PacmanCharacter
@@ -95,14 +96,14 @@ class GhostMovement:
             )
 
             if ghost.is_edible:
-                simulated_dist = pr.vector2_distance(
+                simulated_dist = ft_vector2_distance(
                     projected_pos, pacman.pixel_pos
                 )
                 if simulated_dist > extreme_score:
                     extreme_score = simulated_dist
                     best_direction = choice
             else:
-                simulated_dist = pr.vector2_distance(
+                simulated_dist = ft_vector2_distance(
                     projected_pos, target_pixel_pos
                 )
                 if simulated_dist < extreme_score:

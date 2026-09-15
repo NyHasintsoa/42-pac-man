@@ -62,27 +62,27 @@ def main() -> None:
     Catches individual subclass exceptions to print distinct category tags
     and status messages before exiting.
     """
-    try:
-        _run(sys.argv[1:])
-    except ConfigError as err:
-        print_cli_error("Configuration Error", err)
-        sys.exit(1)
-    except ScoreError as err:
-        print_cli_error("Score Error", err)
-        sys.exit(1)
-    except PacmanError as err:
-        print_cli_error("Pac-Man Application Error", err)
-        sys.exit(1)
-    except KeyboardInterrupt:
-        print_cli_error(
-            "Interrupt", "Operation cancelled by user.", color=COLOR_YELLOW
-        )
-        sys.exit(130)
-    except Exception as err:
-        print_cli_error(
-            "Unexpected Fatal Exception", f"{type(err).__name__}: {err}"
-        )
-        sys.exit(1)
+    _run(sys.argv[1:])
+    # try:
+    # except ConfigError as err:
+    #     print_cli_error("Configuration Error", err)
+    #     sys.exit(1)
+    # except ScoreError as err:
+    #     print_cli_error("Score Error", err)
+    #     sys.exit(1)
+    # except PacmanError as err:
+    #     print_cli_error("Pac-Man Application Error", err)
+    #     sys.exit(1)
+    # except KeyboardInterrupt:
+    #     print_cli_error(
+    #         "Interrupt", "Operation cancelled by user.", color=COLOR_YELLOW
+    #     )
+    #     sys.exit(130)
+    # except Exception as err:
+    #     print_cli_error(
+    #         "Unexpected Fatal Exception", f"{type(err).__name__}: {err}"
+    #     )
+    #     sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -14,6 +14,8 @@ from src.graphic.component import (
     ScoreBoardComponent,
 )
 from src.graphic.page.parent import ParentPage
+from src.utils import ft_vector2_distance
+from src.graphic.utils.text_helper import centered_x
 from src.model import GameContext, LevelConfig, MazeData
 from src.model.enums import PageState
 from src.service import (
@@ -273,7 +275,7 @@ class GamePage(ParentPage):
             if ghost.is_returning_eyes or ghost.is_waiting_to_respawn:
                 continue
 
-            distance = pr.vector2_distance(
+            distance = ft_vector2_distance(
                 self.pacman.pixel_pos, ghost.pixel_pos
             )
             if distance < collision_distance:
@@ -481,12 +483,10 @@ class GamePage(ParentPage):
         ):
             ready_text = "READY!"
             font_size = 32
-            text_width = pr.measure_text(ready_text, font_size)
-            x_pos = (self.window.width // 2) - (text_width // 2)
             y_pos = (self.window.height // 2) + 20
             pr.draw_text(
                 ready_text,
-                x_pos,
+                centered_x(ready_text, self.window.width / 2, font_size),
                 y_pos,
                 font_size,
                 pr.Color(254, 222, 23, 255),

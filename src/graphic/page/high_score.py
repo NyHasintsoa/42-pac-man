@@ -4,10 +4,9 @@ import math
 from typing import TYPE_CHECKING, Any, List
 
 import pyray as pr
-
+import time
 from src.graphic.component import PageFrame
 from src.graphic.page.parent import ParentPage
-from src.graphic.utils import ResourceManager
 from src.model.enums import PageState
 from src.service.score_manager import ScoreManager
 
@@ -37,9 +36,6 @@ class HighScorePage(ParentPage):
         self.scroll_offset = 0
         self.last_input_time = 0.0
         self.input_cooldown = 0.16
-
-        self.font_path = ResourceManager.font("emulogic.ttf")
-        self.font = pr.load_font(self.font_path)
 
         self.color_title = pr.Color(249, 44, 114, 255)
         self.color_headers = pr.Color(27, 199, 233, 255)
@@ -83,7 +79,6 @@ class HighScorePage(ParentPage):
         """
         if self._is_unloaded:
             return
-        pr.unload_font(self.font)
         super().unload()
 
     def _draw_text_with_shadow_ex(
@@ -112,17 +107,14 @@ class HighScorePage(ParentPage):
         Returns:
             The requested result.
         """
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             text,
-            pr.Vector2(x + offset, y + offset),
+            x + offset,
+            y + offset,
             font_size,
-            spacing,
             shadow_color,
         )
-        pr.draw_text_ex(
-            self.font, text, pr.Vector2(x, y), font_size, spacing, text_color
-        )
+        pr.draw_text(text, x, y, font_size, text_color)
 
     def _draw_retro_trophy(
         self, x: int, y: int, scale: float, color: pr.Color
@@ -200,7 +192,7 @@ class HighScorePage(ParentPage):
         Returns:
             The requested result.
         """
-        total_time = pr.get_time()
+        total_time = time.perf_counter()
         total_scores = len(self.high_scores)
 
         if total_scores == 0:
@@ -240,11 +232,11 @@ class HighScorePage(ParentPage):
             The requested result.
         """
         self._event_listener()
-        total_time = pr.get_time()
+        total_time = time.perf_counter()
         self.page_frame.render()
 
-        scale_x = self.window.width / 800.0
-        scale_y = self.window.height / 600.0
+        scale_x = self.window.width / 800
+        scale_y = self.window.height / 600
         layout_scale = min(scale_x, scale_y)
 
         padding_x = 100 * scale_x
@@ -255,61 +247,54 @@ class HighScorePage(ParentPage):
         usable_width = self.window.width - (2 * padding_x)
         usable_height = self.window.height - (2 * padding_y)
 
-        col_rank_x = padding_x + (usable_width * 0.02)
-        col_name_x = padding_x + (usable_width * 0.16)
-        col_score_x = padding_x + (usable_width * 0.58)
-        col_stage_x = padding_x + (usable_width * 0.86)
+        col_rank_x = int(padding_x + (usable_width * 0.02))
+        col_name_x = int(padding_x + (usable_width * 0.16))
+        col_score_x = int(padding_x + (usable_width * 0.58))
+        col_stage_x = int(padding_x + (usable_width * 0.86))
 
         title_text = "HIGH SCORES"
         title_font_size = int(38 * layout_scale)
-        title_size_vec = pr.measure_text_ex(
-            self.font, title_text, title_font_size, spacing
-        )
-        title_x = (self.window.width - title_size_vec.x) // 2
+        title_size = pr.measure_text(title_text, title_font_size)
+        title_x = (self.window.width - title_size) // 2
         title_y = padding_y + (usable_height * 0.05)
 
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             title_text,
-            pr.Vector2(title_x, title_y),
+            title_x,
+            int(title_y),
             title_font_size,
-            spacing,
             self.color_title,
         )
 
         header_font_size = int(18 * layout_scale)
-        y_start = title_y + title_size_vec.y + (usable_height * 0.08)
+        y_start = int(title_y + title_size + (usable_height * 0.08))
 
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             "RANK",
-            pr.Vector2(col_rank_x, y_start),
+            col_rank_x,
+            y_start,
             header_font_size,
-            spacing,
             self.color_headers,
         )
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             "NAME",
-            pr.Vector2(col_name_x, y_start),
+            col_name_x,
+            y_start,
             header_font_size,
-            spacing,
             self.color_headers,
         )
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             "SCORE",
-            pr.Vector2(col_score_x, y_start),
+            col_score_x,
+            y_start,
             header_font_size,
-            spacing,
             self.color_headers,
         )
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             "STAGE",
-            pr.Vector2(col_stage_x, y_start),
+            col_stage_x,
+            y_start,
             header_font_size,
-            spacing,
             self.color_headers,
         )
 
@@ -327,10 +312,8 @@ class HighScorePage(ParentPage):
         if not self.high_scores:
             no_score_text = "NO HIGH SCORES YET"
             no_score_font_size = int(20 * layout_scale)
-            no_score_size = pr.measure_text_ex(
-                self.font, no_score_text, no_score_font_size, spacing
-            )
-            no_score_x = (self.window.width - no_score_size.x) // 2
+            no_score_size = pr.measure_text(no_score_text, no_score_font_size)
+            no_score_x = (self.window.width - no_score_size) // 2
             no_score_y = content_start_y + (usable_height * 0.15)
 
             empty_pulse = int(140 + 115 * math.cos(total_time * 3.0))
@@ -345,7 +328,7 @@ class HighScorePage(ParentPage):
             )
         else:
             visible_subset = self.high_scores[
-                self.scroll_offset: self.scroll_offset + self.max_visible_rows
+                self.scroll_offset : self.scroll_offset + self.max_visible_rows
             ]
 
             for i, entry in enumerate(visible_subset):
@@ -420,17 +403,14 @@ class HighScorePage(ParentPage):
 
         footer_text = "USE [UP/DOWN] TO SELECT  |  PRESS [ESC] TO EXIT"
         footer_font_size = int(12 * layout_scale)
-        footer_size_vec = pr.measure_text_ex(
-            self.font, footer_text, footer_font_size, spacing
-        )
-        footer_x = (self.window.width - footer_size_vec.x) // 2
-        footer_y = self.window.height - padding_y - (usable_height * 0.05)
+        footer_size = pr.measure_text(footer_text, footer_font_size)
+        footer_x = (self.window.width - footer_size) // 2
+        footer_y = int(self.window.height - padding_y - (usable_height * 0.05))
 
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             footer_text,
-            pr.Vector2(footer_x, footer_y),
+            footer_x,
+            footer_y,
             footer_font_size,
-            spacing,
             footer_color,
         )

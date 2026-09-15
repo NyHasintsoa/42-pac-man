@@ -6,7 +6,9 @@ import pyray as pr
 
 from src.graphic.component import MenuButton, PageFrame
 from src.graphic.page.parent import ParentPage
+from src.graphic.utils.text_helper import centered_x
 from src.model.enums import PageState
+from src.utils import ft_check_collision_point_rec
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -124,11 +126,19 @@ class MenuPage(ParentPage):
         """
         self._event_listener()
         self.page_frame.render()
-        pr.draw_text("PAC-MAN", 320, 180, 72, pr.YELLOW)
+        title = "PAC-MAN"
+        title_font_size = 72
+        pr.draw_text(
+            title,
+            centered_x(title, self.window.width / 2, title_font_size),
+            int(self.window.height * 0.20),
+            title_font_size,
+            pr.YELLOW,
+        )
 
         mouse_pos = pr.get_mouse_position()
         for i, button in enumerate(self.buttons):
-            if pr.check_collision_point_rec(mouse_pos, button.rect):
+            if ft_check_collision_point_rec(mouse_pos, button.rect):
                 self.selected_index = i
 
         for i, button in enumerate(self.buttons):

@@ -4,10 +4,11 @@ import math
 from typing import TYPE_CHECKING, Dict
 
 import pyray as pr
+import time
 
 from src.graphic.component import GhostCharacter, PacmanCharacter, PageFrame
 from src.graphic.page.parent import ParentPage
-from src.graphic.utils import ResourceManager
+from src.graphic.utils.text_helper import centered_y
 from src.model.enums import PageState
 
 if TYPE_CHECKING:
@@ -29,8 +30,6 @@ class HowToPlayPage(ParentPage):
         super().__init__(window)
         self.state = PageState.HELP_MENU
         self.page_frame = PageFrame(window.width, window.height)
-        self.font_path = ResourceManager.font("emulogic.ttf")
-        self.font = pr.load_font(self.font_path)
 
         self.color_title = pr.Color(249, 44, 114, 255)
         self.color_headers = pr.Color(27, 199, 233, 255)
@@ -87,7 +86,6 @@ GHOSTS: 200 PTS.
         """
         if self._is_unloaded:
             return
-        pr.unload_font(self.font)
         self.pacman_preview.unload()
         self.ghost_preview.unload()
         super().unload()
@@ -118,17 +116,14 @@ GHOSTS: 200 PTS.
         Returns:
             The requested result.
         """
-        pr.draw_text_ex(
-            self.font,
+        pr.draw_text(
             text,
-            pr.Vector2(x + offset, y + offset),
+            x + offset,
+            y + offset,
             font_size,
-            spacing,
             shadow_color,
         )
-        pr.draw_text_ex(
-            self.font, text, pr.Vector2(x, y), font_size, spacing, text_color
-        )
+        pr.draw_text(text, x, y, font_size, text_color)
 
     def _draw_key_button(self, text: str, x: int, y: int, size: int) -> None:
         """Draw a styled keyboard key.
@@ -153,12 +148,10 @@ GHOSTS: 200 PTS.
         )
 
         font_size = int(size * 0.4)
-        text_size = pr.measure_text_ex(self.font, text, font_size, 2)
-        tx = x + (size - text_size.x) / 2
-        ty = y + (size - text_size.y) / 2
-        pr.draw_text_ex(
-            self.font, text, pr.Vector2(tx, ty), font_size, 2, pr.BLACK
-        )
+        text_size = pr.measure_text(text, font_size)
+        tx = x + (size - text_size) / 2
+        ty = centered_y(y, size, font_size)
+        pr.draw_text(text, int(tx), int(ty), font_size, pr.BLACK)
 
     def _draw_component_pacman(
         self,
@@ -266,10 +259,8 @@ GHOSTS: 200 PTS.
             pr.Color(27, 199, 233, 100),
         )
 
-        header_size_vec = pr.measure_text_ex(
-            self.font, sec["header"], header_font_size, spacing
-        )
-        header_x = box_x + (cell_width - header_size_vec.x) // 2
+        header_size = pr.measure_text(sec["header"], header_font_size)
+        header_x = box_x + (cell_width - header_size) // 2
         self._draw_text_with_shadow_ex(
             sec["header"],
             int(header_x),
@@ -522,7 +513,7 @@ GHOSTS: 200 PTS.
         """
         self._event_listener()
         self.page_frame.render()
-        total_time = pr.get_time()
+        total_time = time.perf_counter()
         spacing = 2
         global_frame_tick = int(total_time / 0.15)
 
@@ -534,16 +525,13 @@ GHOSTS: 200 PTS.
         body_font_size = int(width * 0.010)
 
         title_text = "HOW TO PLAY"
-        title_size_vec = pr.measure_text_ex(
-            self.font, title_text, title_font_size, spacing
-        )
-        title_x = (width - title_size_vec.x) // 2
-        pr.draw_text_ex(
-            self.font,
+        title_size = pr.measure_text(title_text, title_font_size)
+        title_x = (width - title_size) // 2
+        pr.draw_text(
             title_text,
-            pr.Vector2(title_x, int(height * 0.06)),
+            title_x,
+            int(height * 0.06),
             title_font_size,
-            spacing,
             self.color_title,
         )
 
@@ -594,15 +582,12 @@ GHOSTS: 200 PTS.
 
         footer_text = "PRESS [ESC] OR [ENTER] TO RETURN TO MENU"
         footer_font_size = int(width * 0.012)
-        footer_size_vec = pr.measure_text_ex(
-            self.font, footer_text, footer_font_size, spacing
-        )
-        footer_x = (width - footer_size_vec.x) // 2
-        pr.draw_text_ex(
-            self.font,
+        footer_size = pr.measure_text(footer_text, footer_font_size)
+        footer_x = (width - footer_size) // 2
+        pr.draw_text(
             footer_text,
-            pr.Vector2(footer_x, height - int(height * 0.08)),
+            footer_x,
+            height - int(height * 0.08),
             footer_font_size,
-            spacing,
             footer_color,
         )

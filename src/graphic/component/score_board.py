@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 import pyray as pr
 
 from src.graphic.utils import ResourceManager
+from src.graphic.utils.text_helper import centered_x
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -103,8 +104,21 @@ class ScoreBoardComponent:
         pr.draw_text("1UP", left_base_x + 30, 12, 25, pr.RED)
         pr.draw_text(score_str, left_base_x, 40, 30, pr.WHITE)
 
-        pr.draw_text("HIGH SCORE", (self.width // 2) - 80, 12, 25, pr.RED)
-        pr.draw_text(high_score_str, (self.width // 2) - 55, 40, 30, pr.WHITE)
+        high_score_center = self.width / 2
+        pr.draw_text(
+            "HIGH SCORE",
+            centered_x("HIGH SCORE", high_score_center, 25),
+            12,
+            25,
+            pr.RED,
+        )
+        pr.draw_text(
+            high_score_str,
+            centered_x(high_score_str, high_score_center, 30),
+            40,
+            30,
+            pr.WHITE,
+        )
 
         lives_start_x = right_base_x - 150
         icon_y = 38

@@ -1,6 +1,5 @@
 """Define shared movement and rendering behavior for characters."""
 
-import os
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, List
 
@@ -103,11 +102,8 @@ class CharacterComponent(ABC):
         path = ResourceManager.path(self.assets_path, filename)
         size = int(self.scale) if int(self.scale) > 0 else 1
 
-        if not os.path.exists(path):
-            img = pr.gen_image_color(size, size, fallback_color)
-        else:
-            img = pr.load_image(path)
-            pr.image_resize(img, size, size)
+        img = pr.load_image(path)
+        pr.image_resize(img, size, size)
         tex = pr.load_texture_from_image(img)
         pr.unload_image(img)
         self._loaded_textures.append(tex)

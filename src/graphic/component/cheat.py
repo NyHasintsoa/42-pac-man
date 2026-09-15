@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING, Callable, Dict
 import pyray as pr
 
 from src.graphic.component import Button
+from src.graphic.utils.text_helper import centered_x, centered_y
+from src.utils import ft_check_collision_point_rec
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -96,15 +98,15 @@ class CheatComponent:
         if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
             mouse_pos = pr.get_mouse_position()
 
-            if pr.check_collision_point_rec(mouse_pos, self.lives_btn.rect):
+            if ft_check_collision_point_rec(mouse_pos, self.lives_btn.rect):
                 on_add_life()
-            elif pr.check_collision_point_rec(mouse_pos, self.skip_btn.rect):
+            elif ft_check_collision_point_rec(mouse_pos, self.skip_btn.rect):
                 on_skip_level()
-            elif pr.check_collision_point_rec(mouse_pos, self.close_btn.rect):
+            elif ft_check_collision_point_rec(mouse_pos, self.close_btn.rect):
                 on_close()
 
             for key, rect in self.checkboxes.items():
-                if pr.check_collision_point_rec(mouse_pos, rect):
+                if ft_check_collision_point_rec(mouse_pos, rect):
                     if key == "invincible":
                         self.manager.invincible = not self.manager.invincible
                     elif key == "freeze":
@@ -142,7 +144,7 @@ class CheatComponent:
         pr.draw_text(
             label,
             int(rect.x + rect.width + 15),
-            int(rect.y + (rect.height - 18) // 2),
+            centered_y(rect.y, rect.height, 18),
             18,
             pr.WHITE,
         )
@@ -174,10 +176,9 @@ class CheatComponent:
 
         title = "CHEAT PANEL"
         font_size = 28
-        title_w = pr.measure_text(title, font_size)
         pr.draw_text(
             title,
-            self.modal_x + (self.modal_w - title_w) // 2,
+            centered_x(title, self.modal_x + (self.modal_w / 2), font_size),
             self.modal_y + 25,
             font_size,
             pr.Color(255, 0, 128, 255),

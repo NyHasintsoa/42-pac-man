@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING, Callable
 import pyray as pr
 
 from src.graphic.component import Button
+from src.graphic.utils.text_helper import centered_x
+from src.utils import ft_check_collision_point_rec
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow
@@ -72,15 +74,15 @@ class PauseComponent:
         if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
             mouse_pos = pr.get_mouse_position()
 
-            if pr.check_collision_point_rec(mouse_pos, self.resume_btn.rect):
+            if ft_check_collision_point_rec(mouse_pos, self.resume_btn.rect):
                 on_resume()
-            elif pr.check_collision_point_rec(
+            elif ft_check_collision_point_rec(
                 mouse_pos, self.restart_btn.rect
             ):
                 on_restart()
-            elif pr.check_collision_point_rec(mouse_pos, self.menu_btn.rect):
+            elif ft_check_collision_point_rec(mouse_pos, self.menu_btn.rect):
                 on_menu()
-            elif pr.check_collision_point_rec(mouse_pos, self.quit_btn.rect):
+            elif ft_check_collision_point_rec(mouse_pos, self.quit_btn.rect):
                 pr.close_window()
 
     def render(self) -> None:
@@ -114,10 +116,9 @@ class PauseComponent:
 
         title = "PAUSED"
         font_size = 36
-        title_w = pr.measure_text(title, font_size)
         pr.draw_text(
             title,
-            self.modal_x + (self.modal_w - title_w) // 2,
+            centered_x(title, self.modal_x + (self.modal_w / 2), font_size),
             self.modal_y + 25,
             font_size,
             pr.Color(254, 222, 23, 255),

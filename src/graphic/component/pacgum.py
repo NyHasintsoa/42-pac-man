@@ -4,6 +4,7 @@ import math
 from typing import TYPE_CHECKING, List, Tuple
 
 import pyray as pr
+import time
 
 from src.model import Pacgums, SimplePacgum, SuperPacgum
 
@@ -82,7 +83,7 @@ class PacgumComponent:
         simple_radius = self.scale * 0.1
         base_super_radius = self.scale * 0.18
 
-        bounce_factor = 1.0 + 0.08 * math.sin(pr.get_time() * 8.0)
+        bounce_factor = 1.0 + 0.08 * math.sin(time.perf_counter() * 8.0)
         animated_super_radius = base_super_radius * bounce_factor
 
         for simple_pacgum in self.pacgums:
