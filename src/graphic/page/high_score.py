@@ -67,7 +67,7 @@ class HighScorePage(ParentPage):
             self.context.config, "highscore_filename", "high_scores.json"
         )
         score_manager = ScoreManager(filename)
-        self.high_scores = score_manager.load_scores()
+        self.high_scores = score_manager.load_scores()[:10]
         self.selected_index = 0
         self.scroll_offset = 0
 

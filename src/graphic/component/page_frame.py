@@ -19,7 +19,6 @@ class PageFrame:
         self.width = width
         self.height = height
         self.neon_cyan = pr.Color(15, 215, 228, 255)
-        self.dark_blue = pr.Color(8, 15, 28, 255)
 
         self.glow_far = pr.Color(15, 215, 228, 25)
         self.glow_mid = pr.Color(15, 215, 228, 60)
@@ -40,8 +39,6 @@ class PageFrame:
         Returns:
             The requested result.
         """
-        pr.clear_background(self.dark_blue)
-
         def draw_rounded_line(
             p1: pr.Vector2, p2: pr.Vector2, thickness: float, color: pr.Color
         ) -> None:

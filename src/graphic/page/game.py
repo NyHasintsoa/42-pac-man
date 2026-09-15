@@ -456,8 +456,6 @@ class GamePage(ParentPage):
         Returns:
             The requested result.
         """
-        pr.clear_background(pr.BLACK)
-
         self.update()
 
         self.score_board.render()

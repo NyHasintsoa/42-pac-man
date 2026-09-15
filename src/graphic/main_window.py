@@ -41,6 +41,7 @@ class MainWindow:
         self.current_page: Optional[ParentPage] = None
         self.windows: Dict[PageState, ParentPage] = {}
         self._closed = False
+        self._close_requested = False
         self.context = GameContext(
             config=config,
             lives=config.lives,
@@ -75,6 +76,10 @@ class MainWindow:
             pr.close_window()
             self._closed = True
 
+    def request_close(self) -> None:
+        """Request shutdown after the current drawing frame completes."""
+        self._close_requested = True
+
     def load_page(self) -> None:
         """Create all pages and initialize the loading page.
 
@@ -101,8 +106,8 @@ class MainWindow:
             The requested result.
         """
         while not pr.window_should_close():
-            pr.clear_background(pr.BLACK)
             pr.begin_drawing()
+            pr.clear_background((8, 15, 28, 255))
 
             if not self.current_page:
                 pr.end_drawing()
@@ -118,4 +123,6 @@ class MainWindow:
                     self.current_page.next_state = self.current_state
                     self.current_page.init(self.context)
             pr.end_drawing()
+            if self._close_requested:
+                break
         self.close()

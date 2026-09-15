@@ -116,7 +116,7 @@ class MenuPage(ParentPage):
         elif self.buttons[3].is_clicked or (
             self.selected_index == 3 and enter_pressed
         ):
-            self.window.close()
+            self.window.request_close()
 
     def render(self) -> None:
         """Render the component for the current frame.
