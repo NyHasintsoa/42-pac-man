@@ -14,7 +14,7 @@ from src.graphic.component import (
     ScoreBoardComponent,
 )
 from src.graphic.page.parent import ParentPage
-from src.utils import ft_vector2_distance
+from src.graphic.utils import ft_vector2_distance
 from src.graphic.utils.text_helper import centered_x
 from src.model import GameContext, LevelConfig, MazeData
 from src.model.enums import PageState

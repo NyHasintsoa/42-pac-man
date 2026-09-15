@@ -6,7 +6,7 @@ import pyray as pr
 
 from src.algorithm.ghost_pathfinding import GhostPathfinding
 from src.algorithm.ghost_targeting import GhostTargeting
-from src.utils import ft_vector2_distance
+from src.graphic.utils import ft_vector2_distance
 
 if TYPE_CHECKING:
     from src.graphic.component import GhostCharacter, PacmanCharacter

@@ -3,7 +3,7 @@
 import pyray as pr
 
 from src.graphic.utils.text_helper import centered_text_position
-from src.utils import ft_check_collision_point_rec
+from src.graphic.utils import ft_check_collision_point_rec
 
 
 class Button:

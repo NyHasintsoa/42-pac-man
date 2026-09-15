@@ -6,7 +6,7 @@ import pyray as pr
 
 from src.graphic.component import Button
 from src.graphic.utils.text_helper import centered_x
-from src.utils import ft_check_collision_point_rec
+from src.graphic.utils import ft_check_collision_point_rec
 
 if TYPE_CHECKING:
     from src.graphic.main_window import MainWindow

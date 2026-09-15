@@ -178,7 +178,7 @@ class GhostCharacter(CharacterComponent):
 
         saved_speed = self.speed
         if self.is_returning_eyes:
-            self.speed *= 2.5
+            self.speed *= 1.5
 
         self.update_movement_and_grid()
         self.speed = saved_speed

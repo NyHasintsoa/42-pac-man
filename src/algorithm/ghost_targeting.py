@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import pyray as pr
 import time
 
-from src.utils import ft_vector2_distance
+from src.graphic.utils import ft_vector2_distance
 
 if TYPE_CHECKING:
     from src.graphic.component import GhostCharacter, PacmanCharacter
