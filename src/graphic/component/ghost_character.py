@@ -169,9 +169,6 @@ class GhostCharacter(CharacterComponent):
         ):
             calculated_dir = GhostMovement.get_next_direction(
                 ghost=self,
-                pacman=pacman,
-                blinky=blinky,
-                is_angry_blinky=is_angry_blinky,
             )
             self.direction = calculated_dir
             self.next_direction = calculated_dir
