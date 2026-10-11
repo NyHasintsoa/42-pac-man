@@ -1,12 +1,14 @@
 """Display and navigate saved high scores."""
 
 import math
+import time
 from typing import TYPE_CHECKING, Any, List
 
 import pyray as pr
-import time
+
 from src.graphic.component import PageFrame
 from src.graphic.page.parent import ParentPage
+from src.graphic.utils.text_helper import text_width
 from src.model.enums import PageState
 from src.service.score_manager import ScoreManager
 
@@ -254,7 +256,7 @@ class HighScorePage(ParentPage):
 
         title_text = "HIGH SCORES"
         title_font_size = int(38 * layout_scale)
-        title_size = pr.measure_text(title_text, title_font_size)
+        title_size = text_width(title_text, title_font_size)
         title_x = (self.window.width - title_size) // 2
         title_y = padding_y + (usable_height * 0.05)
 
@@ -312,7 +314,7 @@ class HighScorePage(ParentPage):
         if not self.high_scores:
             no_score_text = "NO HIGH SCORES YET"
             no_score_font_size = int(20 * layout_scale)
-            no_score_size = pr.measure_text(no_score_text, no_score_font_size)
+            no_score_size = text_width(no_score_text, no_score_font_size)
             no_score_x = (self.window.width - no_score_size) // 2
             no_score_y = content_start_y + (usable_height * 0.15)
 
@@ -403,7 +405,7 @@ class HighScorePage(ParentPage):
 
         footer_text = "USE [UP/DOWN] TO SELECT  |  PRESS [ESC] TO EXIT"
         footer_font_size = int(12 * layout_scale)
-        footer_size = pr.measure_text(footer_text, footer_font_size)
+        footer_size = text_width(footer_text, footer_font_size)
         footer_x = (self.window.width - footer_size) // 2
         footer_y = int(self.window.height - padding_y - (usable_height * 0.05))
 

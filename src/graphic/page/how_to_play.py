@@ -1,14 +1,14 @@
 """Display the game instructions and animated examples."""
 
 import math
+import time
 from typing import TYPE_CHECKING, Dict
 
 import pyray as pr
-import time
 
 from src.graphic.component import GhostCharacter, PacmanCharacter, PageFrame
 from src.graphic.page.parent import ParentPage
-from src.graphic.utils.text_helper import centered_y
+from src.graphic.utils.text_helper import centered_y, text_width
 from src.model.enums import PageState
 
 if TYPE_CHECKING:
@@ -148,7 +148,7 @@ GHOSTS: 200 PTS.
         )
 
         font_size = int(size * 0.4)
-        text_size = pr.measure_text(text, font_size)
+        text_size = text_width(text, font_size)
         tx = x + (size - text_size) / 2
         ty = centered_y(y, size, font_size)
         pr.draw_text(text, int(tx), int(ty), font_size, pr.BLACK)
@@ -259,7 +259,7 @@ GHOSTS: 200 PTS.
             pr.Color(27, 199, 233, 100),
         )
 
-        header_size = pr.measure_text(sec["header"], header_font_size)
+        header_size = text_width(sec["header"], header_font_size)
         header_x = box_x + (cell_width - header_size) // 2
         self._draw_text_with_shadow_ex(
             sec["header"],
@@ -525,7 +525,7 @@ GHOSTS: 200 PTS.
         body_font_size = int(width * 0.010)
 
         title_text = "HOW TO PLAY"
-        title_size = pr.measure_text(title_text, title_font_size)
+        title_size = text_width(title_text, title_font_size)
         title_x = (width - title_size) // 2
         pr.draw_text(
             title_text,
@@ -582,7 +582,7 @@ GHOSTS: 200 PTS.
 
         footer_text = "PRESS [ESC] OR [ENTER] TO RETURN TO MENU"
         footer_font_size = int(width * 0.012)
-        footer_size = pr.measure_text(footer_text, footer_font_size)
+        footer_size = text_width(footer_text, footer_font_size)
         footer_x = (width - footer_size) // 2
         pr.draw_text(
             footer_text,
